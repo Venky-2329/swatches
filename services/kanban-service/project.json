@@ -1,0 +1,57 @@
+{
+  "name": "services/kanban-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "services/kanban-service/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/services/kanban-service",
+        "main": "services/kanban-service/src/main.ts",
+        "tsConfig": "services/kanban-service/tsconfig.app.json",
+        "assets": ["services/kanban-service/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "services/kanban-service/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "services/kanban-service:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "services/kanban-service:build:development"
+        },
+        "production": {
+          "buildTarget": "services/kanban-service:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["services/kanban-service/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "services/kanban-service/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
