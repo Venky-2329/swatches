@@ -1,10 +1,25 @@
 import { Button, Card, Col, Form, Input, Row, Table } from 'antd';
-import React, { useState } from 'react';
+import { getRacks } from 'libs/shared-services';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export function RacksGrid() {
   const [page, setPage] = React.useState(1);
   const [data, setData] = useState([]);
+
+  useEffect(()=>{
+    getData()
+  },[]);
+
+  function getData(){
+    getRacks().then((res)=>{
+      if(res.data){
+        setData(res.data)
+      }
+    })
+  };
+
+  console.log(data)
 
   const columns = [
     {
@@ -15,6 +30,7 @@ export function RacksGrid() {
         title:'Rack Name',
         dataIndex:'rackName'
     }
+    
   ];
   return (
     <>
