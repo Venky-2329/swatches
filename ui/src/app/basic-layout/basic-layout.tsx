@@ -41,6 +41,12 @@ export function BasicLayout(props: BasicLayoutProps) {
       path: "rack-card",
       icon: <TableOutlined />,
       filepath: "../",
+    },{
+      label: "Dashboard",
+      key: "dashboard",
+      path: "dashboard",
+      icon: <TableOutlined />,
+      filepath: "../",
     },
   ]
   return (
