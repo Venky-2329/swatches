@@ -35,6 +35,13 @@ export function BasicLayout(props: BasicLayoutProps) {
       icon: <TableOutlined />,
       filepath: "../",
     },
+    {
+      label: "Rack card",
+      key: "rack-card",
+      path: "rack-card",
+      icon: <TableOutlined />,
+      filepath: "../",
+    },
   ]
   return (
     <ProConfigProvider dark={dark}  >
