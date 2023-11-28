@@ -1,12 +1,17 @@
-import { Button, Card, Col, theme,Typography } from 'antd'
+import { Button, Card, Col, theme, Typography, Row } from 'antd'
 import React from 'react'
 import { EnvironmentOutlined, BarcodeOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
 const { useToken } = theme
-const {Text} = Typography
+const { Text } = Typography
 
-export default function RackCard({ index, item, location }) {
+export default function RackCard({ index, racks }) {
     const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
+    const colors = {
+        Partially: 'orange',
+        Fully: 'red',
+        Empty: colorPrimary
+    }
     return (
         // <Col key={index} xs={12} sm={6} md={4} lg={3} style={{border:`1px solid ${colorPrimary}`}}>
         //     <Card  style={{ borderRadius: '8px', }} bordered   bodyStyle={{ padding: '0px' }}
@@ -42,25 +47,32 @@ export default function RackCard({ index, item, location }) {
 
         //     </Card>
         // </Col>
+
         <ProCard
             ghost
-            title={<div style={{ height: 15 }}>{'RACK A'}</div>}
+            title={<div style={{ height: 15, paddingLeft: 10 }}>{racks.rackName}</div>}
             bordered
-            bodyStyle={{padding:'3px'}}
-            style={{padding:'3px'}}
-            colSpan={{ xs: 2, sm: 4, md: 6, lg: 8, xl: 10 }}
-          
-        >
-            <ProCard   colSpan={{ xs: 2, sm: 4, md: 6, lg: 8, xl: 10 }}  bordered >
-                {/* <div style={{ height: 30 }}>{location}</div> */}
-                {/* <div style={{ height: 30 }}>{item}</div> */}
-                <Text>Hello</Text>
-            </ProCard>
-            <ProCard   colSpan={{ xs: 2, sm: 4, md: 6, lg: 8, xl: 10 }}  bordered>
-                {/* <div style={{ height: 30 }}>{location}</div> */}
+            bodyStyle={{ padding: '3px', overflow: 'unset', display: 'flex', flexWrap: 'wrap' }}
+            style={{ padding: '3px' }}
+            // colSpan={{ xs: 2, sm: 4, md: 6, lg: 8, xl: 10 }}
+            direction='row'
 
-                {/* <div style={{ height: 30 }}>{item}</div> */}
-            </ProCard>
+            gutter={24}
+
+        >
+            {
+
+                racks.rackDetails.map((r) => 
+                {
+                    const colSpan = (24/racks.columns)
+                    return <ProCard colSpan={colSpan} style={{ background: `linear-gradient(to top, ${colors[r.status]}, transparent)`, paddingBottom: '5px' }} title={r.subRack} bordered  >
+                        <Text>Status : {r.status}</Text><br />
+                        <Text>Qty : {r.qty}</Text>
+                    </ProCard>
+
+                })
+            }
+
         </ProCard>
     )
 }

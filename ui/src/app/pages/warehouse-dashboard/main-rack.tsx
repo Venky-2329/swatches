@@ -3,30 +3,10 @@ import React from 'react'
 import RackCard from './rack-card'
 const { useToken } = theme
 
-export default function MainRackCard(index) {
+export default function MainRackCard(racks,index) {
     const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
 
-    const racks = [
-        {
-            location: 'R1C1',
-            item: 'M001'
-        }, {
-            location: 'R1C2',
-            item: 'M001'
-        }, {
-            location: 'R2C1',
-            item: 'M001'
-        }, {
-            location: 'R2C2',
-            item: 'M001'
-        }, {
-            location: 'R3C1',
-            item: 'M001'
-        }, {
-            location: 'R3C2',
-            item: 'M001'
-        },
-    ]
+   
     return (
         <Row key={index} gutter={24} >
             {/* <div style={{ border: `1px solid ${colorPrimary}` }}> */}
@@ -40,7 +20,7 @@ export default function MainRackCard(index) {
                     md={{ span: 11 }}
                     lg={{ span: 4 }}
                     xl={{ span: 4 }}>
-                        <RackCard index={i} item={v.item} location={v.location} />
+                        <RackCard index={i} racks={v}/>
                     </Col>
                 })
             }

@@ -55,6 +55,12 @@ export function BasicLayout(props: BasicLayoutProps) {
       path: "allocate-rack",
       icon: <TableOutlined />,
       filepath: "../",
+    },{
+      label: "Cutting Inventory",
+      key: "dashboard",
+      path: "dashboard",
+      icon: <TableOutlined />,
+      filepath: "../",
     },
   ]
   return (
