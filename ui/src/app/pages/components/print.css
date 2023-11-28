@@ -1,0 +1,16 @@
+tr {
+    margin-bottom: 1px; 
+    margin-top: -10px;/* Adjust the value as needed */
+  }
+
+  /* Optional: Add some styling to the table for better visibility */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  /* td, th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  } */

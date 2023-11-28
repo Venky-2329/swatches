@@ -41,10 +41,18 @@ export function BasicLayout(props: BasicLayoutProps) {
       path: "rack-card",
       icon: <TableOutlined />,
       filepath: "../",
-    },{
-      label: "Dashboard",
-      key: "dashboard",
-      path: "dashboard",
+    },
+    {
+      label: "Cut Summary",
+      key: "cut-summary",
+      path: "cut-summary",
+      icon: <TableOutlined />,
+      filepath: "../",
+    },
+    {
+      label: "Rack Allocation",
+      key: "allocate-rack",
+      path: "allocate-rack",
       icon: <TableOutlined />,
       filepath: "../",
     },

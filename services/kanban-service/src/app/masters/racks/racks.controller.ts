@@ -23,4 +23,22 @@ export class RacksController {
       console.log(err);
     }
   }
+
+  @Post('/getRacksData')
+  async getRacksData(): Promise<CommonResponseModel> {
+    try {
+      return this.racksService.getRacksData();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  @Post('/updateRackStatus')
+  async updateRackStatus(@Body() req :any): Promise<CommonResponseModel> {
+    try {
+      return this.racksService.updateRackStatus(req);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
