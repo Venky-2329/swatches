@@ -16,9 +16,9 @@ export const AppRoutes = () => {
     const router = createHashRouter(createRoutesFromElements(
         <Route errorElement={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />}>
             <Route path='/' key='/' element={
-                <ProtectionWrapper>
+                // <ProtectionWrapper>
                     <BasicLayout />
-                </ProtectionWrapper>
+                // </ProtectionWrapper>
             }  >
                 <Route path="/racks-form" key="racks-form" element={<RacksForm />} />
                 <Route path="/racks-grid" key="racks-grid" element={<RacksGrid />} />

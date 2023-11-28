@@ -42,7 +42,7 @@ export function BasicLayout(props: BasicLayoutProps) {
       icon: <TableOutlined />,
       filepath: "../",
     },{
-      label: "Dashboard",
+      label: "Cutting Inventory",
       key: "dashboard",
       path: "dashboard",
       icon: <TableOutlined />,
