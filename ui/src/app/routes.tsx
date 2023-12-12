@@ -11,6 +11,8 @@ import RacksDashboard from "./pages/dasboard/racks-dashboard"
 import CutSummary from "./pages/components/cut-summary"
 import AllocateRacks from "./pages/components/allocate-racks"
 import TrimCard from "./pages/pdf-reader/trim-card"
+import BrandsGrid from "./pages/masters/brands-master/brands-grid"
+import BrandsForm from "./pages/masters/brands-master/brands-form"
 
 export const AppRoutes = () => {
 
@@ -21,7 +23,8 @@ export const AppRoutes = () => {
                     <BasicLayout />
                 // </ProtectionWrapper>
             }  >
-                <Route path="/trim-card" key="trim-card" element={<TrimCard />} />
+                <Route path="/brands-grid" key="brands-grid" element={<BrandsGrid />} />
+                <Route path="/brands-form" key="brands-form" element={<BrandsForm />} />
 
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>

@@ -29,9 +29,9 @@ export function BasicLayout(props: BasicLayoutProps) {
 
   const baseRouterList: any[] = [
     {
-      label: "Trim Card",
-      key: "trim-card",
-      path: "trim-card",
+      label: "Brands",
+      key: "brands-grid",
+      path: "brands-grid",
       icon: <TableOutlined />,
       filepath: "../",
     },
@@ -46,7 +46,7 @@ export function BasicLayout(props: BasicLayoutProps) {
         }}
       >
         <ProLayout
-          title="Trim Card"
+          title="Sample Items"
           logo={<LogoIcon  />}
           locale='en-US'
           siderWidth={240}
