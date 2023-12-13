@@ -24,7 +24,7 @@ export function BasicLayout(props: BasicLayoutProps) {
 
   function handleLogout() {
     localStorage.clear()
-    // navigate('/login')
+    navigate('/login')
   }
 
   const baseRouterList: any[] = [
@@ -32,6 +32,20 @@ export function BasicLayout(props: BasicLayoutProps) {
       label: "Brands",
       key: "brands-grid",
       path: "brands-grid",
+      icon: <TableOutlined />,
+      filepath: "../",
+    },
+    {
+      label: "Sample Upload",
+      key: "sample-upload",
+      path: "sample-upload",
+      icon: <TableOutlined />,
+      filepath: "../",
+    },
+    {
+      label: "Samples",
+      key: "sample-cards",
+      path: "sample-cards",
       icon: <TableOutlined />,
       filepath: "../",
     },
@@ -49,11 +63,10 @@ export function BasicLayout(props: BasicLayoutProps) {
           title="Sample Items"
           logo={<LogoIcon  />}
           locale='en-US'
-          siderWidth={240}
+          // layout='top'
           colorPrimary='#22C55E'
           headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
           fixSiderbar
-          layout='mix'
           token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg } }}
           route={{
             path: '/',

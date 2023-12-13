@@ -1,15 +1,27 @@
-import { Button, Card, Col, Form, Input, Row } from 'antd';
+import { Button, Card, Col, Form, Input, Row, notification } from 'antd';
+import { createLocation, createSeason } from 'libs/shared-services';
 import { useNavigate } from 'react-router-dom';
 
-export default function BrandsForm() {
+export default function LocationForm() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const createUser: any = localStorage.getItem('auth')
 
   function goToGrid() {
-    navigate('/brands-grid');
+    navigate('/location-grid');
   }
 
-  function onFinish() {}
+  function onFinish(values) {
+    createLocation(values).then((res)=>{
+        if(res.status){
+          onReset()
+           notification.success({message:res.internalMessage})
+           navigate('/location-grid');
+        }else{
+          notification.error({message:res.internalMessage})
+        }
+    })
+  }
 
   function onReset() {
     form.resetFields();
@@ -18,7 +30,7 @@ export default function BrandsForm() {
   return (
     <>
       <Card
-        title="Brands Form"
+        title="Location Form"
         extra={
           <span>
             <Button onClick={goToGrid} type="primary">
@@ -30,15 +42,12 @@ export default function BrandsForm() {
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row gutter={24}>
             <Col span={4}>
-              <Form.Item label="Brand Code" name={'brandCode'}>
+              <Form.Item label="Location" name={'locationName'}
+              rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={4}>
-              <Form.Item label="Brand Name" name={'brandName'}>
-                <Input />
-              </Form.Item>
-            </Col>
+            <Form.Item name={'createdUser'} initialValue={createUser}><Input defaultValue={createUser}/></Form.Item>
             <Col span={2}>
               <Button style={{marginTop:'23px'}} htmlType="submit" type="primary">
                 Submit

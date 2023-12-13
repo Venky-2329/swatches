@@ -5,7 +5,8 @@ export const ProtectionWrapper = ({ children }: { children: JSX.Element }) => {
     let location = useLocation();
 
 
-    const createUser: any = localStorage.getItem('USER_ID')
+    const createUser: any = localStorage.getItem('auth')
+    console.log(createUser)
     if (!createUser) {
         // Redirect them to the /login page, but save the current location they were
         // trying to go to when they were redirected. This allows us to send them

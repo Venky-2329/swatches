@@ -1,21 +1,23 @@
 import { Button, Card, Col, Row, Table } from "antd";
-import { useState } from "react";
+import { getBrandsData, getCategoryData } from "libs/shared-services";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function BrandsGrid(){
     const navigate = useNavigate();
-    const [brandData,setBrandData] = useState([])
+    const [data,setData] = useState([])
 
-    const data =[
-        {
-            brandCode:'HM',
-            brandName:'H&M'
-        },
-        {
-            brandCode:'Wrong',
-            brandName:'Wrong'
-        }
-    ]
+    useEffect(()=>{
+        getData()
+    },[])
+
+    function getData(){
+        getCategoryData().then((res)=>{
+            if(res.data){
+                setData(res.data)
+            }
+        })
+    }
 
      const columns = [
         {
@@ -23,22 +25,18 @@ export default function BrandsGrid(){
             render:(val,record,index) => index + 1
         },
         {
-            title :'Brand Code',
-            dataIndex:'brandCode'
-        },
-        {
-            title:'BrandName',
-            dataIndex:'brandName'
+            title:'Category Name',
+            dataIndex:'categoryName'
         }
      ];
 
     function goToForm(){
-        navigate('/brands-form')
+        navigate('/category-form')
     }
 
     return(
         <>
-        <Card title='Brands' extra={<span><Button onClick={goToForm} type="primary">Add</Button></span>}>
+        <Card title='Categories' extra={<span><Button onClick={goToForm} type="primary">Add</Button></span>}>
            <Row gutter={24}>
              <Col span={24}>
                <Table columns={columns} dataSource={data} ></Table>

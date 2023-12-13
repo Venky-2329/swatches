@@ -6,6 +6,12 @@ import {
   import 'dotenv/config';
 import { RacksEntity } from '../masters/racks/entity/racks.entity';
 import { RacksChildEntity } from '../masters/racks/entity/racks-child.entity';
+import { BrandsEntity } from '../masters/brands/entity/brands.entity';
+import { CategoryEntity } from '../masters/category/entity/category.entity';
+import { LocationEntity } from '../masters/location/entity/location.entity';
+import { SeasonEntity } from '../masters/season/entity/season.entity';
+import { UserEntity } from '../masters/users/entity/user.entity';
+import { SampleUpload } from '../masters/sample-upload/entity/sample-upload.entity';
 
   export const typeOrmConfig: DataSourceOptions = {
     type: "mysql",
@@ -13,7 +19,7 @@ import { RacksChildEntity } from '../masters/racks/entity/racks-child.entity';
     username: 'internal_apps',
     password: 'Schemax@2023',
     database: 'internal_apps',
-    entities:[RacksEntity,RacksChildEntity]
+    entities:[RacksEntity,RacksChildEntity,BrandsEntity,CategoryEntity,LocationEntity,SeasonEntity,UserEntity,SampleUpload]
   };
   
   export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
