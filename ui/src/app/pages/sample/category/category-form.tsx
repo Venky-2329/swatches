@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 export default function CategoryForm() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const createUser: any = localStorage.getItem('auth')
+  const users: any = JSON.parse(localStorage.getItem('auth'))
+  const createUser = users.userName
 
   function goToGrid() {
     navigate('/category-grid');
@@ -47,7 +48,7 @@ export default function CategoryForm() {
                 <Input />
               </Form.Item>
             </Col>
-            <Form.Item name={'createdUser'} initialValue={createUser}><Input defaultValue={createUser}/></Form.Item>
+            <Form.Item hidden name={'createdUser'} initialValue={createUser}><Input defaultValue={createUser}/></Form.Item>
             <Col span={2}>
               <Button style={{marginTop:'23px'}} htmlType="submit" type="primary">
                 Submit

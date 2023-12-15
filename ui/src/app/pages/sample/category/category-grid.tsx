@@ -3,7 +3,7 @@ import { getBrandsData, getCategoryData } from "libs/shared-services";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function BrandsGrid(){
+export default function CategoryGrid(){
     const navigate = useNavigate();
     const [data,setData] = useState([])
 

@@ -52,9 +52,9 @@ export class SampleUploadController {
   }
 
   @Post('/getData')
-  async getData(): Promise<CommonResponseModel> {
+  async getData(@Body() req:any): Promise<CommonResponseModel> {
     try {
-      return this.service.getData();
+      return this.service.getData(req);
     } catch (err) {
       console.log(err);
     }

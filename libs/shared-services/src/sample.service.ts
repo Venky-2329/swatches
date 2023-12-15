@@ -1,6 +1,6 @@
 import { API_URL } from "../config";
 import axios from 'axios';
-import {CommonResponseModel} from 'libs/shared-models'
+import {CommonResponseModel, SampleCardReq} from 'libs/shared-models'
 
 const endPoint = API_URL + '/sample-upload'
 const userUrl = API_URL + '/users'
@@ -15,8 +15,8 @@ export async function createSample(req: any): Promise<CommonResponseModel> {
     return response.data;
   }
 
-  export async function getData():Promise<CommonResponseModel>{
-    const response =await axios.post(endPoint + '/getData')
+  export async function getAllSamplesData(req?:SampleCardReq):Promise<CommonResponseModel>{
+    const response =await axios.post(endPoint + '/getData',req)
     return response.data
   }
 

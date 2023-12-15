@@ -18,7 +18,7 @@ async function bootstrap() {
     whitelist: true,
   }));
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3011;
+  const port = process.env.PORT || 3012;
 
   /**
    * Swagger intiantation

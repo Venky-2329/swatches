@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 export default function BrandsForm() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const createUser: any = localStorage.getItem('auth')
+  const createUser: any = JSON.parse(localStorage.getItem('auth'))
+  const user = createUser.userName
 
   function goToGrid() {
     navigate('/brands-grid');
@@ -46,7 +47,7 @@ export default function BrandsForm() {
                 <Input />
               </Form.Item>
             </Col>
-            <Form.Item name={'createdUser'} initialValue={createUser}><Input defaultValue={createUser}/></Form.Item>
+            <Form.Item hidden name={'createdUser'} initialValue={user}><Input defaultValue={user}/></Form.Item>
             <Col span={4}>
               <Form.Item label="Brand Name" name={'brandName'}rules={[{ required: true }]}>
                 <Input />

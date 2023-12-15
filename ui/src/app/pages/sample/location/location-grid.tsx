@@ -3,7 +3,7 @@ import { getLocationData } from "libs/shared-services";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function SeasonGrid(){
+export default function LocationGrid(){
     const navigate = useNavigate();
     const [data,setData] = useState([])
 

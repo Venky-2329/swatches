@@ -7,20 +7,20 @@ import { treeRouter } from '../utils/common';
 import { DarkModeIcon } from '../icons/darkmode.icon';
 import { useState } from 'react';
 import { Button, Tooltip, theme } from 'antd';
-import { UserOutlined, PieChartOutlined, LogoutOutlined, TableOutlined, PicCenterOutlined } from '@ant-design/icons'
+import { UserOutlined, RobotOutlined, LogoutOutlined, TableOutlined, PicCenterOutlined,UploadOutlined } from '@ant-design/icons'
 import { LogoIcon } from '../icons/logo-icon';
 
 const { useToken } = theme
 /* eslint-disable-next-line */
 export interface BasicLayoutProps { }
 
-
-
 export function BasicLayout(props: BasicLayoutProps) {
   const [pathname, setPathname] = useState(location.pathname);
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(false);
   const navigate = useNavigate();
   const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
+  const createUser: any = JSON.parse(localStorage.getItem('auth'));
+  const user = createUser.userName
 
   function handleLogout() {
     localStorage.clear()
@@ -29,26 +29,69 @@ export function BasicLayout(props: BasicLayoutProps) {
 
   const baseRouterList: any[] = [
     {
-      label: "Brands",
-      key: "brands-grid",
-      path: "brands-grid",
-      icon: <TableOutlined />,
-      filepath: "../",
+        label:"Masters",
+        path: "/",
+        icon: <PicCenterOutlined />,
+        filepath: "../",
+        children :[
+          {
+            label: "User",
+            key: "user-grid",
+            path: "user-grid",
+            icon: <TableOutlined />,
+            filepath: "../",
+          },
+          {
+            label: "Brands",
+            key: "brands-grid",
+            path: "brands-grid",
+            icon: <TableOutlined />,
+            filepath: "../",
+          },
+          {
+            label: "Category",
+            key: "category-grid",
+            path: "category-grid",
+            icon: <TableOutlined />,
+            filepath: "../",
+          },
+          {
+            label: "Season",
+            key: "season-grid",
+            path: "season-grid",
+            icon: <TableOutlined />,
+            filepath: "../",
+          },
+          {
+            label: "Location",
+            key: "location-grid",
+            path: "location-grid",
+            icon: <TableOutlined />,
+            filepath: "../",
+          },
+        ]
     },
     {
       label: "Sample Upload",
-      key: "sample-upload",
-      path: "sample-upload",
-      icon: <TableOutlined />,
+      key: "sample-view",
+      path: "sample-view",
+      icon: <UploadOutlined />,
       filepath: "../",
     },
     {
-      label: "Samples",
+      label: "Digital Design Room",
       key: "sample-cards",
       path: "sample-cards",
-      icon: <TableOutlined />,
+      icon: <RobotOutlined />,
       filepath: "../",
     },
+    // {
+    //   label: "Samples View",
+    //   key: "sample-view",
+    //   path: "sample-view",
+    //   icon: <TableOutlined />,
+    //   filepath: "../",
+    // },
     
   ]
   return (
@@ -60,11 +103,11 @@ export function BasicLayout(props: BasicLayoutProps) {
         }}
       >
         <ProLayout
-          title="Sample Items"
+          title="Digital Design Room"
           logo={<LogoIcon  />}
           locale='en-US'
           // layout='top'
-          colorPrimary='#22C55E'
+          colorPrimary='#035199'
           headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
           fixSiderbar
           token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg } }}
@@ -78,7 +121,7 @@ export function BasicLayout(props: BasicLayoutProps) {
           avatarProps={{
             src: <UserOutlined />,
             size: 'small',
-            title: 'admin',
+            title: user,
             style: { color: colorPrimary }
           }}
           contentStyle={{ paddingBlock: '10px', paddingInline: '10px' }}
@@ -98,7 +141,7 @@ export function BasicLayout(props: BasicLayoutProps) {
                   onClick={() => {
                     setDark(!dark);
                   }}
-                  icon={!dark ? <DarkModeIcon style={{ color: "#22C55E" }} /> : <LightModeIcon style={{ color: "#22C55E" }} />}
+                  icon={!dark ? <DarkModeIcon style={{ color: "#035199" }} /> : <LightModeIcon style={{ color: "#035199" }} />}
                 ></Button>
               </Tooltip>,
               <Tooltip placement="bottom" title={"Sign Out"}>
@@ -108,7 +151,7 @@ export function BasicLayout(props: BasicLayoutProps) {
                   // style={{ borderRadius: "5px" }}
                   icon={
                     <LogoutOutlined
-                      style={{ color: '#22C55E' }}
+                      style={{ color: '#035199' }}
                       onClick={async () => {
                         // await signOut(dispatch);
                         handleLogout()

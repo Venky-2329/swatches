@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommonResponseModel } from 'libs/shared-models';
 import { UserEntityRepository } from './entity/user.repo';
 import { UserEntity } from './entity/user.entity';
+import { AuthModel } from './auth.model';
 
 @Injectable()
 export class UserService {
@@ -28,7 +29,7 @@ export class UserService {
    async login (dto:any) : Promise<CommonResponseModel>{
     const validateUser = await this.userRepo.findOne({where:{userName : dto.userName , password: dto.password}})
     if(!validateUser) return new CommonResponseModel(false,1111,'Please check your credentials')
-    const userName = validateUser.userName;
-    return new CommonResponseModel(true,1111,'Sucessfully logged in',userName)
+    const authData = new AuthModel(validateUser.userName,validateUser.userId)
+    return new CommonResponseModel(true,1111,'Sucessfully logged in',authData)
 }
 }

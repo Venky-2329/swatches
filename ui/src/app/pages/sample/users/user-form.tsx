@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 export default function UserForm() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const createdUser: any = localStorage.getItem('auth')
+  const users: any = JSON.parse(localStorage.getItem('auth'))
+  const createdUser = users.userName
 
   function goToGrid() {
     navigate('/user-grid');
@@ -53,7 +54,7 @@ export default function UserForm() {
                 <Input />
               </Form.Item>
             </Col>
-            <Form.Item name={'createdUser'} initialValue={createdUser}><Input defaultValue={createdUser}/></Form.Item>
+            <Form.Item hidden name={'createdUser'} initialValue={createdUser}><Input defaultValue={createdUser}/></Form.Item>
             <Col span={2}>
               <Button style={{marginTop:'23px'}} htmlType="submit" type="primary">
                 Submit

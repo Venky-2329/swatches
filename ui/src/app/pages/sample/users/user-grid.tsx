@@ -25,7 +25,7 @@ export default function UserGrid(){
             render:(val,record,index) => index + 1
         },
         {
-            title:'Location',
+            title:'User Name',
             dataIndex:'userName'
         }
      ];
