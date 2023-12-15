@@ -29,39 +29,13 @@ export function BasicLayout(props: BasicLayoutProps) {
 
   const baseRouterList: any[] = [
     {
-      label: "Racks",
-      key: "racks-grid",
-      path: "racks-grid",
+      label: "Trim Card",
+      key: "trim-card",
+      path: "trim-card",
       icon: <TableOutlined />,
       filepath: "../",
     },
-    {
-      label: "Rack card",
-      key: "rack-card",
-      path: "rack-card",
-      icon: <TableOutlined />,
-      filepath: "../",
-    },
-    {
-      label: "Cut Summary",
-      key: "cut-summary",
-      path: "cut-summary",
-      icon: <TableOutlined />,
-      filepath: "../",
-    },
-    {
-      label: "Rack Allocation",
-      key: "allocate-rack",
-      path: "allocate-rack",
-      icon: <TableOutlined />,
-      filepath: "../",
-    },{
-      label: "Cutting Inventory",
-      key: "dashboard",
-      path: "dashboard",
-      icon: <TableOutlined />,
-      filepath: "../",
-    },
+    
   ]
   return (
     <ProConfigProvider dark={dark}  >
@@ -72,7 +46,7 @@ export function BasicLayout(props: BasicLayoutProps) {
         }}
       >
         <ProLayout
-          title="KANBAN"
+          title="Trim Card"
           logo={<LogoIcon  />}
           locale='en-US'
           siderWidth={240}
