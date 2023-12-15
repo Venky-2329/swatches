@@ -224,7 +224,7 @@ function onReset(){
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
-            <Form.Item label="Styel No" name={'styleNo'}>
+            <Form.Item label="Style No" name={'styleNo'}>
               <Select showSearch placeholder="Select Location">
                 {filters.map((item) => {
                   return (
@@ -286,7 +286,7 @@ function onReset(){
         {data.map((i) => {
           const { brandName, styleNo, itemNo } = i;
           return (
-            <Col key={i.itemId} span={4}>
+            <Col key={i.itemId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
               <Card
                 hoverable
                 cover={

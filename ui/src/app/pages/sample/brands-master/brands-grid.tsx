@@ -42,7 +42,7 @@ export default function BrandsGrid(){
         <>
         <Card title='Brands' extra={<span><Button onClick={goToForm} type="primary">Add</Button></span>}>
            <Row gutter={24}>
-             <Col span={24}>
+             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 24}}>
                <Table columns={columns} dataSource={data} ></Table>
              </Col>
            </Row>

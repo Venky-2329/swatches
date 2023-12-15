@@ -61,6 +61,12 @@ export class SampleUpload extends CommonFields{
     })
     fabricCount: string;
 
+    @Column('int', {
+        nullable: false,
+        name: "Quantity",
+    })
+    quantity: number;
+
     @Column('varchar', {
         nullable: false,
         name: "gsm",

@@ -169,7 +169,19 @@ export default function DigitalSamplesView(){
         {
             title :'Category',
             dataIndex:'categoryName'
-        }
+        },
+        {
+          title:'Season',
+          dataIndex:'seasonName'
+        },
+        {
+          title:'Location',
+          dataIndex:'locationName'
+        },
+        {
+          title:'Qty/Season',
+          dataIndex:'qtyPerSeason'
+        },
     ];
 
     function gotoForm(){
@@ -254,26 +266,31 @@ export default function DigitalSamplesView(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2 }}>  
            <Button type='primary' onClick={getAllGridData}>Submit</Button>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1}}>
               <Button onClick={onReset}>Reset</Button>
           </Col>
         </Row>
       </Form>
       <br></br>
       <Row gutter={24} style={{ alignContent:'end' }}>
-        <Col span={22}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 22}}>
         </Col>
-      <Col >
+      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1}}>
               <Button type='primary' shape='round' onClick={() => generateQrcode(selectedRows)} style={{height:'40px',width:'50px'}}>
                 <PrinterOutlined style={{fontSize:'20px'}}/>
               </Button>
         </Col>
       </Row>
          <br></br>
-          <Table rowKey={(record) => record.sampleId} columns={columns} dataSource={gridData}       
+         <Row gutter={24}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 24}}>
+          
+          <Table scroll={{x:1500}} rowKey={(record) => record.sampleId} columns={columns} dataSource={gridData}       
              rowSelection={{
           ...rowSelection
         }}></Table>
+          </Col>
+         </Row>
         </Card>
         {Qrcode.length > 0 ? <QrCodesPrint key={Date.now() + Qrcode[0]?.defectCodeId} printQrcodes={closeWindow} closeQrcodePopUp={closeWindow}
           columns={qrcodeWithColumns} newWindow={false} qrcodeInfo={Qrcode} /> : ''}

@@ -187,6 +187,11 @@ export default function SampleUpload(){
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
+                        <Form.Item label='Quantity' name={'quantity'}>
+                            <Input placeholder="Enter Quantity"/>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Category' name={'categoryId'}>
                         <Select showSearch placeholder="Select Category" >
                                 {category.map((item) => {
@@ -260,7 +265,7 @@ export default function SampleUpload(){
           <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>
                         <Button htmlType="submit" type="primary">Submit</Button>
                     </Col>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1}}>
                         <Button onClick={onReset}>Reset</Button>
                     </Col>
              </Row>

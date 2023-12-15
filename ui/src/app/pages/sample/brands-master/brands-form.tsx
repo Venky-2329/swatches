@@ -42,23 +42,23 @@ export default function BrandsForm() {
       >
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row gutter={24}>
-            <Col span={4}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
               <Form.Item label="Brand Code" name={'brandCode'}>
                 <Input />
               </Form.Item>
             </Col>
             <Form.Item hidden name={'createdUser'} initialValue={user}><Input defaultValue={user}/></Form.Item>
-            <Col span={4}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
               <Form.Item label="Brand Name" name={'brandName'}rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={2}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>
               <Button style={{marginTop:'23px'}} htmlType="submit" type="primary">
                 Submit
               </Button>
             </Col>
-            <Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1}}>
               <Button  style={{marginTop:'23px'}} onClick={onReset}>Reset</Button>
             </Col>
           </Row>

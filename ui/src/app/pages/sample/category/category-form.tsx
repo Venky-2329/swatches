@@ -42,19 +42,19 @@ export default function CategoryForm() {
       >
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row gutter={24}>
-            <Col span={4}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
               <Form.Item label="Category" name={'categoryName'}
               rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
             </Col>
             <Form.Item hidden name={'createdUser'} initialValue={createUser}><Input defaultValue={createUser}/></Form.Item>
-            <Col span={2}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>
               <Button style={{marginTop:'23px'}} htmlType="submit" type="primary">
                 Submit
               </Button>
             </Col>
-            <Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1}}>
               <Button  style={{marginTop:'23px'}} onClick={onReset}>Reset</Button>
             </Col>
           </Row>
