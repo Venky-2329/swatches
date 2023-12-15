@@ -190,6 +190,7 @@ function onReset(){
       windowWidth: 200, //window width in CSS pixels
     });
   }
+  console.log(data)
 
   const filteredData = selectedItemNo
     ? data.filter((item) => item.itemNo === selectedItemNo)
@@ -291,7 +292,7 @@ function onReset(){
                 cover={
                   <img
                     alt="example"
-                    src={image}
+                    src={'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/'+ i.fileName}
                     onClick={() => ViewDetails(i)}
                   />
                 }

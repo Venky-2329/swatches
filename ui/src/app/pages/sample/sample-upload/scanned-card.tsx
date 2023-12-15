@@ -1,21 +1,22 @@
 import { Button, Card } from "antd";
 import Meta from 'antd/es/card/Meta';
 import image from '../../../../assets/Picture1.png';
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { getAllSamplesData } from "libs/shared-services";
 import { useEffect, useState } from "react";
 import { SampleCardReq } from "libs/shared-models";
 
 export default function ScannedCard(){
   const { state } = useLocation();
+  const {id} = useParams();
   const [data,setData] = useState([])
-  console.log(state)
 
+  console.log(id)
   useEffect(()=>{
-     if(state){
-      getAll(state.id)
+     if(id){
+      getAll(id)
      }
-  },[state])
+  },[id])
 
   function getAll(val){
     const req = new SampleCardReq()

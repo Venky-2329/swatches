@@ -43,7 +43,7 @@ export const AppRoutes = () => {
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
             <Route path="/login" key="/login" element={<Login />} />
-            <Route path="/sample-digital-card" key="/sample-digital-card/:id" element={<ScannedCard />} />
+            <Route path="/sample-digital-card/:id" key="/sample-digital-card" element={<ScannedCard />} />
 
         </Route>
     ))

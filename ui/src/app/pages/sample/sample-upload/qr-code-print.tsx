@@ -105,8 +105,7 @@ export default function QrCodesPrint(props:QrProps){
                    
                       return <Descriptions.Item key={'descitembar' + keyCounter++} span={qrcodeDetails.span} >
                         {<><QRCode size={120}
-                          value={`http://localhost:4200/#/sample-digital-card/:${record.itemNo}`} type='svg'/>
-                        
+                          value={`http://172.20.50.169/design-room_app/#/sample-digital-card/${record.itemNo}`} type='svg'/>
                         </>
                         }</Descriptions.Item>;
                     } 
