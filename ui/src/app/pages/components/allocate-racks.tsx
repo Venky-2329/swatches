@@ -31,6 +31,7 @@ export default function AllocateRacks() {
   }, []);
 
   function handleScan(data) {
+    console.log(data)
     if (data) {
       setResult(data.text);
       setVisible(false);
