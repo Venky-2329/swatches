@@ -9,7 +9,7 @@ export interface Props {
 export default function DownloadCard(props: Props) {
   return (
     <>
-      <Card cover={<img alt="example" src={image} style={{width:'50%',height:'60%'}} />}>
+      <Card cover={<img alt="example" src={'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/'+ props.data.fileName} style={{width:'50%',height:'60%'}} />}>
         <Meta
           title="Sample Digital Card"
           description={
