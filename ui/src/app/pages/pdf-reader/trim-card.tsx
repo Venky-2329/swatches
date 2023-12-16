@@ -4,6 +4,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib';
 import { useState } from 'react';
 import { Document, pdfjs } from 'react-pdf';
+import { PdfDataExtractor } from './extract-pdf';
 
 class ResultPropsModel {
     status: any;
@@ -32,8 +33,7 @@ export default function TrimCard() {
     }
 
     async function extractPdfData(pdf: any, pdfText: any) {
-        // const trimPdfData = await extractDataFromPoPdf(pdf)
-        const trimPdfData = ''
+        const trimPdfData = await PdfDataExtractor(pdf)
         setPdfData(trimPdfData)
     }
 
@@ -56,13 +56,19 @@ export default function TrimCard() {
     };
 
     const extractTextFromPdf = async (pdfFile) => {
+      console.log(pdfFile)
         const pdfData = await pdfFile.arrayBuffer();
+        console.log(pdfData)
         const pdf = await pdfjs.getDocument({ data: pdfData }).promise;
+        console.log(pdf)
         let text = '';
         const page = await pdf.getPage(1);
+        console.log(page)
         const textContent = await page.getTextContent();
+        console.log(textContent)
         text += textContent.items.map((item: any) => item.str).join(' ');
-        let title = 'Trim Card'
+        let title = 'PSroduction with new Care Format'
+        extractPdfData(pdf,textContent)
         updateResultProps(title)
     };
   return (
