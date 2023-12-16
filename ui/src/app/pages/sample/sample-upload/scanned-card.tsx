@@ -33,7 +33,7 @@ export default function ScannedCard(){
 
     return(
         <>
-        <Card cover={<img alt="example" src={image} style={{width:'20%',height:'60%'}} />}>
+        <Card cover={<img alt="example" src={'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/'+ data[0]?.fileName} style={{ width: '50%', height: '60%' ,background:''}} />}>
         <Meta
           title="Sample Digital Card"
           description={

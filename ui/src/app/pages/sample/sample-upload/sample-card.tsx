@@ -195,7 +195,7 @@ function onReset(){
   const filteredData = selectedItemNo
     ? data.filter((item) => item.itemNo === selectedItemNo)
     : data;
-
+    const backgroundColors = ['#c8ffc8', '#ffffa0', '#facefa', '#ccccff','#ffd2d2','#d2e1ff','#d2faff','#ffeee8'];
   return (
     <PageContainer title="Design room">
       <Form form={form} layout="vertical">
@@ -283,12 +283,17 @@ function onReset(){
       </Form>
       <br></br>
       <Row gutter={[24, 24]}>
-        {data.map((i) => {
+        {data.map((i,index) => {
           const { brandName, styleNo, itemNo } = i;
+          const cardStyle = {
+            background: backgroundColors[index % backgroundColors.length],
+            color: 'black',
+          };
           return (
             <Col key={i.itemId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
               <Card
                 hoverable
+                style={cardStyle}
                 cover={
                   <img
                     alt="example"

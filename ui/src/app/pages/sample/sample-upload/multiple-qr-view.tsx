@@ -143,10 +143,11 @@ export default function DigitalSamplesView(){
           }
 
           const qrcodeWithColumns: QrcodeCoulmnsReq[] = [
-            { lineNumber: 0, title: 'Item NO', dataIndex: 'itemNo', span: 4, showLabel: true, showQrcode: false },
-            { lineNumber: 1, title: 'Brand Name', dataIndex: 'brandName', span: 2, showLabel: true, showQrcode: false },
-            { lineNumber: 1, title: 'Style No', dataIndex: 'styleNo', span: 2, showLabel: true, showQrcode: false },
-            { lineNumber: 1, title: '', dataIndex: 'qrCode', span: 2, showLabel: true, showQrcode: true },
+            { lineNumber: 0, title: 'Item', dataIndex: 'itemNo', span: 4, showLabel: true, showQrcode: false },
+            { lineNumber: 1, title: 'Brand', dataIndex: 'brandName', span: 4, showLabel: true, showQrcode: false },
+            { lineNumber: 2, title: 'Style', dataIndex: 'styleNo', span: 4, showLabel: true, showQrcode: false },
+            { lineNumber: 3, title: 'Location', dataIndex: 'locationName', span: 4, showLabel: true, showQrcode: false },
+            { lineNumber: 4, title: '', dataIndex: 'qrCode', span: 4, showLabel: true, showQrcode: true },
           ];      
 
     const columns=[
@@ -165,6 +166,10 @@ export default function DigitalSamplesView(){
         {
             title:'Style No',
             dataIndex:'styleNo'
+        },
+        {
+          title:'Quantity',
+          dataIndex:'quantity'
         },
         {
             title :'Category',
