@@ -219,7 +219,7 @@ export default function SampleUpload(){
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Fabric Content' name={'fabricContent'}
                         rules={[{ required: true, message: 'Please input Fabric Content' }]}>
-                            <Input />
+                            <Input placeholder="Enter Fabric Content"/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
