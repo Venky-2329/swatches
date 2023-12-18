@@ -273,10 +273,10 @@ function onReset(){
          
         </Row>
         <Row justify='end'>
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>  
+        <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>  
            <Button type='primary' onClick={getSampleCards}>Submit</Button>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1 }}>
+          <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1 }}>
               <Button onClick={onReset}>Reset</Button>
           </Col>
         </Row>

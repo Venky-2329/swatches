@@ -53,12 +53,12 @@ export default function BrandsForm() {
                 <Input />
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>
+            <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>
               <Button style={{marginTop:'23px'}} htmlType="submit" type="primary">
                 Submit
               </Button>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1}}>
+            <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1}}>
               <Button  style={{marginTop:'23px'}} onClick={onReset}>Reset</Button>
             </Col>
           </Row>
