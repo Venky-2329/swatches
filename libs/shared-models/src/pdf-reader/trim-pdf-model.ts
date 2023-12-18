@@ -11,4 +11,5 @@ export class TrimPodfModel{
     brnBrownQtyByColor:string;
     blkBlackColor:string;
     blkBlackQtyByColor:string;
+    supplierCode:string;
 }

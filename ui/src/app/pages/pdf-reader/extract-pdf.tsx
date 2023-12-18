@@ -20,32 +20,21 @@ export const PdfDataExtractor = async (pdf) => {
         filteredData.push(...pageContent)
     }
     console.log(filteredData)
-    let poNumberIndex;
-    let cabCodeIndex;
-    let shipToStartIndex;
-    let shipToEndIndex
-    for(const [index,rec] of filteredData.entries()){
-        if(rec.str.includes("Delivery Instructions:")){
-            poNumberIndex = index
-        }
-        if(rec.str.includes("CAB Code:")){
-            cabCodeIndex = index
-        }
-        if(rec.str.includes("Ship To Address:")){
-            shipToStartIndex = index
-        }
-        if(rec.str.includes("Notify Parties:")){
-            shipToEndIndex = index
-        }
-    }
-    console.log(filteredData)
-    // trimPdf.cabCode = filteredData[cabCodeIndex + 1].str
-    // const deliveryInstructionsStr = filteredData[poNumberIndex].str.split(":")[1];
-    // trimPdf.poNumber = deliveryInstructionsStr.split("-")[0].replace(/ /g, '')
-    // trimPdf.lineNo = deliveryInstructionsStr.split("-")[1].replace(/ /g, '')
-    // const addarr = filteredData.slice(shipToStartIndex,shipToEndIndex)
-    // console.log(addarr)
-    // trimPdf.shipToAddress = filteredData.slice(shipToStartIndex + 1,shipToEndIndex).map((a) => a.str).join(",")
+
+    trimPdf.style = filteredData[17]?.str;
+    trimPdf.season = filteredData[25]?.str;
+    trimPdf.code = filteredData[267]?.str;
+    trimPdf.product = filteredData[268]?.str;
+    trimPdf.blkBlackQtyByColor = '';
+    trimPdf.supplierQuote = filteredData[269]?.str;
+    trimPdf.supplierCode = '';
+    trimPdf.uom = filteredData[270]?.str;
+    trimPdf.placement = filteredData[271]?.str;
+    trimPdf.contractorSupplied = '';
+    trimPdf.brnBrownColor = filteredData[272]?.str
+
+    console.log(trimPdf)
+
 
     return trimPdf
 }

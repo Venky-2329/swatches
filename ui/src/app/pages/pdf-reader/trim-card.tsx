@@ -5,6 +5,7 @@ import { UploadFile } from 'antd/lib';
 import { useState } from 'react';
 import { Document, pdfjs } from 'react-pdf';
 import { PdfDataExtractor } from './extract-pdf';
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 class ResultPropsModel {
     status: any;
@@ -36,6 +37,7 @@ export default function TrimCard() {
         const trimPdfData = await PdfDataExtractor(pdf)
         setPdfData(trimPdfData)
     }
+    console.log(pdfData)
 
     const uploadProps: UploadProps = {
         name: 'file',
