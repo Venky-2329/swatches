@@ -296,6 +296,7 @@ function onReset(){
                 style={cardStyle}
                 cover={
                   <img
+                  style={{  height: '250px' }}
                     alt="example"
                     src={'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/'+ i.fileName}
                     onClick={() => ViewDetails(i)}
