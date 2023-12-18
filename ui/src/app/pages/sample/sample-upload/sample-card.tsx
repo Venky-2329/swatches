@@ -225,7 +225,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Style No" name={'styleNo'}>
-              <Select showSearch placeholder="Select Location">
+              <Select showSearch placeholder="Select Style">
                 {filters.map((item) => {
                   return (
                     <Option value={item.styleNo}>{item.styleNo}</Option>
