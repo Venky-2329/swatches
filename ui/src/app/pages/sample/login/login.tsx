@@ -12,7 +12,7 @@ export default function Login() {
             console.log(res)
             if(res.data){
                 console.log(res)
-                navigate('/',{replace:true})
+                navigate('/sample-cards',{replace:true})
                 localStorage.setItem('auth',JSON.stringify(res.data))
                 notification.success({message:res.internalMessage})
             }else{

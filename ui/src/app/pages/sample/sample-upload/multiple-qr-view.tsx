@@ -222,8 +222,8 @@ export default function DigitalSamplesView(){
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
-            <Form.Item label="Styel No" name={'styleNo'}>
-              <Select showSearch placeholder="Select Location">
+            <Form.Item label="Style No" name={'styleNo'}>
+              <Select showSearch placeholder="Select Style">
                 {filters.map((item) => {
                   return (
                     <Option value={item.styleNo}>{item.styleNo}</Option>
@@ -258,7 +258,7 @@ export default function DigitalSamplesView(){
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
-            <Form.Item label="Loaction" name={'locationId'}>
+            <Form.Item label="Location" name={'locationId'}>
               <Select showSearch placeholder="Select Location">
                 {location.map((item) => {
                   return (
