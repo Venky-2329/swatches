@@ -19,7 +19,7 @@ export const PdfDataExtractor = async (pdf) => {
 
         filteredData.push(...pageContent)
     }
-    // console.log(filteredData)
+    console.log(filteredData)
 
     trimPdf.style = filteredData[17]?.str;
     trimPdf.season = filteredData[25]?.str;

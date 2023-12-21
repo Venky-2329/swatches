@@ -154,12 +154,12 @@ export default function TrimCardForm() {
                           fieldKey={[field.key, 'code']}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: 'Please Enter code',
                             },
                           ]}
                         >
-                          <Input placeholder="Enter code" />
+                          <Input  />
                         </Form.Item>
                       </Col>
                       <Col span={4}>
@@ -170,7 +170,7 @@ export default function TrimCardForm() {
                           fieldKey={[field.key, 'product']}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: 'Please Enter Product',
                             },
                           ]}
@@ -184,7 +184,7 @@ export default function TrimCardForm() {
                           name={[field.name, 'materialArtworkDescription']}
                           fieldKey={[field.key, 'materialArtworkDescription']}
                           rules={[
-                            { required: true, message: 'Missing Material Artwork Description' },
+                            { required: false, message: 'Missing Material Artwork Description' },
                           ]}
                         >
                           <Input  />
@@ -196,7 +196,7 @@ export default function TrimCardForm() {
                           name={[field.name, 'supplierQuote']}
                           fieldKey={[field.key, 'supplierQuote']}
                           rules={[
-                            { required: true, message: 'Missing Supplier Quote' },
+                            { required: false, message: 'Missing Supplier Quote' },
                           ]}
                         >
                             <Input />
@@ -210,12 +210,12 @@ export default function TrimCardForm() {
                           fieldKey={[field.key, 'uom']}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: 'Enter UOM',
                             },
                           ]}
                         >
-                          <Input placeholder="Enter Efforts" />
+                          <Input  />
                         </Form.Item>
                       </Col>
 
@@ -227,7 +227,7 @@ export default function TrimCardForm() {
                           fieldKey={[field.key, 'placement']}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: 'Enter a valid Placement',
                             },
                           ]}
@@ -243,7 +243,7 @@ export default function TrimCardForm() {
                           fieldKey={[field.key, 'contractorSupplied']}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: 'Enter a Contractor Supplied',
                             },
                           ]}
@@ -259,7 +259,7 @@ export default function TrimCardForm() {
                           fieldKey={[field.key, 'brnBrownColor']}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: 'Enter BRN- Carhartt Brown(Color)',
                             },
                           ]}
@@ -275,7 +275,7 @@ export default function TrimCardForm() {
                           fieldKey={[field.key, 'brnBrownQtyByColor']}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: 'Enter BRN- Carhartt Brown(Qty by Color)',
                             },
                           ]}
@@ -291,7 +291,7 @@ export default function TrimCardForm() {
                           fieldKey={[field.key, 'blkBlackColor']}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: 'Enter BLK- Black(Color)',
                             },
                           ]}
@@ -307,7 +307,7 @@ export default function TrimCardForm() {
                           fieldKey={[field.key, 'blkBlackQtyByColor']}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: 'Enter BLK- Black(Qty by Color)',
                             },
                           ]}

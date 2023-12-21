@@ -40,6 +40,7 @@ export default function TrimCard() {
 
     const uploadProps: UploadProps = {
         name: 'file',
+        multiple: false,
         accept: '.pdf',
         onRemove: (file) => {
             const index = fileList.indexOf(file);
@@ -53,7 +54,7 @@ export default function TrimCard() {
             return false;
         },
         fileList,
-        showUploadList: false
+        showUploadList: false,
     };
 
     const extractTextFromPdf = async (pdfFile) => {
