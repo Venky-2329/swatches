@@ -17,3 +17,21 @@
     left: 50%;
 
   }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .shirt-spinner {
+    animation: rotate 1s linear infinite;
+  }
+  
+  .shirt-icon {
+    /* Add any additional styling for your shirt icon here */
+    font-size: 30px;
+  }
