@@ -293,7 +293,7 @@ function onReset(){
             <Col key={i.sampleId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
               <Card
                 hoverable
-                style={{...cardStyle,height: '350px'}}
+                style={cardStyle}
                 cover={
                   <img
                   style={{ height: '100%', objectFit: 'cover' }}
