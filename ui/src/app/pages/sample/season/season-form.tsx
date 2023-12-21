@@ -16,10 +16,10 @@ export default function SeasonForm() {
     createSeason(values).then((res)=>{
         if(res.status){
           onReset()
-           notification.success({message:res.internalMessage})
+           notification.success({message:res.internalMessage,placement:'top',duration:1})
            navigate('/season-grid');
         }else{
-          notification.error({message:res.internalMessage})
+          notification.error({message:res.internalMessage,placement:'top',duration:1})
         }
     })
   }

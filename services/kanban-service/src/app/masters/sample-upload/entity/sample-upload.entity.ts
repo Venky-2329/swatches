@@ -107,4 +107,11 @@ export class SampleUpload extends CommonFields{
         length: 250
     })
     filePath: string;
+
+    @Column('varchar',{
+        nullable:true,
+        name:'category_type',
+        length:250
+    })
+    categoryType:string;
 }

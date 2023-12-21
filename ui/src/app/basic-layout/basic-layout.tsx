@@ -79,7 +79,7 @@ export function BasicLayout(props: BasicLayoutProps) {
       filepath: "../",
     },
     {
-      label: "Digital Design Room",
+      label: "Design Studio",
       key: "sample-cards",
       path: "sample-cards",
       icon: <RobotOutlined />,

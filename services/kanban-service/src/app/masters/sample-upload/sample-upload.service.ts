@@ -8,9 +8,9 @@ export class SampleUploadService {
   constructor(private readonly sampleRepo: SampleUploadRepository) {}
 
   async create(dto: any): Promise<CommonResponseModel> {
-    const itemNo = await this.sampleRepo.find({where :{itemNo:dto.itemNo}})
-    console.log(itemNo)
-    if(itemNo.length > 0)return new CommonResponseModel(false, 1, 'Item No Already exists');
+    // const itemNo = await this.sampleRepo.find({where :{itemNo:dto.itemNo}})
+    // console.log(itemNo)
+    // if(itemNo.length > 0)return new CommonResponseModel(false, 1, 'Item No Already exists');
     const entity = new SampleUpload();
     entity.brandId = dto.brandId;
     entity.styleNo = dto.styleNo;
@@ -25,7 +25,8 @@ export class SampleUploadService {
     entity.fob = dto.fob;
     entity.qtyPerSeason = dto.qtyPerSeason;
     entity.locationId = dto.locationId;
-    entity.quantity = dto.quantity
+    entity.quantity = dto.quantity;
+    entity.categoryType = dto.categoryType;
     const save = await this.sampleRepo.save(entity);
     if (save) return new CommonResponseModel(true, 1, 'Saved successfully',save);
     return new CommonResponseModel(false, 0, 'Something went wrong');
@@ -53,7 +54,7 @@ async getData(req?:SampleCardReq):Promise<CommonResponseModel>{
     let query = `SELECT su.quantity as quantity, su.brand_id AS brandId , su.sample_id AS sampleId ,su.style_no AS styleNo, su.item_no AS itemNo , su.item_description AS itemDescription ,
     su.category_id AS categoryId , su.season_id AS seasonId , su.fabric_content AS fabricContent , su.fabric_count AS fabricCount , su.gsm AS gsm , su.fob AS fob ,
     su.qty_per_season AS qtyPerSeason, su.location_id AS locationId , su.file_name AS fileName , su.file_path AS filePath,sb.brand_name AS brandName,
-    sc.category_name AS categoryName,sl.location_name AS locationName,ss.season_name AS seasonName FROM internal_apps.sample_upload su
+    CONCAT(sc.category_name ,' - ',su.category_type ) AS categoryName,sl.location_name AS locationName,ss.season_name AS seasonName,su.category_type AS categoryType FROM internal_apps.sample_upload su
     LEFT JOIN internal_apps.sample_brands_master sb ON sb.brand_id = su.brand_id 
     LEFT JOIN internal_apps.sample_category_master sc ON sc.category_id = su.category_id
     LEFT JOIN internal_apps.sample_location_master sl ON sl.location_id = su.location_id 
@@ -72,6 +73,9 @@ async getData(req?:SampleCardReq):Promise<CommonResponseModel>{
     }
     if(req.styleNo){
         query = query + ` AND su.style_no = '${req.styleNo}'`
+    }
+    if(req.sampleId){
+        query = query + ` AND su.sample_id = ${req.sampleId}`
     }
     const data = await this.sampleRepo.query(query)
     if(data)return new CommonResponseModel(true, 1, 'Data retrived successfully',data);

@@ -129,7 +129,7 @@ export default function SampleCards() {
         setData(res.data);
         // notification.success({ message: res.internalMessage });
       } else {
-        notification.error({ message: res.internalMessage });
+        notification.error({ message: res.internalMessage,placement:'top',duration:1 });
       }
     });
   }
@@ -203,7 +203,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Brand" name={'brandId'}>
-              <Select showSearch placeholder="Select Brand">
+              <Select showSearch  optionFilterProp="children" placeholder="Select Brand">
                 {brands.map((item) => {
                   return <Option value={item.brandId}>{item.brandName}</Option>;
                 })}
@@ -213,7 +213,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Item No" name={'itemNo'}>
-              <Select showSearch placeholder="Select Item No">
+              <Select showSearch  optionFilterProp="children" placeholder="Select Item No">
                 {filters.map((item) => {
                   return (
                     <Option value={item.itemNo}>{item.itemNo}</Option>
@@ -225,7 +225,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Style No" name={'styleNo'}>
-              <Select showSearch placeholder="Select Style">
+              <Select showSearch  optionFilterProp="children" placeholder="Select Style">
                 {filters.map((item) => {
                   return (
                     <Option value={item.styleNo}>{item.styleNo}</Option>
@@ -237,7 +237,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Category" name={'categoryId'}>
-              <Select showSearch placeholder="Select Category">
+              <Select showSearch  optionFilterProp="children" placeholder="Select Category">
                 {category.map((item) => {
                   return (
                     <Option value={item.categoryId}>{item.categoryName}</Option>
@@ -249,7 +249,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Season" name={'seasonId'}>
-              <Select showSearch placeholder="Select season">
+              <Select showSearch  optionFilterProp="children" placeholder="Select season">
                 {seasons.map((item) => {
                   return (
                     <Option value={item.seasonId}>{item.seasonName}</Option>
@@ -261,7 +261,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Loaction" name={'locationId'}>
-              <Select showSearch placeholder="Select Location">
+              <Select showSearch  optionFilterProp="children" placeholder="Select Location">
                 {location.map((item) => {
                   return (
                     <Option value={item.locationId}>{item.locationName}</Option>
@@ -284,19 +284,19 @@ function onReset(){
       <br></br>
       <Row gutter={[24, 24]}>
         {data.map((i,index) => {
-          const { brandName, styleNo, itemNo } = i;
+          const { brandName, styleNo, itemNo,categoryName } = i;
           const cardStyle = {
             background: backgroundColors[index % backgroundColors.length],
             color: 'black',
           };
           return (
-            <Col key={i.itemId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
+            <Col key={i.sampleId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
               <Card
                 hoverable
-                style={cardStyle}
+                style={{...cardStyle,height: '350px'}}
                 cover={
                   <img
-                  style={{  height: '250px' }}
+                  style={{ height: '100%', objectFit: 'cover' }}
                     alt="example"
                     src={'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/'+ i.fileName}
                     onClick={() => ViewDetails(i)}
@@ -322,8 +322,9 @@ function onReset(){
                   description={
                     <div className="print">
                       <div><b>{brandName}</b></div>
-                      <div>Item No&nbsp;&nbsp; : {itemNo}</div>
+                      {/* <div>Item No&nbsp;&nbsp; : {itemNo}</div> */}
                       <div>Style No&nbsp;&nbsp; : {styleNo}</div>
+                      <div>Category&nbsp;&nbsp; : {categoryName}</div>
                     </div>
                   }
                 />

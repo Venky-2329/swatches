@@ -42,11 +42,11 @@ export default function BrandsForm() {
       >
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row gutter={24}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
-              <Form.Item label="Brand Code" name={'brandCode'}>
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}> */}
+              {/* <Form.Item label="Brand Code" name={'brandCode'}>
                 <Input />
-              </Form.Item>
-            </Col>
+              </Form.Item> */}
+            {/* </Col> */}
             <Form.Item hidden name={'createdUser'} initialValue={user}><Input defaultValue={user}/></Form.Item>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
               <Form.Item label="Brand Name" name={'brandName'}rules={[{ required: true }]}>

@@ -134,7 +134,7 @@ export default function DigitalSamplesView(){
         
             for(const defRec of records){
               // defRec.qrCode = [`Operation : ${defRec.operationName}, Defect : ${defRec.defectName}`]
-              defRec.qrCode = [`Item No : ${defRec.itemNo}`]
+              defRec.qrCode = [`Sample Id : ${defRec.sampleId}`]
               qrCodes.push(defRec)
             }
             setQrcode(qrCodes)
@@ -143,10 +143,10 @@ export default function DigitalSamplesView(){
           }
 
           const qrcodeWithColumns: QrcodeCoulmnsReq[] = [
-            { lineNumber: 0, title: 'Item', dataIndex: 'itemNo', span: 4, showLabel: true, showQrcode: false },
+            // { lineNumber: 0, title: 'Item', dataIndex: 'itemNo', span: 4, showLabel: true, showQrcode: false },
             { lineNumber: 1, title: 'Brand', dataIndex: 'brandName', span: 4, showLabel: true, showQrcode: false },
             { lineNumber: 2, title: 'Style', dataIndex: 'styleNo', span: 4, showLabel: true, showQrcode: false },
-            { lineNumber: 3, title: 'Location', dataIndex: 'locationName', span: 4, showLabel: true, showQrcode: false },
+            // { lineNumber: 3, title: 'Location', dataIndex: 'locationName', span: 4, showLabel: true, showQrcode: false },
             { lineNumber: 4, title: '', dataIndex: 'qrCode', span: 4, showLabel: true, showQrcode: true },
           ];      
 
@@ -201,7 +201,7 @@ export default function DigitalSamplesView(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Brand" name={'brandId'}>
-              <Select showSearch placeholder="Select Brand">
+              <Select showSearch  optionFilterProp="children" placeholder="Select Brand">
                 {brands.map((item) => {
                   return <Option value={item.brandId}>{item.brandName}</Option>;
                 })}
@@ -211,7 +211,7 @@ export default function DigitalSamplesView(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Item No" name={'itemNo'}>
-              <Select showSearch placeholder="Select Item No">
+              <Select showSearch  optionFilterProp="children" placeholder="Select Item No">
                 {filters.map((item) => {
                   return (
                     <Option value={item.itemNo}>{item.itemNo}</Option>
@@ -223,7 +223,7 @@ export default function DigitalSamplesView(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Style No" name={'styleNo'}>
-              <Select showSearch placeholder="Select Style">
+              <Select showSearch  optionFilterProp="children" placeholder="Select Style">
                 {filters.map((item) => {
                   return (
                     <Option value={item.styleNo}>{item.styleNo}</Option>
@@ -235,7 +235,7 @@ export default function DigitalSamplesView(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Category" name={'categoryId'}>
-              <Select showSearch placeholder="Select Category">
+              <Select showSearch  optionFilterProp="children" placeholder="Select Category">
                 {category.map((item) => {
                   return (
                     <Option value={item.categoryId}>{item.categoryName}</Option>
@@ -247,7 +247,7 @@ export default function DigitalSamplesView(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Season" name={'seasonId'}>
-              <Select showSearch placeholder="Select season">
+              <Select showSearch  optionFilterProp="children" placeholder="Select season">
                 {seasons.map((item) => {
                   return (
                     <Option value={item.seasonId}>{item.seasonName}</Option>
@@ -259,7 +259,7 @@ export default function DigitalSamplesView(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Location" name={'locationId'}>
-              <Select showSearch placeholder="Select Location">
+              <Select showSearch  optionFilterProp="children" placeholder="Select Location">
                 {location.map((item) => {
                   return (
                     <Option value={item.locationId}>{item.locationName}</Option>

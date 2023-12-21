@@ -124,16 +124,16 @@ export default function SampleUpload(){
                 uploadPhoto(formData).then(fileres => {
                     if(res.status){
                         res.data.filePath = fileres.data
-                        notification.success({message:res.internalMessage})
+                        notification.success({message:res.internalMessage,placement:'top',duration:1})
                         onReset()
                         gotoGrid()
                     }else{
-                        notification.error({message:res.internalMessage})
+                        notification.error({message:res.internalMessage,placement:'top',duration:1})
                     }
                 })
               }
            }else{
-            notification.info({message:res.internalMessage})
+            notification.info({message:res.internalMessage,placement:'top',duration:1})
            }
         })
       }
@@ -164,7 +164,7 @@ export default function SampleUpload(){
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Brand' name={'brandId'}
                          rules={[{ required: true, message: 'Please input Brand' }]}>
-                        <Select showSearch placeholder="Select Brand" >
+                        <Select showSearch  optionFilterProp="children" placeholder="Select Brand">
                                 {brands.map((item) => {
                                     return (<Option value={item.brandId}>{item.brandName}</Option>);
                                 })}
@@ -180,26 +180,28 @@ export default function SampleUpload(){
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Item No' name={'itemNo'}
-                        rules={[{ required: true, message: 'Please input Item No' }]}>
+                        rules={[{ required: false, message: 'Please input Item No' }]}>
                             <Input placeholder="Enter Item No"/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Item Description' name={'itemDescription'}
-                        rules={[{ required: true, message: 'Please input Item Description' }]}>
+                        rules={[{ required: false, message: 'Please input Item Description' }]}>
                             <Input placeholder="Enter Item Description"/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
-                        <Form.Item label='Quantity' name={'quantity'}
-                        rules={[{ required: true, message: 'Please input Quantity' }]}>
-                            <Input placeholder="Enter Quantity"/>
-                        </Form.Item>
+                         <Form.Item label='Category Type' name={'categoryType'}>
+                             <Select placeholder='Select Type'>
+                                <Option value={'denim'}>Denim</Option>
+                                <Option value={'woven'}>Woven</Option>
+                             </Select>
+                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Category' name={'categoryId'}
-                        rules={[{ required: true, message: 'Please input Category' }]}>
-                        <Select showSearch placeholder="Select Category" >
+                        rules={[{ required: false, message: 'Please input Category' }]}>
+                        <Select showSearch  optionFilterProp="children" placeholder="Select Category" >
                                 {category.map((item) => {
                                     return (<Option value={item.categoryId}>{item.categoryName}</Option>);
                                 })}
@@ -208,8 +210,8 @@ export default function SampleUpload(){
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Season' name={'seasonId'}
-                        rules={[{ required: true, message: 'Please input Season' }]}>
-                        <Select showSearch placeholder="Select season" >
+                        rules={[{ required: false, message: 'Please input Season' }]}>
+                        <Select showSearch  optionFilterProp="children" placeholder="Select season" >
                                 {seasons.map((item) => {
                                     return (<Option value={item.seasonId}>{item.seasonName}</Option>);
                                 })}
@@ -218,38 +220,44 @@ export default function SampleUpload(){
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Fabric Content' name={'fabricContent'}
-                        rules={[{ required: true, message: 'Please input Fabric Content' }]}>
+                        rules={[{ required: false, message: 'Please input Fabric Content' }]}>
                             <Input placeholder="Enter Fabric Content"/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Fabric Count' name={'fabricCount'}
-                        rules={[{ required: true, message: 'Please input Fabric Count' }]}>
+                        rules={[{ required: false, message: 'Please input Fabric Count' }]}>
                             <Input placeholder="Enter Fabric Count"/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='GSM' name={'gsm'}
-                        rules={[{ required: true, message: 'Please input GSM' }]}>
+                        rules={[{ required: false, message: 'Please input GSM' }]}>
                             <Input placeholder="Enter GSM"/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='FOB' name={'fob'}
-                        rules={[{ required: true, message: 'Please input FOB' }]}>
+                        rules={[{ required: false, message: 'Please input FOB' }]}>
                             <Input placeholder="Enter FOB"/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
-                        <Form.Item label='Qty/Season' name={'qtyPerSeason'}
-                        rules={[{ required: true, message: 'Please input Qty/Season' }]}>
-                            <Input placeholder="Enter Qty/Season"/>
+                        <Form.Item label='Quantity' name={'quantity'}
+                        rules={[{ required: false, message: 'Please input Quantity' }]}>
+                            <Input placeholder="Enter Quantity"/>
                         </Form.Item>
                     </Col>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
+                        <Form.Item label='Qty/Season' name={'qtyPerSeason'}
+                        rules={[{ required: false, message: 'Please input Qty/Season' }]}>
+                            <Input placeholder="Enter Qty/Season"/>
+                        </Form.Item>
+                    </Col> */}
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Loaction' name={'locationId'}
-                        rules={[{ required: true, message: 'Please input Location' }]}>
-                        <Select showSearch placeholder="Select Location" >
+                        rules={[{ required: false, message: 'Please input Location' }]}>
+                        <Select showSearch  optionFilterProp="children" placeholder="Select Location" >
                                 {location.map((item) => {
                                     return (<Option value={item.locationId}>{item.locationName}</Option>);
                                 })}

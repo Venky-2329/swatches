@@ -5,4 +5,5 @@ export class SampleCardReq{
     categoryId:number;
     seasonId:number;
     locationId:number;
+    sampleId:number;
 }

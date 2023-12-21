@@ -1,6 +1,7 @@
 import { Button, Card, Col, Form, Input, Row, notification } from 'antd';
 import { createSeason, createUser } from 'libs/shared-services';
 import { useNavigate } from 'react-router-dom';
+import type { NotificationPlacement } from 'antd/es/notification/interface';
 
 export default function UserForm() {
   const [form] = Form.useForm();
@@ -16,10 +17,10 @@ export default function UserForm() {
     createUser(values).then((res)=>{
         if(res.status){
           onReset()
-           notification.success({message:res.internalMessage})
+           notification.success({message:res.internalMessage,placement:'top',duration:1})
            navigate('/user-grid');
         }else{
-          notification.error({message:res.internalMessage})
+          notification.error({message:res.internalMessage,placement:'top',duration:1})
         }
     })
   }

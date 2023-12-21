@@ -14,9 +14,9 @@ export default function Login() {
                 console.log(res)
                 navigate('/sample-cards',{replace:true})
                 localStorage.setItem('auth',JSON.stringify(res.data))
-                notification.success({message:res.internalMessage})
+                notification.success({message:res.internalMessage,placement:'top',duration:1})
             }else{
-                notification.error({message:res.internalMessage})
+                notification.error({message:res.internalMessage,placement:'top',duration:1})
             }
         })
     };
