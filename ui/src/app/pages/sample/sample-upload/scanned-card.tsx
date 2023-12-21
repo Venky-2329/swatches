@@ -48,7 +48,9 @@ export default function ScannedCard() {
               <img
                 alt="example"
                 style={{ height: '100%', objectFit: 'cover' }}
-                src={image
+                src={
+                  'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/' +
+                  data[0]?.fileName
                 }
               />
             }
