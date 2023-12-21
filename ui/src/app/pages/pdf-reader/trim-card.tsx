@@ -37,7 +37,6 @@ export default function TrimCard() {
         const trimPdfData = await PdfDataExtractor(pdf)
         setPdfData(trimPdfData)
     }
-    console.log(pdfData)
 
     const uploadProps: UploadProps = {
         name: 'file',
@@ -58,21 +57,18 @@ export default function TrimCard() {
     };
 
     const extractTextFromPdf = async (pdfFile) => {
-      console.log(pdfFile)
         const pdfData = await pdfFile.arrayBuffer();
-        console.log(pdfData)
         const pdf = await pdfjs.getDocument({ data: pdfData }).promise;
-        console.log(pdf)
         let text = '';
         const page = await pdf.getPage(1);
-        console.log(page)
         const textContent = await page.getTextContent();
-        console.log(textContent)
         text += textContent.items.map((item: any) => item.str).join(' ');
         let title = 'PSroduction with new Care Format'
         extractPdfData(pdf,textContent)
         updateResultProps(title)
     };
+
+    console.log(pdfData)
   return (
     <>
       <Card>
@@ -90,11 +86,27 @@ export default function TrimCard() {
               </p>
             </Dragger>
           </Col>
-        </Row>
-        <Descriptions title="Trim Card Info">
-          <Descriptions.Item label="Style#">106668</Descriptions.Item>
-          <Descriptions.Item label="Season">2024 Fall</Descriptions.Item>
+        </Row><br></br>
+        {
+          pdfData !=undefined ? <>
+                  <Descriptions title="Trim Card Info">
+          <Descriptions.Item label="Style#">{pdfData?.style}</Descriptions.Item>
+          <Descriptions.Item label="Season">{pdfData?.season}</Descriptions.Item>
+          <Descriptions.Item label="Code">{pdfData?.code}</Descriptions.Item>
+          <Descriptions.Item label="Product">{pdfData?.product}</Descriptions.Item>
+          <Descriptions.Item label="Supplier Quote">{pdfData?.supplierQuote}</Descriptions.Item>
+          <Descriptions.Item label="Supplier Code">{pdfData?.supplierCode}</Descriptions.Item>
+          <Descriptions.Item label="UOM">{pdfData?.uom}</Descriptions.Item>
+          <Descriptions.Item label="Placement">{pdfData?.placement}</Descriptions.Item>
+          <Descriptions.Item label="Contractor Supplied">{pdfData?.contractorSupplied}</Descriptions.Item>
+          <Descriptions.Item label="BRN-Carhartt Brown(Color)">{pdfData?.brnBrownColor}</Descriptions.Item>
+          <Descriptions.Item label="BRN- Carhartt Brown(Qty By Color)">{pdfData?.brnBrownQtyByColor}</Descriptions.Item>
+          <Descriptions.Item label="BLK- Black(Color)">{pdfData?.blkBlackColor}</Descriptions.Item>
+          <Descriptions.Item label="BLK- Black(Qty By Color)">{pdfData?.blkBlackQtyByColor}</Descriptions.Item>
         </Descriptions>
+          </> : ''
+        }
+
       </Card>
     </>
   );

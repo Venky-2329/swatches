@@ -29,9 +29,16 @@ export function BasicLayout(props: BasicLayoutProps) {
 
   const baseRouterList: any[] = [
     {
-      label: "Trim Card",
+      label: "Trim Card Upload",
       key: "trim-card",
       path: "trim-card",
+      icon: <TableOutlined />,
+      filepath: "../",
+    },
+    {
+      label: "Trim Card ",
+      key: "trim-card-form",
+      path: "trim-card-form",
       icon: <TableOutlined />,
       filepath: "../",
     },
