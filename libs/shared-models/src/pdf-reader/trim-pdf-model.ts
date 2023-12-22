@@ -1,7 +1,7 @@
 export class TrimPodfModel{
     style:string;
     season:string;
-    code:string;
+    code:string[];
     product:string;
     materialArtworkDescription:string;
     supplierQuote:string;uom:string;

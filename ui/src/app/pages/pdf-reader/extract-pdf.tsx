@@ -20,21 +20,25 @@ export const PdfDataExtractor = async (pdf) => {
 
   let styleIndex;
   let seasonIndex;
+  let codeIndex;
 
   for (const [index, rec] of filteredData.entries()) {
     if (rec.str.includes('Style #')) {
       styleIndex = index;
     }
-    if(rec.str.includes('Season')){
+    if(rec.str === 'Season'){
         seasonIndex = index
     }
+    if(rec.str.includes('Code')){
+      codeIndex = index
+    }
   }
-  console.log(styleIndex);
+  console.log(codeIndex);
 
   trimPdf.style = filteredData[styleIndex + 1]?.str;
   trimPdf.season = filteredData[seasonIndex + 1]?.str;
-  
-  trimPdf.code = filteredData[267]?.str;
+  trimPdf.code = filteredData[codeIndex + 1]?.str;
+
   trimPdf.product = filteredData[268]?.str;
   trimPdf.materialArtworkDescription = '';
   trimPdf.supplierQuote = filteredData[269]?.str + ' ' + filteredData[270]?.str;

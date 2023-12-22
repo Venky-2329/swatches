@@ -64,7 +64,7 @@ export default function TrimCard() {
         const page = await pdf.getPage(1);
         const textContent = await page.getTextContent();
         text += textContent.items.map((item: any) => item.str).join(' ');
-        let title = 'PSroduction with new Care Format'
+        let title = 'Production'
         extractPdfData(pdf,textContent)
         updateResultProps(title)
     };
@@ -93,7 +93,7 @@ export default function TrimCard() {
                   <Descriptions title="Trim Card Info">
           <Descriptions.Item label="Style#">{pdfData?.style}</Descriptions.Item>
           <Descriptions.Item label="Season">{pdfData?.season}</Descriptions.Item>
-          <Descriptions.Item label="Code">{pdfData?.code}</Descriptions.Item>
+          {/* <Descriptions.Item label="Code">{pdfData?.code}</Descriptions.Item>
           <Descriptions.Item label="Product">{pdfData?.product}</Descriptions.Item>
           <Descriptions.Item label="Supplier Quote">{pdfData?.supplierQuote}</Descriptions.Item>
           <Descriptions.Item label="Supplier Code">{pdfData?.supplierCode}</Descriptions.Item>
@@ -103,7 +103,7 @@ export default function TrimCard() {
           <Descriptions.Item label="BRN-Carhartt Brown(Color)">{pdfData?.brnBrownColor}</Descriptions.Item>
           <Descriptions.Item label="BRN- Carhartt Brown(Qty By Color)">{pdfData?.brnBrownQtyByColor}</Descriptions.Item>
           <Descriptions.Item label="BLK- Black(Color)">{pdfData?.blkBlackColor}</Descriptions.Item>
-          <Descriptions.Item label="BLK- Black(Qty By Color)">{pdfData?.blkBlackQtyByColor}</Descriptions.Item>
+          <Descriptions.Item label="BLK- Black(Qty By Color)">{pdfData?.blkBlackQtyByColor}</Descriptions.Item> */}
         </Descriptions>
           </> : ''
         }
