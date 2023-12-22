@@ -22,74 +22,74 @@ export class SampleUpload extends CommonFields{
     styleNo: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "item_no",
         length: 250
     })
     itemNo: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "item_description",
         length: 250
     })
     itemDescription: string;
 
     @Column('int',{
-        nullable:false,
+        nullable:true,
         name:"category_id"
     })
     categoryId:number
 
     @Column('int',{
-        nullable:false,
+        nullable:true,
         name:"season_id"
     })
     seasonId:number
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "fabric_content",
         length: 250
     })
     fabricContent: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "fabric_count",
         length: 250
     })
     fabricCount: string;
 
     @Column('int', {
-        nullable: false,
+        nullable: true,
         name: "Quantity",
     })
     quantity: number;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "gsm",
         length: 250
     })
     gsm: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "fob",
         length: 250
     })
     fob: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "qty_per_season",
         length: 250
     })
     qtyPerSeason: string;
 
     @Column('int',{
-        nullable:false,
+        nullable:true,
         name:"location_id"
     })
     locationId:number;
