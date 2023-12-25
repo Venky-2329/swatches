@@ -15,21 +15,24 @@ import {
   getAllSamplesData,
   getLocationData,
   getSeasonData,
+  deleteUploadFile,
 } from 'libs/shared-services';
 import { useEffect, useState } from 'react';
 import image from '../../../../assets/download (2)-a875.jpg';
 import ReactDOMServer from 'react-dom/server';
 import jsPDF from 'jspdf';
 import DownloadCard from './download-pdf';
-import { FilePdfOutlined, QrcodeOutlined } from '@ant-design/icons';
+import { FilePdfOutlined, DeleteOutlined } from '@ant-design/icons';
 import { QRCode, Space } from 'antd';
 import DownloadQrCode from './download-qr';
-import { SampleCardReq } from 'libs/shared-models';
+import { SampleCardReq, SampleDelReq } from 'libs/shared-models';
 import { PageContainer } from '@ant-design/pro-components';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
 export default function SampleCards() {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [selectedItemNo, setSelectedItemNo] = useState(null);
   const [qrData, setQrData] = useState([]);
@@ -43,7 +46,7 @@ export default function SampleCards() {
   const [seasons, setSeasons] = useState([]);
   const [filters,setFilters] = useState([])
   const users: any = JSON.parse(localStorage.getItem('auth'))
-  const createUser = users
+  const userName = users.userName
 
   useEffect(() => {
     getBrands();
@@ -93,8 +96,8 @@ export default function SampleCards() {
 
   function ViewDetails(values) {
     console.log(values);
+    navigate(`/separete-card/${values.sampleId}`);
     setDetailsData(values);
-    setDetailsVisible(true);
   }
 
   function onCancel() {
@@ -132,6 +135,20 @@ export default function SampleCards() {
         notification.error({ message: res.internalMessage,placement:'top',duration:1 });
       }
     });
+  }
+
+  function deleteFile(val){
+    const req = new SampleDelReq();
+    req.sampleId = val.sampleId;
+    req.updatedUser = userName;
+    deleteUploadFile(req).then((res)=>{
+      if(res.status){
+        getSampleCards();
+         notification.success({message:res.internalMessage})
+      }else{
+        notification.error({message:res.internalMessage})
+      }
+    })
   }
 
   function filtersData(){
@@ -304,9 +321,10 @@ function onReset(){
                 }
               >
                <Row gutter={24}>
-                <Col span={15}>
+                <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 15}}>
+                  <Button icon={<DeleteOutlined />} onClick={() => deleteFile(i)}></Button>
                 </Col>
-                <Col span={2}>
+                <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>
                 <Button
                   icon={<FilePdfOutlined />}
                   onClick={() => downloadPdf(i)}

@@ -1,6 +1,6 @@
 import { API_URL } from "../config";
 import axios from 'axios';
-import {CommonResponseModel, SampleCardReq} from 'libs/shared-models'
+import {CommonResponseModel, SampleCardReq, SampleDelReq} from 'libs/shared-models'
 
 const endPoint = API_URL + '/sample-upload'
 const userUrl = API_URL + '/users'
@@ -77,6 +77,11 @@ export async function createUser(req:any):Promise<CommonResponseModel>{
 
 export async function getUserData():Promise<CommonResponseModel>{
   const response =await axios.post(userUrl + '/getData')
+  return response.data
+}
+
+export async function deleteUploadFile(req:SampleDelReq):Promise<CommonResponseModel>{
+  const response =await axios.post(endPoint + '/deleteUploadFile',req)
   return response.data
 }
 

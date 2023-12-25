@@ -59,4 +59,12 @@ export class SampleUploadController {
       console.log(err);
     }
   }
+  @Post('/deleteUploadFile')
+  async deleteUploadFile(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return this.service.deleteUploadFile(req);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }

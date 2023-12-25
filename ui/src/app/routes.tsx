@@ -17,6 +17,7 @@ import UserGrid from "./pages/sample/users/user-grid";
 import UserForm from "./pages/sample/users/user-form";
 import ScannedCard from "./pages/sample/sample-upload/scanned-card";
 import DigitalSamplesView from "./pages/sample/sample-upload/multiple-qr-view";
+import SeparateView from "./pages/sample/sample-upload/separate-view";
 
 export const AppRoutes = () => {
     const router = createHashRouter(createRoutesFromElements(
@@ -39,6 +40,7 @@ export const AppRoutes = () => {
                 <Route path="/season-form" key="season-form" element={<SeasonForm />} />
                 <Route path="/user-grid" key="user-grid" element={<UserGrid />} />
                 <Route path="/user-form" key="user-form" element={<UserForm />} />
+                <Route path="/separete-card/:id" key="separete-card" element={<SeparateView/>} />
 
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
