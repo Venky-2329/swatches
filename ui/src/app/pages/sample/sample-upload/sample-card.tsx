@@ -28,6 +28,7 @@ import DownloadQrCode from './download-qr';
 import { SampleCardReq, SampleDelReq } from 'libs/shared-models';
 import { PageContainer } from '@ant-design/pro-components';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment'
 
 const { Option } = Select;
 
@@ -214,13 +215,13 @@ function onReset(){
     : data;
     const backgroundColors = ['#c8ffc8', '#ffffa0', '#facefa', '#ccccff','#ffd2d2','#d2e1ff','#d2faff','#ffeee8'];
   return (
-    <PageContainer title="Design room">
+    <PageContainer title={`Design Room  : (${data.length})`}>
       <Form form={form} layout="vertical">
         <Row gutter={24}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Brand" name={'brandId'}>
-              <Select showSearch  optionFilterProp="children" placeholder="Select Brand">
+              <Select allowClear showSearch  optionFilterProp="children" placeholder="Select Brand">
                 {brands.map((item) => {
                   return <Option value={item.brandId}>{item.brandName}</Option>;
                 })}
@@ -230,7 +231,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Item No" name={'itemNo'}>
-              <Select showSearch  optionFilterProp="children" placeholder="Select Item No">
+              <Select allowClear showSearch  optionFilterProp="children" placeholder="Select Item No">
                 {filters.map((item) => {
                   return (
                     <Option value={item.itemNo}>{item.itemNo}</Option>
@@ -242,7 +243,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Style No" name={'styleNo'}>
-              <Select showSearch  optionFilterProp="children" placeholder="Select Style">
+              <Select allowClear showSearch  optionFilterProp="children" placeholder="Select Style">
                 {filters.map((item) => {
                   return (
                     <Option value={item.styleNo}>{item.styleNo}</Option>
@@ -254,7 +255,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Category" name={'categoryId'}>
-              <Select showSearch  optionFilterProp="children" placeholder="Select Category">
+              <Select allowClear showSearch  optionFilterProp="children" placeholder="Select Category">
                 {category.map((item) => {
                   return (
                     <Option value={item.categoryId}>{item.categoryName}</Option>
@@ -266,7 +267,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Season" name={'seasonId'}>
-              <Select showSearch  optionFilterProp="children" placeholder="Select season">
+              <Select allowClear showSearch  optionFilterProp="children" placeholder="Select season">
                 {seasons.map((item) => {
                   return (
                     <Option value={item.seasonId}>{item.seasonName}</Option>
@@ -278,7 +279,7 @@ function onReset(){
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
           >
             <Form.Item label="Loaction" name={'locationId'}>
-              <Select showSearch  optionFilterProp="children" placeholder="Select Location">
+              <Select allowClear showSearch  optionFilterProp="children" placeholder="Select Location">
                 {location.map((item) => {
                   return (
                     <Option value={item.locationId}>{item.locationName}</Option>
@@ -301,7 +302,8 @@ function onReset(){
       <br></br>
       <Row gutter={[24, 24]}>
         {data.map((i,index) => {
-          const { brandName, styleNo, itemNo,categoryName } = i;
+          const { brandName, styleNo, itemNo,categoryName ,createdDate} = i;
+          const date = moment(createdDate).format('YYYY-MM-DD')
           const cardStyle = {
             background: backgroundColors[index % backgroundColors.length],
             color: 'black',
@@ -340,6 +342,7 @@ function onReset(){
                   description={
                     <div className="print">
                       <div><b>{brandName}</b></div>
+                      <div><b>{date}</b></div>
                       {/* <div>Item No&nbsp;&nbsp; : {itemNo}</div> */}
                       <div>Style No&nbsp;&nbsp; : {styleNo}</div>
                       <div>Category&nbsp;&nbsp; : {categoryName}</div>
