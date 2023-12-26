@@ -28,6 +28,13 @@ export function BasicLayout(props: BasicLayoutProps) {
   }
 
   const baseRouterList: any[] = [
+    // {
+    //   label: "Home",
+    //   key: "home-screen",
+    //   path: "home-screen",
+    //   icon: <UploadOutlined />,
+    //   filepath: "../",
+    // },
     {
         label:"Masters",
         path: "/",
