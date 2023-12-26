@@ -68,8 +68,8 @@ export default function SeparateView() {
             <Descriptions.Item label="FOB"><span style={{marginLeft:'89px'}}></span>: {data[0]?.fob}</Descriptions.Item>
             <Descriptions.Item label="Qty/Season"><span style={{marginLeft:'50px'}}></span>: {data[0]?.qtyPerSeason}</Descriptions.Item>
             <Descriptions.Item label="Location"><span style={{marginLeft:'66px'}}></span>: {data[0]?.locationName}</Descriptions.Item>
+            <Descriptions.Item label="SMV"><span style={{marginLeft:'86px'}}></span>: {data[0]?.smv}</Descriptions.Item>
           </Descriptions>
-          
         </Col>
       </Row>
     </>

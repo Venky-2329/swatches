@@ -264,6 +264,12 @@ export default function SampleUpload(){
                             </Select>
                         </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
+                        <Form.Item label='SMV' name={'smv'}
+                        rules={[{ required: false, message: 'Please input SMV' }]}>
+                            <Input placeholder="Enter SMV"/>
+                        </Form.Item>
+                    </Col>
                 </Row>
                <Row gutter={24}>
              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5}}>

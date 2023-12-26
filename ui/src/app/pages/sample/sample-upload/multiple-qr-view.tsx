@@ -187,6 +187,10 @@ export default function DigitalSamplesView(){
           title:'Qty/Season',
           dataIndex:'qtyPerSeason'
         },
+        {
+          title:'SMV',
+          dataIndex:'smv'
+        }
     ];
 
     function gotoForm(){
