@@ -1,0 +1,5 @@
+.ant-descriptions .ant-descriptions-item-container .ant-descriptions-item-label {
+    display: inline-flex;
+    align-items: baseline;
+    content: none;
+}

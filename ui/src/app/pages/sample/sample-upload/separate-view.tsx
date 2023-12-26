@@ -4,6 +4,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { getAllSamplesData } from 'libs/shared-services';
 import { useEffect, useState } from 'react';
 import { SampleCardReq } from 'libs/shared-models';
+import './view.css'
 
 export default function SeparateView() {
   const { id } = useParams();
@@ -55,20 +56,18 @@ export default function SeparateView() {
           xl={{ span:  10}}
         >
           <Descriptions style={{padding:'30px'}} title="Sample Info"   column={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1, xxl:1 }} >
-            <Descriptions.Item label="Brand Name">{data[0]?.brandName}</Descriptions.Item>
-            <Descriptions.Item label="Style No">{data[0]?.styleNo}</Descriptions.Item>
-            <Descriptions.Item label="Item No">
-            {data[0]?.itemNo}
-            </Descriptions.Item>
-            <Descriptions.Item label="Item Description">{data[0]?.itemDescription}</Descriptions.Item>
-            <Descriptions.Item label="Category">{data[0]?.categoryName}</Descriptions.Item>
-            <Descriptions.Item label="Season">{data[0]?.seasonName}</Descriptions.Item>
-            <Descriptions.Item label="Fabric Content">{data[0]?.fabricContent}</Descriptions.Item>
-            <Descriptions.Item label="Fabric Count">{data[0]?.fabricCount}</Descriptions.Item>
-            <Descriptions.Item label="GSM">{data[0]?.gsm}</Descriptions.Item>
-            <Descriptions.Item label="FOB">{data[0]?.fob}</Descriptions.Item>
-            <Descriptions.Item label="Qty/Season">{data[0]?.qtyPerSeason}</Descriptions.Item>
-            <Descriptions.Item label="Location">{data[0]?.locationName}</Descriptions.Item>
+            <Descriptions.Item label="Brand Name"style={{ marginBottom: '8px' }} ><span style={{marginLeft:'40px'}}></span>: {data[0]?.brandName}</Descriptions.Item>
+            <Descriptions.Item label="Style No" style={{ marginBottom: '8px' }}><span style={{marginLeft:'62px'}}></span>: {data[0]?.styleNo}</Descriptions.Item>
+            <Descriptions.Item label="Item No"><span style={{marginLeft:'64px'}}></span>: {data[0]?.itemNo}</Descriptions.Item>
+            <Descriptions.Item label="Item Description"><span style={{marginLeft:'20px'}}></span>: {data[0]?.itemDescription}</Descriptions.Item>
+            <Descriptions.Item label="Category"><span style={{marginLeft:'60px'}}></span>: {data[0]?.categoryName}</Descriptions.Item>
+            <Descriptions.Item label="Season"><span style={{marginLeft:'71px'}}></span>: {data[0]?.seasonName}</Descriptions.Item>
+            <Descriptions.Item label="Fabric Content"><span style={{marginLeft:'33px'}}></span>: {data[0]?.fabricContent}</Descriptions.Item>
+            <Descriptions.Item label="Fabric Count"><span style={{marginLeft:'44px'}}></span>: {data[0]?.fabricCount}</Descriptions.Item>
+            <Descriptions.Item label="GSM"><span style={{marginLeft:'86px'}}></span>: {data[0]?.gsm}</Descriptions.Item>
+            <Descriptions.Item label="FOB"><span style={{marginLeft:'89px'}}></span>: {data[0]?.fob}</Descriptions.Item>
+            <Descriptions.Item label="Qty/Season"><span style={{marginLeft:'50px'}}></span>: {data[0]?.qtyPerSeason}</Descriptions.Item>
+            <Descriptions.Item label="Location"><span style={{marginLeft:'66px'}}></span>: {data[0]?.locationName}</Descriptions.Item>
           </Descriptions>
           
         </Col>
