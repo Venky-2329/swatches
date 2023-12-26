@@ -83,17 +83,57 @@ export const PdfDataExtractor = async (pdf) => {
   const typesDetails = new TrimTypes();
   typesDetails.type = type;
   typesDetails.subType = subtype;
-  typesDetails.trimDetails = trimeDetails;
+  // typesDetails.trimDetails = trimeDetails;
   trimPdf.style = filteredData[styleIndex + 1]?.str;
   trimPdf.season = filteredData[seasonIndex + 1]?.str;
   trimPdf.trimTypes = [typesDetails];
  
-  const subtypes = []
+  const types = [filteredData[200]?.str ,filteredData[202]?.str ,filteredData[303]?.str ,filteredData[308]?.str]
+  console.log(types.length)
+  const sumNumbersInBrackets = (types) => {
+    let sum = 0;
+    types.forEach(item => {
+      const match = item.match(/\((\d+)\)/);
+      if (match && match[1]) {
+        const number = parseInt(match[1], 10);
+        sum += number;
+      }
+    });
+    return sum;
+  };
+  
+  const result = sumNumbersInBrackets(types);
 
+  // for (let i = 0; i < types.length; i++) {
+  //   const type = types[i];
+  //   console.log(`Type at index ${i}:`, type);
+  // }
 
-  for(const data of filteredData){
-     
+  // for (let i = 1; i <= result; i++) {
+  //   console.log(`Iteration ${i}`);
+  //   const typeIndex = [200,202,303,308]
+    
+  // }
+
+  const typeIndex = [200, 202, 303, 308];
+  const codesIndex = [140]
+  const productsIndex = [141]
+
+for (let i = 0; i < types.length; i++) {
+  const type = types[i];
+  const match = type.match(/\((\d+)\)/);
+
+  if (match && match[1]) {
+    const iterationCount = parseInt(match[1], 10);
+    for (let j = 1; j <= iterationCount; j++) {
+      const typeIndexValue = typeIndex[i];
+      const typeForIndex = filteredData[typeIndexValue]?.str;
+      console.log(`Type at index ${i}, Iteration ${j}:`, typeForIndex);
+    }
+  } else {
+    console.log(`Invalid format for type at index ${i}:`, type);
   }
+}
 
   console.log(trimPdf);
 

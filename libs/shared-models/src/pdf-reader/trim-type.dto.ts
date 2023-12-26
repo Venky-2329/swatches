@@ -1,7 +1,6 @@
-import { TrimDetails } from "./trim-details.dto";
+import { SubTypeDetails } from "./subtype.model";
 
 export class TrimTypes{
     type:string;
-    subType:string;
-    trimDetails:TrimDetails;
+    subType :SubTypeDetails
 }
