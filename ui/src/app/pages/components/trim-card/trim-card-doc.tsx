@@ -144,7 +144,7 @@ export default function TrimCardDoc() {
                 <div className={styles.placementsCard} >
                     <table >
                         <tr >
-                            <td><b>Placements</b></td>
+                            <td colSpan={10}><b>Placements</b></td>
                         </tr>
                         <tr className={styles.greyRow}>
                             <th rowSpan={2}>Code</th>
@@ -162,15 +162,29 @@ export default function TrimCardDoc() {
                             <th>Color</th>
                             <th>Qty by Color</th>
                         </tr>
-                        <tr>
+                        <tr className={styles.greyRow}>
                             <td colSpan={10}>Fabric</td>
+                        </tr>
+                        <tr className={styles.greyRow}>
+                            <td colSpan={10}>Duck</td>
+                        </tr>
+                        <tr >
+                            <th rowSpan={2}>DU1029</th>
+                            <th rowSpan={2}></th>
+                            <th rowSpan={2}></th>
+                            <th rowSpan={2}></th>
+                            <th rowSpan={2}></th>
+                            <th rowSpan={2}></th>
+                            <th colSpan={1}></th>
+                            <th colSpan={1}></th>
+                            <th colSpan={1}></th>
+                            <th colSpan={1}></th>
                         </tr>
                     </table>
                 </div>
             </div>
             {/* <table id={'trim-card-container'} className='trim-card-container' >
                 <thead>
-
                 <tr style={{alignContent:'center'}}>
                     <td>
                         <img src={titleLogo} />
