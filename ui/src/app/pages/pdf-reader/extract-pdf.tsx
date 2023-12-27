@@ -1,5 +1,10 @@
-import { TrimPodfModel } from 'libs/shared-models';
-import { EMP_STR_EXP } from './pdf-regex-expressions';
+import { SubTypeDetails, TrimDetails, TrimPodfModel, TrimTypes } from 'libs/shared-models';
+import {
+  BOLD_HEIGHT_1,
+  BOLD_HEIGHT_2,
+  EMP_STR_EXP,
+  UNWANTED_TEXT_1,
+} from './pdf-regex-expressions';
 
 export const PdfDataExtractor = async (pdf) => {
   const itemsArr: { itemNo: string; itemIndex: number }[] = [];
@@ -9,13 +14,32 @@ export const PdfDataExtractor = async (pdf) => {
   for (let i = 1; i < pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const textContent: any = await page.getTextContent();
-    //parsing  dia data
+    let startFlag = false;
+    let endFlag = false;
     const pageContent = textContent.items.filter((val, index) => {
-      return !EMP_STR_EXP.test(val.str);
+      if (val.str === 'POMs') {
+        startFlag = true;
+      }
+      if (endFlag) {
+        startFlag = false;
+        endFlag = false;
+      }
+      if (val.str === 'Nail Apron Total Width - at Bottom') {
+        endFlag = true;
+      }
+
+      return !(
+        val.str.includes(UNWANTED_TEXT_1) ||
+        EMP_STR_EXP.test(val.str) ||
+        val.height === BOLD_HEIGHT_1 ||
+        val.height === BOLD_HEIGHT_2 ||
+        startFlag
+      );
     });
 
     filteredData.push(...pageContent);
   }
+
   console.log(filteredData);
 
   let styleIndex;
@@ -26,34 +50,110 @@ export const PdfDataExtractor = async (pdf) => {
     if (rec.str.includes('Style #')) {
       styleIndex = index;
     }
-    if(rec.str === 'Season'){
-        seasonIndex = index
+    if (rec.str === 'Season') {
+      seasonIndex = index;
     }
-    if(rec.str.includes('Code')){
-      codeIndex = index
+    if (rec.str === 'Nicole Clement') {
+      codeIndex = index;
     }
   }
   console.log(codeIndex);
-
+  // 140 - 117
+  const type = filteredData[200].str;
+  const subtype = filteredData[201].str;
+  const code = filteredData[codeIndex + 23].str;
+  const product = filteredData[codeIndex + 24].str;
+  const supplQuote =filteredData[codeIndex + 25].str + ' ' + filteredData[codeIndex + 26].str;
+  const uom = filteredData[codeIndex + 27].str;
+  const placement = filteredData[codeIndex + 28].str;
+  const brnBrownColor =filteredData[codeIndex + 29].str +filteredData[codeIndex + 30].str +' ' +filteredData[codeIndex + 31].str;
+  const brnQtyByColor = filteredData[codeIndex + 32].str;
+  const blkBlack = filteredData[codeIndex + 33].str + filteredData[codeIndex + 34].str;
+  const blkQtyByColor = filteredData[codeIndex + 34].str;
+  const trimeDetails = new TrimDetails();
+  trimeDetails.code = code;
+  trimeDetails.product = product;
+  trimeDetails.supplierQuote = supplQuote;
+  trimeDetails.uom = uom;
+  trimeDetails.placement = placement;
+  trimeDetails.brnBrownColor = brnBrownColor;
+  trimeDetails.brnBrownQtyByColor = brnQtyByColor;
+  trimeDetails.blkBlackColor = blkBlack;
+  trimeDetails.blkBlackQtyByColor = blkQtyByColor;
+  const typesDetails = new TrimTypes();
+  typesDetails.type = type;
+  typesDetails.subType = subtype;
+  // typesDetails.trimDetails = trimeDetails;
   trimPdf.style = filteredData[styleIndex + 1]?.str;
   trimPdf.season = filteredData[seasonIndex + 1]?.str;
-  trimPdf.code = filteredData[codeIndex + 1]?.str;
+  trimPdf.trimTypes = [typesDetails];
+ 
+  const types = [filteredData[200]?.str ,filteredData[202]?.str ,filteredData[303]?.str ,filteredData[308]?.str]
+  console.log(types.length)
+  const sumNumbersInBrackets = (types) => {
+    let sum = 0;
+    types.forEach(item => {
+      const match = item.match(/\((\d+)\)/);
+      if (match && match[1]) {
+        const number = parseInt(match[1], 10);
+        sum += number;
+      }
+    });
+    return sum;
+  };
+  
+  const result = sumNumbersInBrackets(types);
 
-  trimPdf.product = filteredData[268]?.str;
-  trimPdf.materialArtworkDescription = '';
-  trimPdf.supplierQuote = filteredData[269]?.str + ' ' + filteredData[270]?.str;
-  trimPdf.supplierCode = '';
-  trimPdf.uom = filteredData[271]?.str;
-  trimPdf.placement = filteredData[272]?.str;
-  trimPdf.contractorSupplied = '';
-  trimPdf.brnBrownColor =
-    filteredData[273]?.str +
-    filteredData[274]?.str +
-    ' ' +
-    filteredData[275]?.str;
-  trimPdf.brnBrownQtyByColor = filteredData[276]?.str;
-  trimPdf.blkBlackColor = filteredData[277]?.str + filteredData[278]?.str;
-  trimPdf.blkBlackQtyByColor = filteredData[279]?.str;
+  // for (let i = 0; i < types.length; i++) {
+  //   const type = types[i];
+  //   console.log(`Type at index ${i}:`, type);
+  // }
+
+  // for (let i = 1; i <= result; i++) {
+  //   console.log(`Iteration ${i}`);
+  //   const typeIndex = [200,202,303,308]
+    
+  // }
+
+  const typeIndex = [200, 202, 303, 308];
+  const subTypesIndex =[201,203,204,304,305,306,307,309,443,444,445,446]
+  const codesIndex = [140]
+  const productsIndex = [141]
+  const materialArtworkDescriptionsIndex =[null]
+  const supplierQuotesIndex =[142]
+   const uomsIndex =[144]
+   const placementsIndex =[145]
+   const contractorSuppliedsIndex =[null]
+   const brnBrownColorsIndex =[146]
+   const brnBrownQtyByColorsIndex =[149]
+   const blkBlackColorsIndex =[150]
+   const blkBlackQtyByColorsIndex =[152]
+   const supplierCodesIndex =[null]
+
+for (let i = 0; i < types.length; i++) {
+  const type = types[i];
+  const match = type.match(/\((\d+)\)/);
+
+  if (match && match[1]) {
+    const iterationCount = parseInt(match[1], 10);
+    for (let j = 1; j <= iterationCount; j++) {
+      const typesDetails = new TrimTypes();
+      const typeIndexValue = typeIndex[i];
+      const typeValue = filteredData[typeIndexValue]?.str;
+      typesDetails.type = typeValue;
+     
+      const subTypesDetails = new SubTypeDetails()
+      const subTypeIn = subTypesIndex[i]
+      const subTypeValue = filteredData[subTypeIn].str
+      console.log(subTypeValue)
+
+
+    }
+  } else {
+    console.log(`Invalid format for type at index ${i}:`, type);
+  }
+}
+
   console.log(trimPdf);
 
   return trimPdf;
