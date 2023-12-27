@@ -18,7 +18,7 @@ export interface BasicLayoutProps { }
 
 export function BasicLayout(props: BasicLayoutProps) {
   const [pathname, setPathname] = useState(location.pathname);
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(false);
   const navigate = useNavigate();
   const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
 
@@ -39,6 +39,13 @@ export function BasicLayout(props: BasicLayoutProps) {
       label: "Trim Card ",
       key: "trim-card-form",
       path: "trim-card-form",
+      icon: <TableOutlined />,
+      filepath: "../",
+    },
+    {
+      label: "Trim Card Doc",
+      key: "trim-card-doc",
+      path: "trim-card-doc",
       icon: <TableOutlined />,
       filepath: "../",
     },
