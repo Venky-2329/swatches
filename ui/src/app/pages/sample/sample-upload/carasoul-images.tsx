@@ -1,4 +1,4 @@
-import { Carousel } from 'antd';
+import { Carousel  } from 'antd';
 import { getAllSamplesData } from 'libs/shared-services';
 import { useEffect, useState } from 'react';
 
@@ -26,22 +26,23 @@ export default function HomeScreen() {
 
   return (
     <>
-      <Carousel autoplay afterChange={onChange}>
+      <Carousel autoplay afterChange={onChange} dotPosition={'right'}>
         {data.map((i) => {
           return (
-            <div className='image-container'>
+            <div className='image-container' style={{color:'black'}}>
               <img
                 style={{
                   width: '100%',
-                  height: '100vh', // Adjust as needed
-                  // objectFit: 'cover',
+                  height: '90vh', // Adjust as needed
+                  objectFit: 'contain',
+                  background:'rgb(0 0 0 / 59%)'
                 }}
                 src={
                   'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/' +
                   i.fileName
                 }
               ></img>
-              <h1 style={{position:'absolute',top:'50%',left:'45%',zIndex:10}}>Welcome Digital Studio</h1>
+              {/* <h1 style={{position:'absolute',top:'50%',left:'45%',zIndex:10}}>Welcome Digital Studio</h1> */}
             </div>
           );
         })}

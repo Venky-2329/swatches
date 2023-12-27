@@ -7,7 +7,7 @@ import { treeRouter } from '../utils/common';
 import { DarkModeIcon } from '../icons/darkmode.icon';
 import { useState } from 'react';
 import { Button, Tooltip, theme } from 'antd';
-import { UserOutlined, RobotOutlined, LogoutOutlined, TableOutlined, PicCenterOutlined,UploadOutlined } from '@ant-design/icons'
+import { UserOutlined, RobotOutlined, LogoutOutlined, TableOutlined, PicCenterOutlined,UploadOutlined,HomeOutlined } from '@ant-design/icons'
 import { LogoIcon } from '../icons/logo-icon';
 
 const { useToken } = theme
@@ -28,13 +28,13 @@ export function BasicLayout(props: BasicLayoutProps) {
   }
 
   const baseRouterList: any[] = [
-    // {
-    //   label: "Home",
-    //   key: "home-screen",
-    //   path: "home-screen",
-    //   icon: <UploadOutlined />,
-    //   filepath: "../",
-    // },
+    {
+      label: "Home",
+      key: "home-screen",
+      path: "home-screen",
+      icon:<HomeOutlined />,
+      filepath: "../",
+    },
     {
         label:"Masters",
         path: "/",
