@@ -7,6 +7,7 @@ import {
   Button,
   Modal,
   Form,
+  Badge,
 } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import {
@@ -35,7 +36,6 @@ const { Option } = Select;
 export default function SampleCards() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [selectedItemNo, setSelectedItemNo] = useState(null);
   const [qrData, setQrData] = useState([]);
   const [visble, setVisible] = useState(false);
   const [detailsVisible, setDetailsVisible] = useState(false);
@@ -88,11 +88,6 @@ export default function SampleCards() {
         setSeasons(res.data);
       }
     });
-  }
-
-  function viewModal(val) {
-    setQrData(val);
-    setVisible(true);
   }
 
   function ViewDetails(values) {
@@ -168,10 +163,6 @@ function onReset(){
   getSampleCards();
 }
 
-  const handleItemNoChange = (value) => {
-    setSelectedItemNo(value);
-  };
-
   function downloadPdf(val) {
     var quranHtml: any = ReactDOMServer.renderToString(
       <DownloadCard data={val} />
@@ -190,32 +181,9 @@ function onReset(){
     });
   }
 
-  function downloadQr(val) {
-    console.log(val);
-    var print: any = ReactDOMServer.renderToString(
-      <DownloadQrCode data={val} />
-    );
-    var doc = new jsPDF();
-    doc.html(print, {
-      callback: function (doc) {
-        doc.save();
-      },
-      margin: 5,
-      // autoPaging: 'text',
-      x: 0,
-      y: 0,
-      width: 100, //target width in the PDF document
-      windowWidth: 200, //window width in CSS pixels
-    });
-  }
-  console.log(data)
-
-  const filteredData = selectedItemNo
-    ? data.filter((item) => item.itemNo === selectedItemNo)
-    : data;
     const backgroundColors = ['#c8ffc8', '#ffffa0', '#facefa', '#ccccff','#ffd2d2','#d2e1ff','#d2faff','#ffeee8'];
   return (
-    <PageContainer title={`Design Room  : (${data.length})`}>
+    <PageContainer title={<span>Design Room  {<Badge count={data.length} style={{ backgroundColor: '#52c41a' }}/>}</span>}>
       <Form form={form} layout="vertical">
         <Row gutter={24}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}
@@ -333,17 +301,11 @@ function onReset(){
                 ></Button>
                 </Col>
                </Row>
-                {/* <Button
-                  icon={<QrcodeOutlined />}
-                  onClick={() => viewModal(i)}
-                ></Button> */}
-                {/* <br/> */}
                 <Meta
                   description={
                     <div className="print">
                       <div><b>{brandName}</b></div>
                       <div><b>{date}</b></div>
-                      {/* <div>Item No&nbsp;&nbsp; : {itemNo}</div> */}
                       <div>Style No&nbsp;&nbsp; : {styleNo}</div>
                       <div>Category&nbsp;&nbsp; : {categoryName}</div>
                     </div>
@@ -354,10 +316,10 @@ function onReset(){
           );
         })}
       </Row>
-      <Modal onCancel={onCancel} open={visble} footer={false}>
+      {/* <Modal onCancel={onCancel} open={visble} footer={false}>
         <DownloadQrCode data={qrData} />
-      </Modal>
-      <Modal open={detailsVisible} onCancel={detailsViewCancel} footer={false}>
+      </Modal> */}
+      {/* <Modal open={detailsVisible} onCancel={detailsViewCancel} footer={false}>
         <Card title="Sample Digital Card Details">
           <div className="print">
             <b>
@@ -425,7 +387,7 @@ function onReset(){
             {detailsData?.locationName}
           </div>
         </Card>
-      </Modal>
+      </Modal> */}
     </PageContainer>
   );
 }
