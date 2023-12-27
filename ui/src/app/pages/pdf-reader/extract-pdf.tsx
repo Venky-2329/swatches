@@ -1,4 +1,4 @@
-import { TrimDetails, TrimPodfModel, TrimTypes } from 'libs/shared-models';
+import { SubTypeDetails, TrimDetails, TrimPodfModel, TrimTypes } from 'libs/shared-models';
 import {
   BOLD_HEIGHT_1,
   BOLD_HEIGHT_2,
@@ -116,8 +116,19 @@ export const PdfDataExtractor = async (pdf) => {
   // }
 
   const typeIndex = [200, 202, 303, 308];
+  const subTypesIndex =[201,203,204,304,305,306,307,309,443,444,445,446]
   const codesIndex = [140]
   const productsIndex = [141]
+  const materialArtworkDescriptionsIndex =[null]
+  const supplierQuotesIndex =[142]
+   const uomsIndex =[144]
+   const placementsIndex =[145]
+   const contractorSuppliedsIndex =[null]
+   const brnBrownColorsIndex =[146]
+   const brnBrownQtyByColorsIndex =[149]
+   const blkBlackColorsIndex =[150]
+   const blkBlackQtyByColorsIndex =[152]
+   const supplierCodesIndex =[null]
 
 for (let i = 0; i < types.length; i++) {
   const type = types[i];
@@ -126,9 +137,17 @@ for (let i = 0; i < types.length; i++) {
   if (match && match[1]) {
     const iterationCount = parseInt(match[1], 10);
     for (let j = 1; j <= iterationCount; j++) {
+      const typesDetails = new TrimTypes();
       const typeIndexValue = typeIndex[i];
-      const typeForIndex = filteredData[typeIndexValue]?.str;
-      console.log(`Type at index ${i}, Iteration ${j}:`, typeForIndex);
+      const typeValue = filteredData[typeIndexValue]?.str;
+      typesDetails.type = typeValue;
+     
+      const subTypesDetails = new SubTypeDetails()
+      const subTypeIn = subTypesIndex[i]
+      const subTypeValue = filteredData[subTypeIn].str
+      console.log(subTypeValue)
+
+
     }
   } else {
     console.log(`Invalid format for type at index ${i}:`, type);
