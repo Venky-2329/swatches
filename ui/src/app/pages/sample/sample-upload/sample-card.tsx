@@ -30,6 +30,7 @@ import { SampleCardReq, SampleDelReq } from 'libs/shared-models';
 import { PageContainer } from '@ant-design/pro-components';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment'
+import { FloatButton } from 'antd';
 
 const { Option } = Select;
 
@@ -316,6 +317,7 @@ function onReset(){
           );
         })}
       </Row>
+      <FloatButton.BackTop type='primary'/>
       {/* <Modal onCancel={onCancel} open={visble} footer={false}>
         <DownloadQrCode data={qrData} />
       </Modal> */}
