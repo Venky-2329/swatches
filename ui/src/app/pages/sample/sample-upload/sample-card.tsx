@@ -1,23 +1,6 @@
-import {
-  Card,
-  Col,
-  Row,
-  notification,
-  Select,
-  Button,
-  Modal,
-  Form,
-  Badge,
-} from 'antd';
+import {Card,Col,Row,notification,Select,Button,Modal,Form,Badge} from 'antd';
 import Meta from 'antd/es/card/Meta';
-import {
-  getBrandsData,
-  getCategoryData,
-  getAllSamplesData,
-  getLocationData,
-  getSeasonData,
-  deleteUploadFile,
-} from 'libs/shared-services';
+import {getBrandsData,getCategoryData,getAllSamplesData,getLocationData,getSeasonData,deleteUploadFile} from 'libs/shared-services';
 import { useEffect, useState } from 'react';
 import image from '../../../../assets/download (2)-a875.jpg';
 import ReactDOMServer from 'react-dom/server';
