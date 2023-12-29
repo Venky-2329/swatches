@@ -6,6 +6,8 @@ import {
   import 'dotenv/config';
 import { RacksEntity } from '../masters/racks/entity/racks.entity';
 import { RacksChildEntity } from '../masters/racks/entity/racks-child.entity';
+import { PdfReaderEntity } from '../masters/pdf-reader/entity/pdf-reader.entity';
+import { PdfReaderChildEntity } from '../masters/pdf-reader/entity/pdf-child.entity';
 
   export const typeOrmConfig: DataSourceOptions = {
     type: "mysql",
@@ -13,7 +15,7 @@ import { RacksChildEntity } from '../masters/racks/entity/racks-child.entity';
     username: 'internal_apps',
     password: 'Schemax@2023',
     database: 'internal_apps',
-    entities:[RacksEntity,RacksChildEntity]
+    entities:[RacksEntity,RacksChildEntity,PdfReaderEntity,PdfReaderChildEntity]
   };
   
   export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {

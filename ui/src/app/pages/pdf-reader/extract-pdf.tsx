@@ -45,7 +45,6 @@ export const PdfDataExtractor = async (pdf) => {
     filteredData.push(...pageContent);
   }
 
-  console.log(filteredData);
 
   let styleIndex;
   let seasonIndex;

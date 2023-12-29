@@ -26,7 +26,7 @@ export const AppRoutes = () => {
             }  >
                 <Route path="/trim-card" key="trim-card" element={<TrimCard />} />
                 <Route path="/trim-card-form" key="trim-card-form" element={<TrimCardForm />} />
-                <Route path="/trim-card-doc" key="trim-card-doc" element={<TrimCardExcelDoc />} />
+                <Route path="/trim-card-doc" key="trim-card-doc" element={<TrimCardDoc />} />
 
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>

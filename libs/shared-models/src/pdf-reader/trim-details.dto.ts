@@ -11,4 +11,8 @@ export class TrimDetails{
     blkBlackColor:string;
     blkBlackQtyByColor:string;
     supplierCode:string;
+    blkFilePath: string;
+    blkFileName: string;
+    brnFilePath: string;
+    brnFileName: string;
 }
