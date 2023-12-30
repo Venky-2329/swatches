@@ -62,4 +62,22 @@ export class PdfReaderController {
       } catch (error) {
       }
     }
+
+    @Post('/getPdfData')
+    async getPdfData(@Body() req:any): Promise<CommonResponseModel> {
+      try {
+        return this.service.getPdfData(req);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    @Post('/getPdfGridData')
+    async getPdfGridData(): Promise<CommonResponseModel> {
+      try {
+        return this.service.getPdfGridData();
+      } catch (err) {
+        console.log(err);
+      }
+    }
 }

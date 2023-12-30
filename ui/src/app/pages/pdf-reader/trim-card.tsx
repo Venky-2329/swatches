@@ -1,29 +1,12 @@
-import {
-  Card,
-  Col,
-  DatePicker,
-  Descriptions,
-  Upload,
-  Input,
-  Row,
-  UploadProps,
-  notification,
-  Button,
-  Space,
-} from 'antd';
+import {Card,Col,DatePicker,Descriptions,Upload,Input,Row,UploadProps,notification,Button,Space} from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
-import {
-  InboxOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
-import { Form, UploadFile } from 'antd/lib';
+import {InboxOutlined,MinusCircleOutlined,PlusOutlined} from '@ant-design/icons';
+import { Form } from 'antd/lib';
 import { useState } from 'react';
-import { Document, pdfjs } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
 import { PdfDataExtractor } from './extract-pdf';
-import { RcFile } from 'antd/es/upload';
 import TextArea from 'antd/es/input/TextArea';
-import { TrimPodfModel } from 'libs/shared-models';
+import { TrimDetails, TrimPodfModel, TrimTypes } from 'libs/shared-models';
 import { saveData, uploadFiles } from 'libs/shared-services';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -42,12 +25,14 @@ export default function TrimCard() {
   const [fileList, setFileList] = useState([]);
   const [blkFileList, setBlkFileList] = useState([]);
   const [brnFileList, setBrnFileList] = useState([]);
-  const [uploadList, setUploadList] = useState([])
+  const [uploadList, setUploadList] = useState([]);
 
   const brnUploadFieldProps: UploadProps = {
     multiple: false,
     onRemove: (file) => {
-      setBrnFileList((prevFileList) => prevFileList.filter((f) => f.uid !== file.uid));
+      setBrnFileList((prevFileList) =>
+        prevFileList.filter((f) => f.uid !== file.uid)
+      );
     },
     beforeUpload: (file: any) => {
       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
@@ -58,9 +43,9 @@ export default function TrimCard() {
       }
       var reader = new FileReader();
       reader.readAsArrayBuffer(file);
-      reader.onload = data => {  
+      reader.onload = (data) => {
         setBrnFileList([...brnFileList, file]);
-              return false;
+        return false;
       };
     },
     progress: {
@@ -73,11 +58,13 @@ export default function TrimCard() {
     },
     fileList: brnFileList,
   };
-  
+
   const blkUploadFieldProps: UploadProps = {
     multiple: true,
     onRemove: (file) => {
-      setBlkFileList((prevFileList) => prevFileList.filter((f) => f.uid !== file.uid));
+      setBlkFileList((prevFileList) =>
+        prevFileList.filter((f) => f.uid !== file.uid)
+      );
     },
     beforeUpload: (file: any) => {
       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|xls|xlsx)$/)) {
@@ -88,9 +75,9 @@ export default function TrimCard() {
       }
       var reader = new FileReader();
       reader.readAsArrayBuffer(file);
-      reader.onload = data => {  
+      reader.onload = (data) => {
         setBlkFileList([...blkFileList, file]);
-              return false;
+        return false;
       };
       return false;
     },
@@ -104,7 +91,7 @@ export default function TrimCard() {
     },
     fileList: blkFileList,
   };
-  
+
   const uploadFieldProps: UploadProps = {
     multiple: true,
     onRemove: (file) => {
@@ -142,7 +129,6 @@ export default function TrimCard() {
     },
     fileList: filelist,
   };
-
 
   const updateResultProps = (title) => {
     const resultProps: ResultPropsModel = new ResultPropsModel();
@@ -194,71 +180,83 @@ export default function TrimCard() {
     extractPdfData(pdf, textContent);
     updateResultProps(title);
   };
-  function submit(values){
-    console.log(values)
-    setUploadList(values)
-    console.log(brnFileList)
-    const req = new TrimPodfModel()
-    req.date = values.date
-    req.factory = values.factory
-    req.poNumber = values.poNumber
-    req.quantity = values.quantity
-    req.itemNo = values.itemNO
-    req.wash = values.wash
-    req.preparedBy = values.preparedBy
-    req.approvedBy = values.approvedBy
-    req.qaApproval = values.qaApproval
-    req.remarks = values.remarks
-    req.style = pdfData.style
-    req.season = pdfData.season
-    req.trimTypes = pdfData.trimTypes
-    console.log(req)
-    saveData(req).then((res)=>{
-      console.log(res)
-      console.log(brnFileList)
-       if(res.status){
+  function submit(values) {
+    console.log(values);
+    const req = new TrimPodfModel();
+    req.date = values.date;
+    req.factory = values.factory;
+    req.poNumber = values.poNumber;
+    req.quantity = values.quantity;
+    req.itemNo = values.itemNO;
+    req.wash = values.wash;
+    req.preparedBy = values.preparedBy;
+    req.approvedBy = values.approvedBy;
+    req.qaApproval = values.qaApproval;
+    req.remarks = values.remarks;
+    req.pdfFileName = values.fileUpload.file.name;
+    req.style = pdfData.style;
+    req.season = pdfData.season;
+    req.trimTypes = pdfData.trimTypes;
+    if (!req.trimTypes) {
+      req.trimTypes = [];
+    }
+    pdfData.trimTypes.forEach((v) => {
+      if (values.placements.some((p) => p.code == v.trimDetails.code)) {
+        const trimType = new TrimTypes();
+        const trimDetails = new TrimDetails();
+        const matchingPlacement = values.placements.find(
+          (p) => p.code === v.trimDetails.code
+        );
+        if (matchingPlacement) {
+          trimDetails.brnFileName = matchingPlacement.brnfFleUpload.file.name;
+          trimDetails.blkFileName = matchingPlacement.blkfileUpload.file.name;
+          console.log(trimDetails);
+          trimType.trimDetails = trimDetails;
+          console.log(trimType);
+          req.trimTypes.push(trimType);
+          console.log(req);
+        }
+      }
+    });
+    console.log(req);
+    saveData(req).then((res) => {
+      console.log(res);
+      console.log(brnFileList);
+      if (res.status) {
         if (brnFileList.length) {
           console.log(brnFileList);
-
           // Filter placements based on codes present in res.data.pdfChiltEntity
-          const matchingPlacements = values.placements.filter((placement) =>
-              res.data.pdfChiltEntity.some((codeEntity) => codeEntity.code === placement.code)
-          );
-          matchingPlacements.forEach((placement) => {
-              const formData = new FormData();
-              for (let i = 0; i < brnFileList.length; i++) {
-                  formData.append('file', brnFileList[i]);
-              }
-              formData.append('code', placement.code);
-              console.log(formData);
-              uploadFiles(formData).then((uploadRes) => {
-              });
+          const formData = new FormData();
+          for (let i = 0; i < brnFileList.length; i++) {
+            formData.append('file', brnFileList[i]);
+          }
+          console.log(formData);
+          uploadFiles(formData).then((uploadRes) => {});
+        }
+        if (blkFileList.length) {
+          const formData2 = new FormData();
+          for (let i = 0; i < blkFileList.length; i++) {
+            formData2.append('file', blkFileList[i]);
+          }
+          uploadFiles(formData2).then((uploadRes) => {});
+        }
+        if (filelist.length) {
+          const formData3 = new FormData();
+          filelist.forEach((file: any) => {
+            formData3.append('file', file);
           });
-         }
-         if (blkFileList.length) {
-          console.log(blkFileList);
-          const matchingPlacements = values.placements.filter((placement) =>
-              res.data.pdfChiltEntity.some((codeEntity) => codeEntity.code === placement.code)
-          );
-          matchingPlacements.forEach((placement) => {
-              const formData = new FormData();
-              for (let i = 0; i < blkFileList.length; i++) {
-                  formData.append('file', blkFileList[i]);
-              }
-              formData.append('code', placement.code);
-              console.log(formData);
-              uploadFiles(formData).then((uploadRes) => {
-              });
-          });
-         }
-          notification.success({message:res.internalMessage})
-       }
-    })
+          uploadFiles(formData3).then((uploadRes) => {});
+        }
+        notification.success({ message: res.internalMessage });
+        onReset()
+      }
+    });
   }
 
-  function onreset(){
-        form.resetFields()
+  function onReset() {
+    form.resetFields();
   }
+  const imagesPath = 'https://172.20.50.169/'
   return (
     <>
       <Card>
@@ -288,157 +286,190 @@ export default function TrimCard() {
                 {pdfData?.season}
               </Descriptions.Item>
             </Descriptions>
+
+            <br />
+            <Form form={form} layout="vertical" onFinish={submit}>
+              <Row gutter={24}>
+                <Col span={3}>
+                  <Form.Item name={'date'} label="Date">
+                    <DatePicker />
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item name={'poNumber'} label="PO#">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item name={'quantity'} label="Quantity">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item name={'itemNO'} label="Item No">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item name={'factory'} label="Factory">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item name={'wash'} label="Wash">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item name={'preparedBy'} label="Prepared By">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item name={'approvedBy'} label="Approved By">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={3}>
+                  <Form.Item name={'qaApproval'} label="QA Approval">
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={4}>
+                  <Form.Item name={'remarks'} label="Remarks">
+                    <TextArea />
+                  </Form.Item>
+                </Col>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 8 }}
+                  lg={{ span: 8 }}
+                  xl={{ span: 3 }}
+                >
+                  <Form.Item name="fileUpload">
+                    <Upload {...uploadFieldProps} listType="picture-card">
+                      {filelist.length < 5 && '+ Upload'}
+                    </Upload>
+                  </Form.Item>
+                </Col>
+              </Row>
+              {/* </Form> */}
+              {/* <Form form={form} layout="vertical"> */}
+              <Form.List name="placements">
+                {(fields, { add, remove }) => (
+                  <Card>
+                    {fields.map((field, index) => (
+                      <Space
+                        key={field.key}
+                        style={{ display: 'flex', marginBottom: 8 }}
+                      >
+                        <Row gutter={24}>
+                          <Col span={8}>
+                            <Form.Item
+                              {...field}
+                              label="Code"
+                              name={[field.name, 'code']}
+                              fieldKey={[field.key, 'code']}
+                              rules={[
+                                {
+                                  required: false,
+                                  message: 'Please Enter code',
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                          </Col>
+                          <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 8 }}
+                            lg={{ span: 8 }}
+                            xl={{ span: 8 }}
+                          >
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'brnfFleUpload']}
+                              fieldKey={[field.key, 'brnfFleUpload']}
+                              label="BRN Photo"
+                            >
+                              <Upload
+                                {...brnUploadFieldProps}
+                                listType="picture-card"
+                                fileList={
+                                  Array.isArray(brnFileList[field.name])
+                                    ? brnFileList[field.name]
+                                    : []
+                                }
+                                key={brnFileList[field.name]}
+                              >
+                                {brnFileList.length < 5 && '+ Upload'}
+                              </Upload>
+                            </Form.Item>
+                          </Col>
+                          <Col
+                            xs={{ span: 24 }}
+                            sm={{ span: 24 }}
+                            md={{ span: 8 }}
+                            lg={{ span: 8 }}
+                            xl={{ span: 8 }}
+                          >
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'blkfileUpload']}
+                              fieldKey={[field.key, 'blkfileUpload']}
+                              label="BLK Photo"
+                            >
+                              <Upload
+                                {...blkUploadFieldProps}
+                                listType="picture-card"
+                                fileList={
+                                  Array.isArray(blkFileList[field.name])
+                                    ? blkFileList[field.name]
+                                    : []
+                                }
+                                key={blkFileList[field.name]}
+                              >
+                                {blkFileList.length < 5 && '+ Upload'}
+                              </Upload>
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                        <MinusCircleOutlined
+                          onClick={() => remove(field.name)}
+                        />
+                      </Space>
+                    ))}
+                    <Form.Item>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        block
+                        icon={<PlusOutlined />}
+                      >
+                        Add Placements
+                      </Button>
+                    </Form.Item>
+                  </Card>
+                )}
+              </Form.List>
+              <br />
+              <Row gutter={24} justify={'end'}>
+                <Col span={2}>
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
+                </Col>
+                <Col span={2}>
+                  <Button onClick={onReset}>Reset</Button>
+                </Col>
+              </Row>
+            </Form>
           </>
         ) : (
           ''
         )}
-        <br />
-        <Form form={form} layout="vertical" onFinish={submit}>
-          <Row gutter={24}>
-            <Col span={3}>
-              <Form.Item name={'date'} label="Date">
-                <DatePicker />
-              </Form.Item>
-            </Col>
-            <Col span={3}>
-              <Form.Item name={'poNumber'} label="PO#">
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={3}>
-              <Form.Item name={'quantity'} label="Quantity">
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col>
-              <Form.Item name={'itemNO'} label="Item No">
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col>
-              <Form.Item name={'factory'} label="Factory">
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col>
-              <Form.Item name={'wash'} label="Wash">
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={3}>
-              <Form.Item name={'preparedBy'} label="Prepared By">
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={3}>
-              <Form.Item name={'approvedBy'} label="Approved By">
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={3}>
-              <Form.Item name={'qaApproval'} label="QA Approval">
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={4}>
-              <Form.Item name={'remarks'} label="Remarks">
-                <TextArea />
-              </Form.Item>
-            </Col>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 8 }}
-              lg={{ span: 8 }}
-              xl={{ span: 3 }}
-            >
-              <Form.Item name="fileUpload">
-                <Upload {...uploadFieldProps} listType="picture-card">
-                  {filelist.length < 5 && '+ Upload'}
-                </Upload>
-              </Form.Item>
-            </Col>
-          </Row>
-          {/* </Form> */}
-          {/* <Form form={form} layout="vertical"> */}
-            <Form.List name="placements">
-              {(fields, { add, remove }) => (
-                <Card>
-                  {fields.map((field,index) => (
-                    <Space
-                      key={field.key}
-                      style={{ display: 'flex', marginBottom: 8 }}
-                    >
-                      <Row gutter={24}>
-                        <Col span={8}>
-                          <Form.Item
-                            {...field}
-                            label="Code"
-                            name={[field.name, 'code']}
-                            fieldKey={[field.key, 'code']}
-                            rules={[
-                              {
-                                required: false,
-                                message: 'Please Enter code',
-                              },
-                            ]}
-                          >
-                            <Input />
-                          </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8}}
-                        >
-                          <Form.Item {...field} name={[field.name, 'brnfFleUpload']}
-                            fieldKey={[field.key, 'brnfFleUpload']} label='BRN Photo'>
-                            <Upload
-                              {...brnUploadFieldProps}
-                              listType="picture-card"
-                              fileList={Array.isArray(brnFileList[field.name]) ? brnFileList[field.name] : []}
-                              key={brnFileList[field.name]}
-                            >
-                              {brnFileList.length < 5 && '+ Upload'}
-                            </Upload>
-                          </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}
-                        >
-                          <Form.Item {...field} name={[field.name, 'blkfileUpload']}
-                            fieldKey={[field.key, 'blkfileUpload']} label='BLK Photo'>
-                            <Upload
-                              {...blkUploadFieldProps}
-                              listType="picture-card"
-                              fileList={Array.isArray(blkFileList[field.name]) ? blkFileList[field.name] : []}
-                              key={blkFileList[field.name]}                            >
-                              {blkFileList.length < 5 && '+ Upload'}
-                            </Upload>
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                      <MinusCircleOutlined onClick={() => remove(field.name)} />
-                    </Space>
-                  ))}
-                  <Form.Item>
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      icon={<PlusOutlined />}
-                    >
-                      Add Placements
-                    </Button>
-                  </Form.Item>
-                </Card>
-              )}
-            </Form.List><br/>
-            <Row gutter={24} justify={'end'}>
-              <Col span={2}>
-                <Button type='primary' htmlType='submit'>Submit</Button>
-              </Col>
-              <Col span={2}>
-                <Button onClick={onreset}>Reset</Button>
-              </Col>
-            </Row>
-          </Form>
       </Card>
     </>
   );

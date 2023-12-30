@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { CommonFields } from "../../racks/entity/common.entity";
 import { PdfReaderChildEntity } from "./pdf-child.entity";
 
-@Entity('pdf-reader')
+@Entity('pdf_reader')
 export class PdfReaderEntity extends CommonFields{
     @PrimaryGeneratedColumn('increment', {
         name: 'pdf_id',

@@ -5,6 +5,12 @@
     display: flex;   
 }
 
+.centeredImageContainer {
+    display: flex;
+    justify-content: center; /* Center along the main-axis (horizontal centering) */
+    margin-top: 10px; /* Adjust the margin as needed */
+  }
+
 .mainCardTitle{
     display: flex;
     justify-content: center;
@@ -12,7 +18,6 @@
 }
 
 .brandTitle{
-    background-image: url('./carhartt-logo.png');
     width: 14.625rem;
     height: 2.125rem;
   

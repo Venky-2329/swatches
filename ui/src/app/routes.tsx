@@ -14,6 +14,7 @@ import TrimCard from "./pages/pdf-reader/trim-card"
 import TrimCardForm from "./pages/pdf-reader/trim-card-form"
 import TrimCardDoc from "./pages/components/trim-card/trim-card-doc"
 import TrimCardExcelDoc from "./pages/pdf-reader/trim-card-excel"
+import GenerateFileGrid from "./pages/pdf-reader/upload-grid"
 
 export const AppRoutes = () => {
 
@@ -26,7 +27,8 @@ export const AppRoutes = () => {
             }  >
                 <Route path="/trim-card" key="trim-card" element={<TrimCard />} />
                 <Route path="/trim-card-form" key="trim-card-form" element={<TrimCardForm />} />
-                <Route path="/trim-card-doc" key="trim-card-doc" element={<TrimCardDoc />} />
+                <Route path="/trim-card-doc/:id" key="trim-card-doc" element={<TrimCardDoc />} />
+                <Route path="/generate-file" key="generate-file" element={<GenerateFileGrid />} />
 
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
