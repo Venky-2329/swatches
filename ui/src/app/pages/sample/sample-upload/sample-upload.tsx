@@ -3,14 +3,15 @@ import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useEffect, useState } from "react";
 import ImgCrop from 'antd-img-crop';
 import { createSample, getBrandsData, getCategoryData, getLocationData, getSeasonData, uploadPhoto } from "libs/shared-services";
-import { Console } from "console";
+import imageCompression from 'browser-image-compression';
+
 import { useNavigate } from "react-router-dom";
 
 export default function SampleUpload(){
   const Option = Select
     const [form] = Form.useForm()
     const navigate = useNavigate();
-    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [fileList, setFileList] = useState<any[]>([]);
     const [brands,setBrands] = useState([]);
     const [category,setCategory] = useState([]);
     const [location,setLocation] = useState([]);
@@ -67,43 +68,64 @@ export default function SampleUpload(){
         createSampleUpload(values)
       }
 
-      const uploadFieldProps: UploadProps = {
-        multiple: false,
-        onRemove: file => {
-          setFileList([]);
-          // uploadFileList([]);
-        },
-        beforeUpload: (file: any) => {
-          if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
-            notification.info({message:'Only png, jpeg, jpg files are allowed!'})
-            return true;
-          }
-          var reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          reader.onload = data => {
-            if (fileList.length === 1) {
-              notification.info({message:'You Cannot Upload More Than One File At A Time'})
-              return true;
-            } else {
-              setFileList([...fileList, file]);
-              // uploadFileList([...filelist, file]);
-              return false;
-            }
-          };
+      const handleRemove = (file) => {
+        setFileList([]);
+        // Additional logic for removing file
+      };
+
+      const handleBeforeUpload = async (file) => {
+        if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
+          notification.info({ message: 'Only png, jpeg, jpg files are allowed!' });
+          return true;
+        }
     
-          // Add a default return value for cases where none of the conditions are met
-          return false;
-        },
+        try {
+          const compressedImage = await compressImage(file);
+    
+          if (fileList.length === 1) {
+            notification.info({ message: 'You Cannot Upload More Than One File At A Time' });
+            return true;
+          } else {
+            setFileList([...fileList, compressedImage]);
+            return false;
+          }
+        } catch (error) {
+          console.error('Error during image compression:', error);
+          return true; // Returning true to prevent uploading if an error occurs
+        }
+      };
+    
+      const compressImage = async (file) => {
+        try {
+          const options = {
+            maxSizeMB: 0.5, // Adjust the maximum size as needed
+            // maxWidthOrHeight: 1920, // Adjust the maximum width or height as needed
+            useWebWorker: true,
+          };
+          const compressedBlob = await imageCompression(file, options);
+          const compressedFile = new File([compressedBlob], file.name, { type: compressedBlob.type });
+          console.log(compressedFile)
+          return compressedFile;
+        } catch (error) {
+          throw error;
+        }
+      };
+    
+      const uploadFieldProps = {
+        multiple: false,
+        onRemove: handleRemove,
+        beforeUpload: handleBeforeUpload,
         progress: {
           strokeColor: {
             '0%': '#108ee9',
             '100%': '#87d068',
           },
           strokeWidth: 3,
-          format: percent => `${parseFloat(percent.toFixed(2))}%`,
+          format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
         },
-        fileList: fileList
-      };
+        fileList: fileList,
+      }; 
+    
 
     //   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     //     setFileList(newFileList);

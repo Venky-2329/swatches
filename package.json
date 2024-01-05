@@ -66,6 +66,7 @@
     "antd": "^5.11.2",
     "antd-img-crop": "^4.18.0",
     "axios": "^1.0.0",
+    "browser-image-compression": "^2.0.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "jspdf": "^2.5.1",
