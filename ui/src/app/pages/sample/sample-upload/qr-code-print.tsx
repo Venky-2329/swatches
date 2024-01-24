@@ -211,6 +211,7 @@ export default function QrCodesPrint(props: QrProps) {
                   }
                   body {
                     margin: 0;
+                    
                   }
                   .qrcode-container {
                     width: 2in;
