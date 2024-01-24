@@ -164,7 +164,7 @@ export default function QrCodesPrint(props: QrProps) {
                           className="qrcode-description"
                         >
                           <QRCode
-                            size={200}
+                            size={180}
                             value={`http://172.20.50.169/design-room_app/#/sample-digital-card/${record.sampleId}`}
                             type="svg"
                           />
