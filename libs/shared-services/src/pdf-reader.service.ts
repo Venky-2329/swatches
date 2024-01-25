@@ -25,3 +25,8 @@ export async function getPdfGridData():Promise<CommonResponseModel>{
    const response = await axios.post(endPoint + '/getPdfGridData');
    return response.data;
 }
+
+export async function saveExcelData(req: any): Promise<any> {
+   const response = await axios.post(endPoint + '/saveExcelData', req);
+   return response;
+ }

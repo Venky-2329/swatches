@@ -1,13 +1,15 @@
 import {Card,Col,DatePicker,Descriptions,Upload,Input,Row,UploadProps,notification,Button,Space} from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
-import {InboxOutlined,MinusCircleOutlined,PlusOutlined} from '@ant-design/icons';
+import {CheckCircleOutlined, InboxOutlined,LoadingOutlined,MinusCircleOutlined,PlusOutlined} from '@ant-design/icons';
 import { Form } from 'antd/lib';
 import { useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import { PdfDataExtractor } from './extract-pdf';
 import TextArea from 'antd/es/input/TextArea';
 import { TrimDetails, TrimPodfModel, TrimTypes } from 'libs/shared-models';
-import { saveData, uploadFiles } from 'libs/shared-services';
+import { saveData, saveExcelData, uploadFiles } from 'libs/shared-services';
+import * as XLSX from 'xlsx';
+import AlertMessages from '../../common/notifications/notifications';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 class ResultPropsModel {
@@ -26,6 +28,28 @@ export default function TrimCard() {
   const [blkFileList, setBlkFileList] = useState([]);
   const [brnFileList, setBrnFileList] = useState([]);
   const [uploadList, setUploadList] = useState([]);
+
+  const excelUploadProps: UploadProps = {
+
+    name: 'file',
+    accept: '.xlsx',
+    multiple: false,
+    onRemove: (file) => {
+        const index = fileList.indexOf(file);
+        const newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+        setUploadList(newFileList);
+    },
+    beforeUpload: (file) => {
+        setUploadList([...fileList, file]);
+        return false;
+    },
+    fileList,
+    showUploadList: true,
+    listType: 'picture-card'
+};
+
+console.log(uploadList)
 
   const brnUploadFieldProps: UploadProps = {
     multiple: false,
@@ -257,12 +281,35 @@ export default function TrimCard() {
     form.resetFields();
   }
   const imagesPath = 'https://172.20.50.169/'
+
+  const handleUpload = async () => {
+    console.log('ssssssssssssssss')
+    AlertMessages.getCustomIconMessage("excelupload", "Excel is uploading", <LoadingOutlined style={{ color: '#22C55E' }} />)
+    if (uploadList.length) {
+        const formData = new FormData();
+        formData.append('file', uploadList[0])
+        console.log(formData)
+        saveExcelData(formData).then((res) => {
+            if (res.data.status === true) {
+                AlertMessages.getCustomIconMessage("excelupload", "Excel Uploaded Sucessfuly", <CheckCircleOutlined style={{ color: '#22C55E' }} />, 2)
+
+            } else {
+                AlertMessages.getInfoMessage("excelupload", res.data.internalMessage)
+            }
+        }).catch((err) => {
+            AlertMessages.getErrorMessage("excelupload", "Unknown error occured")
+        }).finally(() => {
+            setFileList([])
+        })
+    }
+}
+ 
   return (
     <>
       <Card>
         <Row gutter={24}>
           <Col span={24}>
-            <Dragger {...uploadProps}>
+            <Dragger {...excelUploadProps}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
@@ -273,6 +320,11 @@ export default function TrimCard() {
                 Please upload only valid documents .
               </p>
             </Dragger>
+          </Col>
+        </Row>
+        <Row>
+        <Col>
+           <Button onClick={handleUpload}>Upload</Button>
           </Col>
         </Row>
         <br></br>

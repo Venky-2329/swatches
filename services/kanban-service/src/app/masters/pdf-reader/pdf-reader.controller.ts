@@ -1,10 +1,13 @@
-import { Body, Controller, Post, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Post, UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { extname } from "path";
 import * as fs from 'fs';
 import { diskStorage, File } from 'multer'; 
 import {  FilesInterceptor } from '@nestjs/platform-express'
 import { PdfReaderService } from "./pdf-reader.service";
 import { CommonResponseModel } from "libs/shared-models";
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes } from "@nestjs/swagger";
+
 
 
 @Controller('pdf-reader')
@@ -76,6 +79,30 @@ export class PdfReaderController {
     async getPdfGridData(): Promise<CommonResponseModel> {
       try {
         return this.service.getPdfGridData();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+
+    @Post('/saveExcelData')
+    @UseInterceptors(
+      FileInterceptor('file', {
+        limits: { files: 1 },
+        storage: diskStorage({
+          destination: './upload_files',
+          filename: (req, filea, callback) => {
+            const name = filea.originalname;
+            callback(null, `${name}`);
+          },
+        }),
+      })
+    )
+    @ApiConsumes('multipart/form-data')
+    async saveExcelData(@UploadedFile() file): Promise<any> {
+      console.log(file)
+      try {
+        return this.service.saveExcelData(file);
       } catch (err) {
         console.log(err);
       }
