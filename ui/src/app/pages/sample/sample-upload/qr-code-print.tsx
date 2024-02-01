@@ -71,7 +71,6 @@ export default function QrCodesPrint(props: QrProps) {
       // Inside the loop where you render Descriptions
       qrcodeInfo.forEach((record, index) => {
         const quantity = record.quantity || 1;
-      
         for (let i = 0; i < quantity; i++) {
           qrcodeContent.push(
             <React.Fragment key={`main${keyCounter++}`}>
@@ -83,7 +82,7 @@ export default function QrCodesPrint(props: QrProps) {
                       qrcodeDetails.showQrcode && (
                         <div
                           key={`descitembar${keyCounter++}`}
-                          style={{ width: 'auto', marginRight: '10px' }}
+                          style={{ width: 'auto'}}
                           // className="qrcode-description"
                         >
                           <QRCode
@@ -97,7 +96,6 @@ export default function QrCodesPrint(props: QrProps) {
                   })}
                 </div>
       
-                {/* Descriptions */}
                 <div >
                   {acsOrderCoulmns.map((qrcodeDetails, _ix) => {
                     const descWidth = qrcodeDetails.showQrcode
@@ -110,10 +108,9 @@ export default function QrCodesPrint(props: QrProps) {
                           style={{
                             width: '400%',
                           }}
-                          // className="qrcode-description"
                         >
                           {qrcodeDetails.lineNumber === 0 && (
-                            <p style={{ fontSize: '25px' }}>Shahi Design Room</p>
+                            <p style={{ fontSize: '25px' }}>Shahi Sample Library</p>
                           )}
                           {qrcodeDetails.lineNumber === 1 && <p style={{ fontSize: '25px' }}>Bangalore</p>}
                           {qrcodeDetails.lineNumber !== 0 &&
@@ -134,7 +131,6 @@ export default function QrCodesPrint(props: QrProps) {
                   }
                   body {
                     margin: 0;
-                    
                   }
                   .qrcode-container {
                     width: 2in;
@@ -144,9 +140,6 @@ export default function QrCodesPrint(props: QrProps) {
                     align-items: center;
                     justify-content: center;
                     page-break-after: always; /* Add page break after each qrcode-container */
-                  }
-                  .qrcode-container:last-child {
-                    page-break-after: auto;
                   }
                   @media print {
                     .qrcode-container {
