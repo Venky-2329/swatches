@@ -8,9 +8,6 @@ export class SampleUploadService {
   constructor(private readonly sampleRepo: SampleUploadRepository) {}
 
   async create(dto: any): Promise<CommonResponseModel> {
-    // const itemNo = await this.sampleRepo.find({where :{itemNo:dto.itemNo}})
-    // console.log(itemNo)
-    // if(itemNo.length > 0)return new CommonResponseModel(false, 1, 'Item No Already exists');
     const entity = new SampleUpload();
     entity.brandId = dto.brandId;
     entity.styleNo = dto.styleNo;
@@ -99,7 +96,6 @@ export class SampleUploadService {
   }
 
   async deleteUploadFile(req:SampleDelReq): Promise<CommonResponseModel> {
-    console.log(req)
     const deleteFile =await  this.sampleRepo.update({sampleId:req.sampleId},{isActive:false ,updatedUser:req.updatedUser})
     if(deleteFile.affected) return new CommonResponseModel(true ,1,'Deleted Succussfully')
     return new CommonResponseModel(false,0,'Something went wrong')
