@@ -90,7 +90,6 @@ export default function SampleUpload(){
             return false;
           }
         } catch (error) {
-          console.error('Error during image compression:', error);
           return true; // Returning true to prevent uploading if an error occurs
         }
       };
@@ -104,7 +103,6 @@ export default function SampleUpload(){
           };
           const compressedBlob = await imageCompression(file, options);
           const compressedFile = new File([compressedBlob], file.name, { type: compressedBlob.type });
-          console.log(compressedFile)
           return compressedFile;
         } catch (error) {
           throw error;
@@ -134,15 +132,12 @@ export default function SampleUpload(){
       function createSampleUpload(values){
         createSample(values).then((res)=>{
            if(res.status){
-            console.log(res)
             if (fileList.length > 0) {
                 const formData = new FormData();
-                console.log(fileList)
                 fileList.forEach((file : any) => {
                   formData.append('file', file);
                 });
                 formData.append('id', `${res.data.sampleId}`)
-                console.log(formData)
                 uploadPhoto(formData).then(fileres => {
                     if(res.status){
                         res.data.filePath = fileres.data
