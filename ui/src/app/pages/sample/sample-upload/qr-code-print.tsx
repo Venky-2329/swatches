@@ -32,7 +32,6 @@ export default function QrCodesPrint(props: QrProps) {
   let externalWindow: any;
   let containerEl: any;
 
-  console.log(props.qrcodeInfo);
 
   const printQrcodes = () => {
     const pageContent = document.getElementById('printArea');
