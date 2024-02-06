@@ -25,6 +25,7 @@ export class SampleUploadService {
     entity.quantity = dto.quantity;
     entity.categoryType = dto.categoryType;
     entity.smv = dto.smv;
+    entity.mill = dto.mill;
     const save = await this.sampleRepo.save(entity);
     if (save)
       return new CommonResponseModel(true, 1, 'Saved successfully', save);
@@ -58,7 +59,7 @@ export class SampleUploadService {
   }
 
   async getData(req?: SampleCardReq): Promise<CommonResponseModel> {
-    let query = `SELECT su.smv as smv ,su.created_at as createdDate, su.quantity as quantity, su.brand_id AS brandId , su.sample_id AS sampleId ,su.style_no AS styleNo, su.item_no AS itemNo , su.item_description AS itemDescription ,
+    let query = `SELECT su.mill AS mill, su.smv as smv ,su.created_at as createdDate, su.quantity as quantity, su.brand_id AS brandId , su.sample_id AS sampleId ,su.style_no AS styleNo, su.item_no AS itemNo , su.item_description AS itemDescription ,
     su.category_id AS categoryId , su.season_id AS seasonId , su.fabric_content AS fabricContent , su.fabric_count AS fabricCount , su.gsm AS gsm , su.fob AS fob ,
     su.qty_per_season AS qtyPerSeason, su.location_id AS locationId , su.file_name AS fileName , su.file_path AS filePath,sb.brand_name AS brandName,
     CONCAT(sc.category_name ,' - ',su.category_type ) AS categoryName,sl.location_name AS locationName,ss.season_name AS seasonName,su.category_type AS categoryType FROM internal_apps.sample_upload su

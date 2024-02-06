@@ -190,6 +190,10 @@ export default function DigitalSamplesView(){
         {
           title:'SMV',
           dataIndex:'smv'
+        },
+        {
+          title:'Mill',
+          dataIndex:'mill'
         }
     ];
 

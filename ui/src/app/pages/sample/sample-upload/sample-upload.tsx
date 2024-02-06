@@ -236,6 +236,12 @@ export default function SampleUpload(){
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
+                        <Form.Item label='Mill' name={'mill'}
+                        rules={[{ required: false, message: 'Please input Mill' }]}>
+                            <Input placeholder="Enter Mill"/>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
                         <Form.Item label='Fabric Content' name={'fabricContent'}
                         rules={[{ required: false, message: 'Please input Fabric Content' }]}>
                             <Input placeholder="Enter Fabric Content"/>
@@ -290,18 +296,15 @@ export default function SampleUpload(){
                 </Row>
                <Row gutter={24}>
              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5}}>
-              {/* <ImgCrop zoomSlider={false} rotationSlider> */}
                 <Upload
                   {...uploadFieldProps}
                   listType="picture-card"
                   fileList={fileList}
-                //   onChange={onChange}
                   onPreview={onPreview}
                   style={{ width: '200px', height: '200px' }}
                 >
                   {fileList.length < 5 && '+ Upload'}
                 </Upload>
-              {/* </ImgCrop> */}
             </Col>
           </Row>
           <br></br>
