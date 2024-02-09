@@ -69,7 +69,7 @@ export default function QrCodesPrint(props: QrProps) {
       const qrcodeContent = [];
       // Inside the loop where you render Descriptions
       qrcodeInfo.forEach((record, index) => {
-        const quantity = record.quantity || 1;
+        const quantity = 1;
         for (let i = 0; i < quantity; i++) {
           qrcodeContent.push(
             <React.Fragment key={`main${keyCounter++}`}>
