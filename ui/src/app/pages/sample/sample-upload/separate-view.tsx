@@ -62,6 +62,7 @@ export default function SeparateView() {
             <Descriptions.Item label="Item Description"><span style={{marginLeft:'20px'}}></span>: {data[0]?.itemDescription}</Descriptions.Item>
             <Descriptions.Item label="Category"><span style={{marginLeft:'60px'}}></span>: {data[0]?.categoryName}</Descriptions.Item>
             <Descriptions.Item label="Season"><span style={{marginLeft:'71px'}}></span>: {data[0]?.seasonName}</Descriptions.Item>
+            <Descriptions.Item label="Mill"><span style={{marginLeft:'84px'}}></span>: {data[0]?.mill}</Descriptions.Item>
             <Descriptions.Item label="Fabric Content"><span style={{marginLeft:'33px'}}></span>: {data[0]?.fabricContent}</Descriptions.Item>
             <Descriptions.Item label="Fabric Count"><span style={{marginLeft:'44px'}}></span>: {data[0]?.fabricCount}</Descriptions.Item>
             <Descriptions.Item label="GSM"><span style={{marginLeft:'86px'}}></span>: {data[0]?.gsm}</Descriptions.Item>
@@ -69,7 +70,6 @@ export default function SeparateView() {
             <Descriptions.Item label="Quantity"><span style={{marginLeft:'50px'}}></span>: {data[0]?.quantity}</Descriptions.Item>
             <Descriptions.Item label="Location"><span style={{marginLeft:'66px'}}></span>: {data[0]?.locationName}</Descriptions.Item>
             <Descriptions.Item label="SMV"><span style={{marginLeft:'86px'}}></span>: {data[0]?.smv}</Descriptions.Item>
-            <Descriptions.Item label="Mill"><span style={{marginLeft:'84px'}}></span>: {data[0]?.mill}</Descriptions.Item>
 
           </Descriptions>
         </Col>

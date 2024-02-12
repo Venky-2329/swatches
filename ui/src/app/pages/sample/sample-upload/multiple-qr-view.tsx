@@ -180,6 +180,10 @@ export default function DigitalSamplesView(){
           dataIndex:'seasonName'
         },
         {
+          title:'Mill',
+          dataIndex:'mill'
+        },
+        {
           title:'Location',
           dataIndex:'locationName'
         },
@@ -191,10 +195,6 @@ export default function DigitalSamplesView(){
           title:'SMV',
           dataIndex:'smv'
         },
-        {
-          title:'Mill',
-          dataIndex:'mill'
-        }
     ];
 
     function gotoForm(){
