@@ -183,10 +183,10 @@ export default function DigitalSamplesView(){
           title:'Location',
           dataIndex:'locationName'
         },
-        {
-          title:'Qty/Season',
-          dataIndex:'qtyPerSeason'
-        },
+        // {
+        //   title:'Qty/Season',
+        //   dataIndex:'qtyPerSeason'
+        // },
         {
           title:'SMV',
           dataIndex:'smv'
