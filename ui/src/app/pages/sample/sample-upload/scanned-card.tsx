@@ -113,9 +113,9 @@ export default function ScannedCard() {
                     {data[0]?.fob}
                   </div>
                   <div>
-                    Qty/Season
+                    Qty
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:{' '}
-                    {data[0]?.qtyPerSeason}
+                    {data[0]?.quantity}
                   </div>
                   <div>
                     Location
@@ -126,6 +126,11 @@ export default function ScannedCard() {
                     SMV 
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:{' '}
                     {data[0]?.smv}
+                  </div>
+                  <div>
+                    Mill 
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:{' '}
+                    {data[0]?.mill}
                   </div>
                 </div>
               }
