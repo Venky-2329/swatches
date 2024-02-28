@@ -130,29 +130,34 @@ export default function SampleUpload(){
     //   };
 
       function createSampleUpload(values){
-        createSample(values).then((res)=>{
-           if(res.status){
-            if (fileList.length > 0) {
-                const formData = new FormData();
-                fileList.forEach((file : any) => {
-                  formData.append('file', file);
-                });
-                formData.append('id', `${res.data.sampleId}`)
-                uploadPhoto(formData).then(fileres => {
-                    if(res.status){
-                        res.data.filePath = fileres.data
-                        notification.success({message:res.internalMessage,placement:'top',duration:1})
-                        onReset()
-                        gotoGrid()
-                    }else{
-                        notification.error({message:res.internalMessage,placement:'top',duration:1})
-                    }
-                })
-              }
-           }else{
-            notification.info({message:res.internalMessage,placement:'top',duration:1})
-           }
-        })
+        if(fileList.length > 0){
+          createSample(values).then((res)=>{
+            if(res.status){
+             if (fileList.length > 0) {
+                 const formData = new FormData();
+                 fileList.forEach((file : any) => {
+                   formData.append('file', file);
+                 });
+                 formData.append('id', `${res.data.sampleId}`)
+                 uploadPhoto(formData).then(fileres => {
+                     if(res.status){
+                         res.data.filePath = fileres.data
+                         notification.success({message:res.internalMessage,placement:'top',duration:1})
+                         onReset()
+                         gotoGrid()
+                     }else{
+                         notification.error({message:res.internalMessage,placement:'top',duration:1})
+                     }
+                 })
+               }
+            }else{
+             notification.info({message:res.internalMessage,placement:'top',duration:1})
+            }
+         })
+        }else {
+          return notification.info({message:'Please upload sample'})
+        }
+
       }
       
       const onPreview = async (file: UploadFile) => {
