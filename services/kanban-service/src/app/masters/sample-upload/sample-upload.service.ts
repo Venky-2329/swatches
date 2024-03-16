@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, SampleCardReq, SampleDelReq } from 'libs/shared-models';
+import {
+  CommonResponseModel,
+  SampleCardReq,
+  SampleDelReq,
+} from 'libs/shared-models';
 import { SampleUploadRepository } from './entity/sample-upload.repo';
 import { SampleUpload } from './entity/sample-upload.entity';
 
@@ -26,6 +30,13 @@ export class SampleUploadService {
     entity.categoryType = dto.categoryType;
     entity.smv = dto.smv;
     entity.mill = dto.mill;
+    entity.sourcingName = dto.sourcingName;
+    entity.fabricPo = dto.fabricPo;
+    entity.color = dto.color;
+    entity.qrCode = dto.qrCode;
+    entity.countAndContruction = dto.countAndContruction;
+    entity.width = dto.width;
+    entity.awbNo = dto.awbNo;
     const save = await this.sampleRepo.save(entity);
     if (save)
       return new CommonResponseModel(true, 1, 'Saved successfully', save);
@@ -96,9 +107,13 @@ export class SampleUploadService {
     return new CommonResponseModel(false, 0, 'Something went wrong');
   }
 
-  async deleteUploadFile(req:SampleDelReq): Promise<CommonResponseModel> {
-    const deleteFile =await  this.sampleRepo.update({sampleId:req.sampleId},{isActive:false ,updatedUser:req.updatedUser})
-    if(deleteFile.affected) return new CommonResponseModel(true ,1,'Deleted Succussfully')
-    return new CommonResponseModel(false,0,'Something went wrong')
+  async deleteUploadFile(req: SampleDelReq): Promise<CommonResponseModel> {
+    const deleteFile = await this.sampleRepo.update(
+      { sampleId: req.sampleId },
+      { isActive: false, updatedUser: req.updatedUser }
+    );
+    if (deleteFile.affected)
+      return new CommonResponseModel(true, 1, 'Deleted Succussfully');
+    return new CommonResponseModel(false, 0, 'Something went wrong');
   }
 }
