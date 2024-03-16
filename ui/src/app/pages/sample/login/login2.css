@@ -1,0 +1,100 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif; /* Add your preferred font-family */
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('edited.jpg') center/cover;
+  position: relative;
+}
+
+.light-effect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #4caf50, #2196f3);
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.login-form {
+  position: relative;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.836);
+  padding: 20px;
+  width: 300px;
+  transition: transform 0.3s;
+}
+
+.login-form:hover {
+  transform: scale(1.01);
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo h1 {
+  color: #3436ce;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.login-button {
+  margin-top: 10px;
+  width: 100%;
+  background-color: #252ea8;
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  transform: scale(1.02);
+  background-color: #112b80;
+  color: rgb(0, 4, 255);
+}
+
+/* Customize Input and Password styles as needed */
+.login-form Input,
+.login-form Input.Password {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-content: center;
+}
+
+.login-form Input.Password {
+  margin-bottom: 20px;
+}
+
+.login-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: #282ab4;
+  margin: 10px;
+}
+
+.login-heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
