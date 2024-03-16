@@ -1,13 +1,13 @@
-import { Body, Controller, Post } from "@nestjs/common";
-import { BrandsService } from "./brands.service";
-import { CommonResponseModel } from "libs/shared-models";
+import { Body, Controller, Post } from '@nestjs/common';
+import { BrandsService } from './brands.service';
+import { CommonResponseModel } from 'libs/shared-models';
 
 @Controller('brands')
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
 
   @Post('/createBrand')
-  async createBrand(@Body() req:any): Promise<CommonResponseModel> {
+  async createBrand(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return this.brandsService.createBrand(req);
     } catch (err) {
@@ -21,6 +21,27 @@ export class BrandsController {
       return this.brandsService.getData();
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  @Post('/updateBrands')
+  async updateBrands(
+    @Body() dto: any,
+    isUpdate: boolean = false
+  ): Promise<CommonResponseModel> {
+    try {
+      return this.brandsService.createBrand(dto);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  @Post('/deleteBrands')
+  async deleteBrands(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return await this.brandsService.deleteBrands(req);
+    } catch (err) {
+      return err;
     }
   }
 }
