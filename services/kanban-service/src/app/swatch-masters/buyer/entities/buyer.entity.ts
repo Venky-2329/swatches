@@ -9,10 +9,10 @@ export class BuyerEntity {
     @Column('varchar',{name:'buyer_name' , length: 60})
     buyerName : string;
 
-    @Column("varchar" , {name:'created_user' , length:50 })
+    @Column("varchar" , {name:'created_user' , length:50,nullable: true })
     createdUser: string;
 
-    @Column("varchar" , {name: 'updated_user' , length: 50})
+    @Column("varchar" , {name: 'updated_user' , length: 50,nullable: true})
     updatedUser : string;
 
     @Column({

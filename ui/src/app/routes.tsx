@@ -27,6 +27,8 @@ import DigitalSamplesView from './pages/sample/sample-upload/multiple-qr-view';
 import SeparateView from './pages/sample/sample-upload/separate-view';
 import HomeScreen from './pages/sample/sample-upload/carasoul-images';
 import { BrandDto, categoryDto } from 'libs/shared-models';
+import BuyerGrid from './pages/swatch-masters/buyer-mastrer/buyer-grid';
+import BuyerForm from './pages/swatch-masters/buyer-mastrer/buyer-form';
 
 export const AppRoutes = () => {
   const router = createHashRouter(
@@ -158,7 +160,13 @@ export const AppRoutes = () => {
           key="/sample-digital-card"
           element={<ScannedCard />}
         />
+
+        <Route path='buyer-grid' key='buyer-grid' element={<BuyerGrid />} />
+        <Route path='buyer-form' key='buyer-form' element={<BuyerForm buyerData={undefined} isUpdate={false} updateDetails={() => {undefined}}  closeForm={() => {}}/>} />
       </Route>
+
+      
+
     )
   );
   return <RouterProvider router={router} />;

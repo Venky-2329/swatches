@@ -10,9 +10,10 @@ import { SeasonModule } from './masters/season/season.module';
 import { SampleUploadModule } from './masters/sample-upload/sample-upload.module';
 import { LocationModule } from './masters/location/location.module';
 import { UsersModule } from './masters/users/user.module';
+import { BuyerModule } from './swatch-masters/buyer/buyer.module';
 
 @Module({
-  imports: [DatabaseModule,RacksModule,CategoryModule,BrandsModule,SeasonModule,SampleUploadModule,LocationModule,UsersModule],
+  imports: [DatabaseModule,RacksModule,CategoryModule,BrandsModule,SeasonModule,SampleUploadModule,LocationModule,UsersModule ,BuyerModule],
   controllers: [AppController],
   providers: [AppService],
 })

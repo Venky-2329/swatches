@@ -26,8 +26,8 @@ import { SampleUpload } from '../masters/sample-upload/entity/sample-upload.enti
     useFactory: async (): Promise<TypeOrmModuleOptions> => {
       return {
         ...typeOrmConfig,
-        synchronize: true,
-        logging: false,
+        synchronize: false,
+        logging: true,
         //namingStrategy: new SnakeNamingStrategy(),
         //logger: new QueryLogger(new PinoLogger({ pinoHttp: { level: configService.get().logLevel } })),
         autoLoadEntities: true
