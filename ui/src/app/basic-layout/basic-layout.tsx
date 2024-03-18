@@ -53,7 +53,7 @@ export function BasicLayout(props: BasicLayoutProps) {
     },
     {
       label: 'Masters',
-      path: '/masters',
+      path: '/',
       icon: <PicCenterOutlined />,
       filepath: '../',
       children: [
@@ -116,21 +116,21 @@ export function BasicLayout(props: BasicLayoutProps) {
         },
       ],
     },
-    {
-      label: 'Sample Upload',
-      key: 'sample-view',
-      path: 'sample-view',
-      icon: <UploadOutlined />,
-      filepath: '../',
-    },
+    // {
+    //   label: 'Sample Upload',
+    //   key: 'sample-view',
+    //   path: 'sample-view',
+    //   icon: <UploadOutlined />,
+    //   filepath: '../',
+    // },
 
-    {
-      label: 'Design Studio',
-      key: 'sample-cards',
-      path: 'sample-cards',
-      icon: <RobotOutlined />,
-      filepath: '../',
-    },
+    // {
+    //   label: 'Design Studio',
+    //   key: 'sample-cards',
+    //   path: 'sample-cards',
+    //   icon: <RobotOutlined />,
+    //   filepath: '../',
+    // },
 
     // {
     //   label: "Samples View",
