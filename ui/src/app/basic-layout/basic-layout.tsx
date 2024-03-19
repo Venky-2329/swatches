@@ -102,8 +102,8 @@ export function BasicLayout(props: BasicLayoutProps) {
       children: [
         {
           label: 'Fabric Upload',
-          key: 'fabric-view',
-          path: 'fabric-view',
+          key: 'fabric-swatch-upload',
+          path: '/fabric-swatch-upload',
           icon: <UploadOutlined />,
           filepath: '../',
         },
