@@ -27,6 +27,7 @@ import DigitalSamplesView from './pages/sample/sample-upload/multiple-qr-view';
 import SeparateView from './pages/sample/sample-upload/separate-view';
 import HomeScreen from './pages/sample/sample-upload/carasoul-images';
 import { BrandDto, categoryDto } from 'libs/shared-models';
+import FabricSwatchUpload from './pages/swatch-masters/fabric-swatch/fabric-swatch-form';
 import BuyerGrid from './pages/swatch-masters/buyer-mastrer/buyer-grid';
 import BuyerForm from './pages/swatch-masters/buyer-mastrer/buyer-form';
 import SupplierGrid from './pages/swatch-masters/supplier-master/supplier-grid';
@@ -78,6 +79,7 @@ export const AppRoutes = () => {
             key="sample-upload"
             element={<SampleUpload />}
           />
+          <Route path="/fabric-swatch-upload"key="fabric-swatch-upload"element={<FabricSwatchUpload />}/>
           <Route
             path="/sample-cards"
             key="sample-cards"
