@@ -92,6 +92,13 @@ export function BasicLayout(props: BasicLayoutProps) {
           icon: <TableOutlined />,
           filepath: '../',
         },
+        {
+          label: 'Buyer',
+          key: 'buyer-grid',
+          path: 'buyer-grid',
+          icon: <TableOutlined />,
+          filepath: '../',
+        },
       ],
     },
     {

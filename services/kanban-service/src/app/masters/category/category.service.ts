@@ -24,6 +24,7 @@ export class CategoryService {
     console.log(dto, '---------dto');
     if (dto.categoryId) {
       entity.categoryId = dto.categoryId;
+      entity.updatedUser = dto.updatedUser;
     }
     entity.categoryName = dto.categoryName;
     entity.createdUser = dto.createdUser;

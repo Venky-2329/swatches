@@ -6,36 +6,40 @@ import {
   Input,
   Row,
   message,
-  notification,
 } from 'antd';
+import { BuyerDto } from 'libs/shared-models';
+import { BuyerService } from 'libs/shared-services';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export interface CategoryFormProps {
-  categoryData: categoryDto;
-  updateDetails: (categoryData: categoryDto) => void;
+export interface BuyerFormProps {
+  buyerData: BuyerDto;
+  updateDetails: (buyerData: BuyerDto) => void;
   isUpdate: Boolean;
   closeForm: () => void;
 }
 
-export default function CategoryForm(props: CategoryFormProps) {
+export default function BuyerForm(props: BuyerFormProps) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const users: any = JSON.parse(localStorage.getItem('auth'));
   const createUser = users.userName;
   const [disable, setDisable] = useState<boolean>(false);
+  const service = new BuyerService()
 
   function goToGrid() {
-    navigate('/category-grid');
+    navigate('/buyer-grid');
   }
 
-  function onFinish(categoryData: categoryDto) {
-    createCategory(categoryData)
+  function onFinish(buyerData: BuyerDto) {
+    console.log(buyerData);
+    
+    service.createBuyer(buyerData)
       .then((res) => {
         if (res.status) {
           onReset();
           message.success(res.internalMessage, 2);
-          navigate('/category-grid');
+          navigate('/buyer-grid');
         } else {
           message.error(res.internalMessage, 2);
         }
@@ -46,7 +50,7 @@ export default function CategoryForm(props: CategoryFormProps) {
       });
   }
 
-  const saveData = (values: categoryDto) => {
+  const saveData = (values: BuyerDto) => {
     setDisable(false);
     if (props.isUpdate) {
       props.updateDetails(values);
@@ -78,10 +82,10 @@ export default function CategoryForm(props: CategoryFormProps) {
           form={form}
           layout="vertical"
           onFinish={saveData}
-          initialValues={props.categoryData}
+          initialValues={props.buyerData}
         >
           <Row gutter={24}>
-            <Form.Item hidden name={'categoryId'}>
+            <Form.Item hidden name={'buyerId'}>
               <Input />
             </Form.Item>
             <Col
@@ -92,8 +96,8 @@ export default function CategoryForm(props: CategoryFormProps) {
               xl={{ span: 4 }}
             >
               <Form.Item
-                label="Category"
-                name={'categoryName'}
+                label="Buyer"
+                name={'buyerName'}
                 rules={[{ required: true }]}
               >
                 <Input />
