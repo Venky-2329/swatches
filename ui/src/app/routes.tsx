@@ -29,6 +29,8 @@ import HomeScreen from './pages/sample/sample-upload/carasoul-images';
 import { BrandDto, categoryDto } from 'libs/shared-models';
 import BuyerGrid from './pages/swatch-masters/buyer-mastrer/buyer-grid';
 import BuyerForm from './pages/swatch-masters/buyer-mastrer/buyer-form';
+import SupplierGrid from './pages/swatch-masters/supplier-master/supplier-grid';
+import SupplierForm from './pages/swatch-masters/supplier-master/supplier-form';
 
 export const AppRoutes = () => {
   const router = createHashRouter(
@@ -132,6 +134,13 @@ export const AppRoutes = () => {
           />
           <Route path="/user-grid" key="user-grid" element={<UserGrid />} />
           <Route path="/user-form" key="user-form" element={<UserForm />} />
+
+          <Route path='buyer-grid' key='buyer-grid' element={<BuyerGrid />} />
+          <Route path='buyer-form' key='buyer-form' element={<BuyerForm buyerData={undefined} isUpdate={false} updateDetails={() => {undefined}}  closeForm={() => {}}/>} />
+          
+          {/* <Route path='supplier-grid' key='supplier-grid' element={<SupplierGrid />} />
+          <Route path='supplier-form' key='supplier-form' element={<SupplierForm supplierData={undefined} isUpdate={false} updateDetails={() => {undefined}}  closeForm={() => {}}/>} /> */}
+
           <Route
             path="/separete-card/:id"
             key="separete-card"
@@ -161,8 +170,7 @@ export const AppRoutes = () => {
           element={<ScannedCard />}
         />
 
-        <Route path='buyer-grid' key='buyer-grid' element={<BuyerGrid />} />
-        <Route path='buyer-form' key='buyer-form' element={<BuyerForm buyerData={undefined} isUpdate={false} updateDetails={() => {undefined}}  closeForm={() => {}}/>} />
+        
       </Route>
 
       

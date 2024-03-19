@@ -99,7 +99,8 @@ async getAllBuyers():Promise<CommonResponseModel>{
         throw new CommonResponseModel(false , 0 , 'No Records Found')
       }
     } catch (error) {
-      return new CommonResponseModel(false , 0 , 'Something Went Wrong');
+      // return new CommonResponseModel(false , 0 , 'Something Went Wrong');
+      console.log(error)
     }
   }
 

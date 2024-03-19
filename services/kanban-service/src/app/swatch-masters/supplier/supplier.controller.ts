@@ -1,34 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SupplierService } from './supplier.service';
-import { CreateSupplierDto } from './dto/create-supplier.dto';
-import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import { Body, Controller, Post } from "@nestjs/common";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { SupplierService } from "./supplier.service";
+import { CommonResponseModel, SupplierDto } from "libs/shared-models";
 
-@Controller('supplier')
-export class SupplierController {
-  constructor(private readonly supplierService: SupplierService) {}
+@ApiTags('buyer')
+@Controller('buyer')
+export class BuyerController {
+  constructor(private readonly buyerService: SupplierService) {}
 
-  @Post()
-  create(@Body() createSupplierDto: CreateSupplierDto) {
-    return this.supplierService.create(createSupplierDto);
+  @Post('/createBuyer')
+  @ApiBody({type:SupplierDto})
+  async createSupplier(@Body() BuyerDto: any , isUpdate : boolean = false) : Promise <CommonResponseModel> {
+    try{
+      console.log(BuyerDto,'............................')
+    return 
+    // this.buyerService.createSupplier(BuyerDto , isUpdate);
+  } catch(err) {
+    console.log(err)
   }
-
-  @Get()
-  findAll() {
-    return this.supplierService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.supplierService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSupplierDto: UpdateSupplierDto) {
-    return this.supplierService.update(+id, updateSupplierDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.supplierService.remove(+id);
   }
 }
