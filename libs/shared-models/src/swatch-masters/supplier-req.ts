@@ -1,4 +1,4 @@
-export class SupplierReq {
+export class supplierReq {
     supplierId: number;
     isActive: boolean;
     updatedUser: string;
