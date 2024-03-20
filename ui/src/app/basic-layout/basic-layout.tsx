@@ -99,6 +99,13 @@ export function BasicLayout(props: BasicLayoutProps) {
           icon: <TableOutlined />,
           filepath: '../',
         },
+        {
+          label: 'Supplier',
+          key: 'supplier-grid',
+          path: 'supplier-grid',
+          icon: <TableOutlined />,
+          filepath: '../',
+        },
       ],
     },
     {
@@ -116,8 +123,8 @@ export function BasicLayout(props: BasicLayoutProps) {
         },
         {
           label: 'Trims Upload',
-          key: 'trims-view',
-          path: 'trims-view',
+          key: 'trims-swatch-upload',
+          path: '/trims-swatch-upload',
           icon: <UploadOutlined />,
           filepath: '../',
         },

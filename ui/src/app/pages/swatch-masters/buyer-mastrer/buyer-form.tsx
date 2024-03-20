@@ -53,6 +53,7 @@ export default function BuyerForm(props: BuyerFormProps) {
   const saveData = (values: BuyerDto) => {
     setDisable(false);
     if (props.isUpdate) {
+      console.log(values,'----------------')
       props.updateDetails(values);
     } else {
       onFinish(values);

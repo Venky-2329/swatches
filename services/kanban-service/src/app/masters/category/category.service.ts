@@ -58,7 +58,7 @@ export class CategoryService {
       console.log(exists,'exists')
       if (exists) {
         if (!exists) {
-          throw new ErrorResponse(0, 'Someone updated the current Address information.Refresh and try again');
+          throw new ErrorResponse(0, 'Someone updated the current Address information. Refresh and try again');
         } else {
           const statusUpdate = await this.categoryRepo.update(
             { categoryId: req.categoryId },

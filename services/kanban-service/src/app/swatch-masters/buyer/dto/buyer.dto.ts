@@ -16,5 +16,11 @@ export class BuyerDto {
     @ApiProperty()
     isActive: boolean;
 
+    @ApiProperty()
+    createdAt: Date;
+
+    @ApiProperty()
+    updatedAt : Date;
+
   }
   

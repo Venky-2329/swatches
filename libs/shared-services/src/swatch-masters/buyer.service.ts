@@ -17,11 +17,11 @@ export class BuyerService  extends CommonAxiosServicePms{
     }
 
     async updateBuyers(dto : BuyerDto): Promise<any> {
-        return await this.axiosPostCall(this.BuyerController +'/updateBuyers' );
+        return await this.axiosPostCall(this.BuyerController +'/updateBuyers',dto );
     }
 
     async activateOrDeactivateBuyer(dto : BuyerReq): Promise<any> {
-        return await this.axiosPostCall(this.BuyerController +'/activateOrDeactivateBuyer' );
+        return await this.axiosPostCall(this.BuyerController +'/activateOrDeactivateBuyer' ,dto );
     }
 
     async getAllBuyers():Promise<any>{

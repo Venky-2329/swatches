@@ -12,9 +12,10 @@ import { LocationModule } from './masters/location/location.module';
 import { UsersModule } from './masters/users/user.module';
 import { FabricSwatchModule } from './swatch-masters/fabric-swatch/fabric-swatch.module';
 import { BuyerModule } from './swatch-masters/buyer/buyer.module';
+import { SupplierModule } from './swatch-masters/supplier/supplier.module';
 
 @Module({
-  imports: [DatabaseModule,RacksModule,CategoryModule,BrandsModule,SeasonModule,SampleUploadModule,LocationModule,UsersModule,FabricSwatchModule ,BuyerModule],
+  imports: [DatabaseModule,RacksModule,CategoryModule,BrandsModule,SeasonModule,SampleUploadModule,LocationModule,UsersModule,FabricSwatchModule ,BuyerModule,SupplierModule],
   controllers: [AppController],
   providers: [AppService],
 })

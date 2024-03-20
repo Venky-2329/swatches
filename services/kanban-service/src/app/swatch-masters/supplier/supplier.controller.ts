@@ -1,34 +1,59 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SupplierService } from './supplier.service';
-import { CreateSupplierDto } from './dto/create-supplier.dto';
-import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import { Body, Controller, Post } from "@nestjs/common";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { SupplierService } from "./supplier.service";
+import { CommonResponseModel, supplierDto } from "libs/shared-models";
+import { ApplicationExceptionHandler } from "libs/backend-utils"
 
+@ApiTags('supplier')
 @Controller('supplier')
 export class SupplierController {
-  constructor(private readonly supplierService: SupplierService) {}
+  constructor(private readonly supplierService: SupplierService,
+    private readonly appHandler: ApplicationExceptionHandler) {}
 
-  @Post()
-  create(@Body() createSupplierDto: CreateSupplierDto) {
-    return this.supplierService.create(createSupplierDto);
+  @Post('/createSupplier')
+  @ApiBody({type:supplierDto})
+  async createSupplier(@Body() req: any , isUpdate : boolean = false) : Promise <CommonResponseModel> {
+    try{
+    return this.supplierService.createSupplier(req , isUpdate)
+  } catch(err) {
+    console.log(err)
+  }
   }
 
-  @Get()
-  findAll() {
-    return this.supplierService.findAll();
+  @Post ('/getAllSuppliers')
+  async getAllSuppliers(): Promise<CommonResponseModel>{
+    try {
+      return this.supplierService.getAllSuppliers();
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.supplierService.findOne(+id);
+  @Post('/getAllActiveSuppliers')
+  async getAllActiveSuppliers(): Promise<CommonResponseModel>{
+    try {
+      return this.supplierService.getAllActiveSuppliers();
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSupplierDto: UpdateSupplierDto) {
-    return this.supplierService.update(+id, updateSupplierDto);
+  @Post('/activateOrDeactivateSupplier')
+  async activateOrDeactivateSupplier(@Body() req: any):Promise <CommonResponseModel>{
+    try {
+      return await this.supplierService.activateOrDeactivateSupplier(req)
+    } catch (error) {
+      return this.appHandler.returnException(CommonResponseModel,error)
+    }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.supplierService.remove(+id);
+  @Post('/updateSuppliers')
+  @ApiBody({type:supplierDto})
+  async updateSuppliers(@Body() dto: any, isUpdate : boolean = false):Promise <CommonResponseModel>{
+    try {
+      return await this.supplierService.createSupplier(dto , isUpdate)
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

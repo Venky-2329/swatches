@@ -11,10 +11,9 @@ export class BuyerController {
 
   @Post('/createBuyer')
   @ApiBody({type:BuyerDto})
-  async createBuyer(@Body() BuyerDto: any , isUpdate : boolean = false) : Promise <CommonResponseModel> {
+  async createBuyer(@Body() req: any , isUpdate : boolean = false) : Promise <CommonResponseModel> {
     try{
-      console.log(BuyerDto,'............................')
-    return this.buyerService.createBuyer(BuyerDto , isUpdate);
+    return this.buyerService.createBuyer(req , isUpdate);
   } catch(err) {
     console.log(err)
   }
@@ -41,7 +40,7 @@ export class BuyerController {
   @Post('/activateOrDeactivateBuyer')
   async activateOrDeactivateBuyer(@Body() req : any): Promise <CommonResponseModel>{
     try {
-      return this.buyerService.activateOrDeactivateBuyer(req)
+      return await this.buyerService.activateOrDeactivateBuyer(req)
     } catch (error) {
       console.log(error);
       
@@ -50,8 +49,10 @@ export class BuyerController {
 
 
   @Post('/updateBuyers')
-  async updateBuyers(@Body() BuyerDto: BuyerDto , isUpdate : boolean = true) : Promise <CommonResponseModel> {
+  @ApiBody({type:BuyerDto})
+  async updateBuyers(@Body() BuyerDto: any , isUpdate : boolean = true) : Promise <CommonResponseModel> {
     try{
+      console.log(BuyerDto,'controller')
     return this.buyerService.createBuyer(BuyerDto , isUpdate);
   } catch(err) {
     console.log(err)

@@ -41,6 +41,7 @@ import { BuyerDto, BuyerReq } from 'libs/shared-models';
     }
   
     const updateBuyer = (buyer: BuyerDto) => {
+      console.log(buyer,'================')
       const authdata = JSON.parse(localStorage.getItem(''));
   
       console.log(buyer.updatedUser);

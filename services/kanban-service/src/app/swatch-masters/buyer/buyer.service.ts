@@ -15,11 +15,11 @@ export class BuyerService {
 
   async createBuyer(dto : BuyerDto , isUpdate: boolean): Promise <CommonResponseModel>{
     try {
-      console.log(dto.buyerName,'----------')
+      console.log(dto,'service')
       const existing = await this.repo.findOne({where : {buyerName : dto.buyerName}})
       console.log(existing,',,,,,,,,,,,,,,,,,,,,,')
       if (existing && (!isUpdate || ( isUpdate &&  existing.buyerId !== dto.buyerId))) {
-        throw new Error('Buyer already exists');
+        return new CommonResponseModel(false , 0,'Buyer already exists');
     }
     const entityData = new BuyerEntity();
     entityData.buyerName = dto.buyerName
@@ -59,7 +59,7 @@ async getAllBuyers():Promise<CommonResponseModel>{
         if(data){
             return new CommonResponseModel(true, 1, 'Data retrieved successfully',data)
         }else{
-            return new CommonResponseModel(false, 0, 'No data found',[])
+            return new CommonResponseModel(false, 0, 'No data found')
         }
     }catch(err){
         throw(err)
@@ -73,7 +73,7 @@ async getAllBuyers():Promise<CommonResponseModel>{
       })
       if (buyerExists){
         if (!buyerExists){
-          throw new ErrorResponse(1011, 'Someone updated the current Buyer information.Refresh and try again')
+          throw new ErrorResponse(1011, 'Someone updated the current Buyer information. Refresh and try again')
         }else{
           const status = await this.repo.update(
             {buyerId : req.buyerId},
@@ -99,7 +99,8 @@ async getAllBuyers():Promise<CommonResponseModel>{
         throw new CommonResponseModel(false , 0 , 'No Records Found')
       }
     } catch (error) {
-      return new CommonResponseModel(false , 0 , 'Something Went Wrong');
+      // return new CommonResponseModel(false , 0 , 'Something Went Wrong');
+      console.log(error)
     }
   }
 

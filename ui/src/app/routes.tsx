@@ -31,6 +31,9 @@ import FabricSwatchUpload from './pages/swatch-masters/fabric-swatch/fabric-swat
 import BuyerGrid from './pages/swatch-masters/buyer-mastrer/buyer-grid';
 import BuyerForm from './pages/swatch-masters/buyer-mastrer/buyer-form';
 import FabricSwatchGrid from './pages/swatch-masters/fabric-swatch/fabric-swatch-grid';
+import SupplierGrid from './pages/swatch-masters/supplier-master/supplier-grid';
+import SupplierForm from './pages/swatch-masters/supplier-master/supplier-form';
+import TrimSwatchUpload from './pages/swatch-masters/trims/trim-form';
 
 export const AppRoutes = () => {
   const router = createHashRouter(
@@ -43,24 +46,15 @@ export const AppRoutes = () => {
           />
         }
       >
-        <Route
-          path="/"
-          key="/"
+        <Route path="/"  key="/"
           element={
             <ProtectionWrapper>
               <BasicLayout />
             </ProtectionWrapper>
           }
         >
-          <Route
-            path="/brands-grid"
-            key="brands-grid"
-            element={<BrandsGrid />}
-          />
-          <Route
-            path="/brands-form"
-            key="brands-form"
-            element={
+          <Route  path="/brands-grid" key="brands-grid" element={<BrandsGrid />} />
+          <Route path="/brands-form" key="brands-form" element={
               <BrandsForm
                 brandData={undefined}
                 updateDetails={function (brandData: BrandDto): void {
@@ -73,32 +67,14 @@ export const AppRoutes = () => {
               />
             }
           />
-          <Route
-            path="/sample-upload"
-            key="sample-upload"
-            element={<SampleUpload />}
-          />
+          <Route path="/sample-upload"  key="sample-upload" element={<SampleUpload />}  />
           <Route path="/fabric-swatch-upload"key="fabric-swatch-upload"element={<FabricSwatchUpload />}/>
           <Route path='/fabric-swatch-view' key={'fabric-swatch-view'} element={<FabricSwatchGrid/>}/>
-          <Route
-            path="/sample-cards"
-            key="sample-cards"
-            element={<SampleCards />}
-          />
-          <Route
-            path="/sample-view"
-            key="sample-view"
-            element={<DigitalSamplesView />}
-          />
-          <Route
-            path="/category-grid"
-            key="category-grid"
-            element={<CategoryGrid />}
-          />
-          <Route
-            path="/category-form"
-            key="category-form"
-            element={
+          <Route path="/trims-swatch-upload"key="trims-swatch-upload"element={<TrimSwatchUpload />}/>
+          <Route  path="/sample-cards"  key="sample-cards" element={<SampleCards />}  />
+          <Route  path="/sample-view"  key="sample-view" element={<DigitalSamplesView />} />
+          <Route path="/category-grid" key="category-grid" element={<CategoryGrid />}  />
+          <Route  path="/category-form"  key="category-form" element={
               <CategoryForm
                 categoryData={undefined}
                 isUpdate={false}
@@ -107,26 +83,10 @@ export const AppRoutes = () => {
               />
             }
           />
-          <Route
-            path="/location-grid"
-            key="location-grid"
-            element={<LocationGrid />}
-          />
-          <Route
-            path="/location-form"
-            key="location-form"
-            element={<LocationForm />}
-          />
-          <Route
-            path="/season-grid"
-            key="season-grid"
-            element={<SeasonGrid />}
-          />
-          <Route
-            path="/season-form"
-            key="season-form"
-            element={
-              <SeasonForm
+          <Route path="/location-grid" key="location-grid" element={<LocationGrid />} />
+          <Route  path="/location-form" key="location-form" element={<LocationForm />}  />
+          <Route  path="/season-grid"  key="season-grid" element={<SeasonGrid />} />
+          <Route  path="/season-form"  key="season-form" element={ <SeasonForm
                 seasonData={undefined}
                 isUpdate={false}
                 closeForm={() => {}}
@@ -136,16 +96,15 @@ export const AppRoutes = () => {
           />
           <Route path="/user-grid" key="user-grid" element={<UserGrid />} />
           <Route path="/user-form" key="user-form" element={<UserForm />} />
-          <Route
-            path="/separete-card/:id"
-            key="separete-card"
-            element={<SeparateView />}
-          />
-          <Route
-            path="/home-screen"
-            key="home-screen"
-            element={<HomeScreen />}
-          />
+
+          <Route path='buyer-grid' key='buyer-grid' element={<BuyerGrid />} />
+          <Route path='buyer-form' key='buyer-form' element={<BuyerForm buyerData={undefined} isUpdate={false} updateDetails={() => {undefined}}  closeForm={() => {}}/>} />
+          
+          <Route path='supplier-grid' key='supplier-grid' element={<SupplierGrid />} />
+          <Route path='supplier-form' key='supplier-form' element={<SupplierForm supplierData={undefined} isUpdate={false} updateDetails={() => {undefined}}  closeForm={() => {}}/>} />
+
+          <Route  path="/separete-card/:id"  key="separete-card"  element={<SeparateView />} />
+          <Route  path="/home-screen" key="home-screen" element={<HomeScreen />} />
 
           <Route
             path="/403"
@@ -165,8 +124,7 @@ export const AppRoutes = () => {
           element={<ScannedCard />}
         />
 
-        <Route path='buyer-grid' key='buyer-grid' element={<BuyerGrid />} />
-        <Route path='buyer-form' key='buyer-form' element={<BuyerForm buyerData={undefined} isUpdate={false} updateDetails={() => {undefined}}  closeForm={() => {}}/>} />
+        
       </Route>
 
       
