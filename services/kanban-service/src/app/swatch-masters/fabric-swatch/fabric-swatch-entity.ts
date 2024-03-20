@@ -1,3 +1,4 @@
+import { StatusEnum } from "libs/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('fabric_swatch')
@@ -89,19 +90,31 @@ export class FabricSwatchEntity{
     })
     grnNumber: string
     
-  @Column('varchar', {
-    nullable: true,
-    name: 'file_name',
-    length: 250,
-  })
-  fileName: string;
+    @Column('varchar', {
+        nullable: true,
+        name: 'file_name',
+        length: 250,
+    })
+    fileName: string;
 
-  @Column('varchar', {
-    nullable: true,
-    name: 'file_path',
-    length: 250,
-  })
-  filePath: string;
+    @Column('varchar', {
+        nullable: true,
+        name: 'file_path',
+        length: 250,
+    })
+    filePath: string;
+
+    @Column('enum',{
+        name:'status',
+        enum: StatusEnum
+    })
+    status: StatusEnum
+
+    @Column('date',{
+        name:'grn_date',
+        // nullable: false
+    })
+    grnDate: Date
 
     @CreateDateColumn({
         name:'created_at',

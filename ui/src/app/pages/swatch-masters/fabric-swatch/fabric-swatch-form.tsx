@@ -1,10 +1,13 @@
-import {Button,Card,Col,Divider,Form,Input,Row,Select,Upload,notification} from 'antd';
+import {Button,Card,Col,Form,Input,Row,Select,Upload,message,notification} from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useEffect, useState } from 'react';
 import ImgCrop from 'antd-img-crop';
-import {createSample,getBrandsData,getCategoryData,getLocationData,getSeasonData,uploadPhoto} from 'libs/shared-services';
+import {BuyerService, FabricSwatchService, createSample,getBrandsData,getCategoryData,getLocationData,getSeasonData,uploadPhoto} from 'libs/shared-services';
 import imageCompression from 'browser-image-compression';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
+import DatePicker from 'antd/lib/date-picker';
+import { FabricSwatchDto } from 'libs/shared-models';
   
   export default function FabricSwatchUpload() {
     const Option = Select;
@@ -13,18 +16,29 @@ import { useNavigate } from 'react-router-dom';
     const [fileList, setFileList] = useState<any[]>([]);
     const [brands, setBrands] = useState([]);
     const [category, setCategory] = useState([]);
-    const [location, setLocation] = useState([]);
+    const [buyerData, setBuyerData] = useState<any[]>([]);
     const [seasons, setSeasons] = useState([]);
     const users: any = JSON.parse(localStorage.getItem('auth'));
     const createUser = users.userName;
     const [selectedType, setSelectedType] = useState('Garment');
     const typesWithCommonFields = ['Garment', 'Trim'];
+    const buyerService = new BuyerService()
+    const service = new FabricSwatchService()
   
     useEffect(() => {
       getBrands();
       getCategories();
       getSeason();
+      getBuyers()
     }, []);
+
+    const getBuyers=()=>{
+      buyerService.getAllActiveBuyers().then((res)=>{
+        if(res.status){
+          setBuyerData(res.data)
+        }
+      })
+    }
   
     function getBrands() {
       getBrandsData().then((res) => {
@@ -42,14 +56,6 @@ import { useNavigate } from 'react-router-dom';
       });
     }
   
-    function getLocations() {
-      getLocationData().then((res) => {
-        if (res.data) {
-          setLocation(res.data);
-        }
-      });
-    }
-  
     function getSeason() {
       getSeasonData().then((res) => {
         if (res.data) {
@@ -61,10 +67,6 @@ import { useNavigate } from 'react-router-dom';
     function onReset() {
       form.resetFields();
       setFileList([]);
-    }
-  
-    function onFinish(values) {
-      createSampleUpload(values);
     }
   
     const handleRemove = (file) => {
@@ -98,7 +100,7 @@ import { useNavigate } from 'react-router-dom';
     const compressImage = async (file) => {
       try {
         const options = {
-          maxSizeMB: 0.5, // Adjust the maximum size as needed
+          maxSizeMB: 50, // Adjust the maximum size as needed
           // maxWidthOrHeight: 1920, // Adjust the maximum width or height as needed
           useWebWorker: true,
         };
@@ -126,46 +128,30 @@ import { useNavigate } from 'react-router-dom';
       },
       fileList: fileList,
     };
-  
-    //   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    //     setFileList(newFileList);
-    //   };
-  
-    function createSampleUpload(values) {
+    
+    const onFinish = (values)=> {
       if (fileList.length > 0) {
-        createSample(values).then((res) => {
+        service.createFabricSwatch(values).then((res) => {
           if (res.status) {
             if (fileList.length > 0) {
               const formData = new FormData();
               fileList.forEach((file: any) => {
                 formData.append('file', file);
               });
-              formData.append('id', `${res.data.sampleId}`);
-              uploadPhoto(formData).then((fileres) => {
+              formData.append('id', `${res.data.fabricSwatchId}`);
+              service.uploadPhoto(formData).then((fileres) => {
                 if (res.status) {
                   res.data.filePath = fileres.data;
-                  notification.success({
-                    message: res.internalMessage,
-                    placement: 'top',
-                    duration: 1,
-                  });
+                  message.success(res.internalMessage,2)
                   onReset();
                   gotoGrid();
                 } else {
-                  notification.error({
-                    message: res.internalMessage,
-                    placement: 'top',
-                    duration: 1,
-                  });
+                  message.error(res.internalMessage,2)
                 }
               });
             }
           } else {
-            notification.info({
-              message: res.internalMessage,
-              placement: 'top',
-              duration: 1,
-            });
+            message.info(res.internalMessage,2)
           }
         });
       } else {
@@ -189,7 +175,7 @@ import { useNavigate } from 'react-router-dom';
     };
   
     function gotoGrid() {
-      navigate('/sample-view');
+      navigate('/fabric-swatch-view');
     }
     return (
         <>
@@ -227,9 +213,9 @@ import { useNavigate } from 'react-router-dom';
                           optionFilterProp="children"
                           placeholder="Select Buyer"
                         >
-                          {brands.map((item) => {
+                          {buyerData.map((item) => {
                             return (
-                              <Option value={item.brandId}>{item.brandName}</Option>
+                              <Option key={item.buyerId} value={item.buyerId}>{item.buyerName}</Option>
                             );
                           })}
                         </Select>
@@ -446,15 +432,24 @@ import { useNavigate } from 'react-router-dom';
                         <Input placeholder="Enter GRN No" />
                       </Form.Item>
                     </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 6 }}
-                  lg={{ span: 6 }}
-                  xl={{ span: 5 }}
-                >
+                    <Col xs={24} sm={12} md={8}>
+                        <Form.Item 
+                        name={'grnDate'}
+                        label={'GRN Date'}
+                        initialValue={moment()}
+                        rules={[
+                          {
+                            required: false,
+                            message: 'Date is required'
+                        },            
+                        ]}
+                        >
+                          <DatePicker showToday format="YYYY-MM-DD"/>
+                        </Form.Item>
+                    </Col>
+              {/* </Row>
+              <Row gutter={24}> */}
+                <Col xs={24} sm={12} md={8}>
                   <Form.Item 
                   label={'Fabric Image'} 
                   required={true} 
@@ -465,34 +460,23 @@ import { useNavigate } from 'react-router-dom';
                     fileList={fileList}
                     onPreview={onPreview}
                     style={{ width: '200px', height: '200px' }}
+                    accept=".png,.jpeg,.PNG,.jpg,.JPG"
                   >
-                    {fileList.length < 5 && '+ Upload'}
+                    {fileList.length < 1 && '+ Upload'}
                   </Upload>
                   </Form.Item>
                 </Col>
               </Row>
               <br></br>
-              <Row gutter={24} style={{ alignContent: 'end' }}>
-                <Col
-                  xs={{ span: 6 }}
-                  sm={{ span: 6 }}
-                  md={{ span: 6 }}
-                  lg={{ span: 6 }}
-                  xl={{ span: 2 }}
-                >
-                  <Button htmlType="submit" type="primary">
+              <Row>
+              <Col span={24} style={{ textAlign: 'right' }}>
+                <Button type="primary" htmlType="submit" >
                     Submit
-                  </Button>
-                </Col>
-                <Col
-                  xs={{ span: 6 }}
-                  sm={{ span: 6 }}
-                  md={{ span: 6 }}
-                  lg={{ span: 6 }}
-                  xl={{ span: 1 }}
-                >
-                  <Button onClick={onReset}>Reset</Button>
-                </Col>
+                </Button>
+                <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
+                    Reset
+                </Button>
+            </Col>
               </Row>
             </Form>
           </Card>

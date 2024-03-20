@@ -1,32 +1,40 @@
 import { Injectable } from "@nestjs/common";
-import { DataSource, Repository } from "typeorm";
 import { FabricSwatchEntity } from "./fabric-swatch-entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { CommonResponseModel } from "libs/shared-models";
+import { CommonResponseModel, StatusEnum } from "libs/shared-models";
 import { FabricSwatchDto } from "./fabric-swatch-dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { DataSource, Repository } from "typeorm";
 
 @Injectable()
 export class FabricSwatchService{
     constructor(
-        @InjectRepository(FabricSwatchEntity)
-        private readonly repo: Repository<FabricSwatchEntity>,
-        private readonly dataSource: DataSource,
-
+      @InjectRepository(FabricSwatchEntity)
+      private readonly repo: Repository<FabricSwatchEntity>,
+      private readonly dataSource: DataSource
     ){}
 
-    async getMaxId():Promise<any>{
-        let query = `max(fabric_swatch_id) as fabricSwatchId FROM fabric_swatch ORDER BY created_at = 'DESC'`
-        const data = await this.dataSource.query(query)
-        return data
+    async getMaxId(): Promise<any> {
+      const id = await this.repo
+          .createQueryBuilder('e')
+          .select(`MAX(fabric_swatch_id) as fabricSwatchId`)
+          .orderBy(` created_at`, 'DESC')
+          .getRawOne();
+      return id;
     }
+
 
     async createFabricSwatch(req: FabricSwatchDto): Promise<CommonResponseModel>{
         try{
-            const entityData = new FabricSwatchEntity() 
+            const formattedDate = new Date(req.grnDate).toISOString().slice(0, 10)
+            const date = new Date(formattedDate)
+
+            const entityData = new FabricSwatchEntity()
             const getId = await this.getMaxId()
+
             if (getId !== undefined) {
-                entityData.fabricSwatchNumber = "FAB" + '-' + Number(getId.fabricSwatchId).toString().padStart(3, '0');
+                entityData.fabricSwatchNumber = "FAB" + '-' + Number(getId.fabricSwatchId + 1).toString().padStart(3, '0');
             }
+
             entityData.buyerId = req.buyerId
             entityData.brandId = req.brandId
             entityData.styleNo = req.styleNo
@@ -39,8 +47,10 @@ export class FabricSwatchService{
             entityData.color = req.color
             entityData.poNumber = req.poNumber
             entityData.grnNumber = req.grnNumber
+            entityData.grnDate = date
+            entityData.status = StatusEnum.OPEN
             const saveData = await this.repo.save(entityData)
-            return new CommonResponseModel(true,1,'Fabric Swatch created successfully',saveData)
+            return new CommonResponseModel(true,1,`${saveData.fabricSwatchNumber} created successfully`,saveData)
         }catch(err){
             throw(err)
         }
@@ -56,5 +66,30 @@ export class FabricSwatchService{
             return new CommonResponseModel(false, 11, 'uploaded failed', filePath);
           }
         } catch (error) {}
+    }
+
+    async getAllFabricSwatchData():Promise<CommonResponseModel>{
+      try{
+        let query = `SELECT fs.fabric_swatch_id AS fabricSwatchId,fs.fabric_swatch_number AS fabricSwatchNo, fs.style_no styleNo,fs.item_no AS itemNo,fs.category_type AS categoryType,fs.color,fs.po_number AS poNumber,
+        fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.mill, fs.status,
+        fs.buyer_id AS buyerId,b.buyer_name AS buyerName,
+        fs.brand_id AS brandId,sbm.brand_name AS brandName,
+        fs.category_id AS categoryId,scm.category_name AS categoryName,
+        fs.season_id AS seasonId,ssm.season_name AS seasonName,fs.grn_date as grnDate
+        FROM fabric_swatch fs
+        LEFT JOIN buyer b ON b.buyer_id = fs.buyer_id
+        LEFT JOIN sample_brands_master sbm ON sbm.brand_id = fs.brand_id
+        LEFT JOIN sample_category_master scm ON scm.category_id = fs.category_id
+        LEFT JOIN sample_season_master ssm ON ssm.season_id = fs.season_id`
+        const data = await this.dataSource.query(query)
+
+        if(data.length>0){
+          return new CommonResponseModel(true,1,'Data retrieved successfully',data)
+        }else{
+          return new CommonResponseModel(false,0,'No data found',[])
+        }
+      }catch(err){
+        throw(err)
+      }
     }
 }

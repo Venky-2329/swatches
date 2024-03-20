@@ -57,4 +57,14 @@ export class FabricSwatchController{
       }
     }
 
+    @Post('/getAllFabricSwatchData')
+    async getAllFabricSwatchData(): Promise<CommonResponseModel> {
+      try {
+        return this.service.getAllFabricSwatchData();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+
 }

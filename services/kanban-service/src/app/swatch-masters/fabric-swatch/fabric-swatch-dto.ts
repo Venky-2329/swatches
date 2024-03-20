@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
+import { StatusEnum } from "libs/shared-models"
 
 export class FabricSwatchDto{
     @ApiProperty()
@@ -33,6 +34,10 @@ export class FabricSwatchDto{
     fileName: string;
     @ApiProperty()
     filePath: string;
+    @ApiProperty()
+    status: StatusEnum;
+    @ApiProperty()
+    grnDate: Date
     @ApiProperty()
     createdAt: Date
     @ApiProperty()

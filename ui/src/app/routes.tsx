@@ -30,6 +30,7 @@ import { BrandDto, categoryDto } from 'libs/shared-models';
 import FabricSwatchUpload from './pages/swatch-masters/fabric-swatch/fabric-swatch-form';
 import BuyerGrid from './pages/swatch-masters/buyer-mastrer/buyer-grid';
 import BuyerForm from './pages/swatch-masters/buyer-mastrer/buyer-form';
+import FabricSwatchGrid from './pages/swatch-masters/fabric-swatch/fabric-swatch-grid';
 
 export const AppRoutes = () => {
   const router = createHashRouter(
@@ -78,6 +79,7 @@ export const AppRoutes = () => {
             element={<SampleUpload />}
           />
           <Route path="/fabric-swatch-upload"key="fabric-swatch-upload"element={<FabricSwatchUpload />}/>
+          <Route path='/fabric-swatch-view' key={'fabric-swatch-view'} element={<FabricSwatchGrid/>}/>
           <Route
             path="/sample-cards"
             key="sample-cards"
