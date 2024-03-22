@@ -18,6 +18,7 @@ export class TrimSwatchController {
   @ApiBody({type : TrimSwatchDto})
   async createTrimSwatch(@Body() req: any):Promise<CommonResponseModel> {
   try {
+    console.log(req,'fgggggddhdj')
         return this.service.createTrimSwatch(req);
   } catch (error) {
     return  this.appHandler.returnException(CommonResponseModel,error)

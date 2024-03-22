@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { BrandsEntityRepository } from './entity/brands.repo';
-import { BrandDto, CommonResponseModel } from 'libs/shared-models';
+import { BrandDto, CommonResponseModel, ErrorResponse } from 'libs/shared-models';
 import { BrandsEntity } from './entity/brands.entity';
 
 @Injectable()
@@ -38,13 +38,26 @@ export class BrandsService {
     return new CommonResponseModel(false, 0, 'Something went wrong');
   }
 
-  async deleteBrands(req: any): Promise<CommonResponseModel> {
-    const deleteBrands = await this.brandsRepo.update(
-      { brandId: req.brandId },
-      { isActive: false }
-    );
-    if (deleteBrands.affected)
-      return new CommonResponseModel(true, 1, 'Brand Deleted');
-    return new CommonResponseModel(false, 0, 'Error while deleting Brand');
+  async activateOrDeactivateBrands(req: any): Promise<CommonResponseModel> {
+ try {
+  const exists = await this.brandsRepo.findOne({where: {brandId :req.brandId}})
+  if(exists){
+    if(!exists){
+      throw new ErrorResponse(0, 'Someone updated the current Brand information. Refresh and try again');
+    }
+    else{
+      const statusUpdate = await this.brandsRepo.update(
+        {brandId: req.brandId},
+        {isActive: req.isActive}
+      );
+      if(exists.isActive){
+        if(statusUpdate.affected){}
+        return 
+      }
+    }
   }
+ } catch (error) {
+  
+ }
+}
 }

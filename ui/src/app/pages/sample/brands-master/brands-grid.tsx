@@ -10,7 +10,7 @@ import {
   message,
 } from 'antd';
 import {
-  deleteBrands,
+  activateOrDeactivateBrands,
   getBrandsData,
   updateBrands,
 } from 'libs/shared-services';
@@ -61,7 +61,7 @@ export default function BrandsGrid() {
   };
 
   const deleteBrand = (val: any) => {
-    deleteBrands(val).then((res) => {
+    activateOrDeactivateBrands(val).then((res) => {
       if (res.status) {
         message.success(res.internalMessage);
         getData();
@@ -112,11 +112,11 @@ export default function BrandsGrid() {
             }}
             title={
               rowData.isActive
-                ? 'Are you sure to Delete this Brand ?'
-                : 'Are you sure to Delete this Brand ?'
+                ? 'Are you sure to Deactivate this Brand ?'
+                : 'Are you sure to Deactivate this Brand ?'
             }
           >
-            <DeleteOutlined style={{ color: 'red', fontSize: '13px' }} />
+
           </Popconfirm>
         </span>
       ),

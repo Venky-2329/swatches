@@ -1,16 +1,37 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {Alert,Button,Card,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Row,Select,Table,Tabs,message} from 'antd';
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Divider,
+  Drawer,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Table,
+  Tabs,
+  message,
+} from 'antd';
 import { Link } from 'react-router-dom';
-import {SearchOutlined,UndoOutlined,FileExcelOutlined, BarcodeOutlined, SendOutlined} from '@ant-design/icons';
+import {
+  SearchOutlined,
+  UndoOutlined,
+  FileExcelOutlined,
+  BarcodeOutlined,
+  SendOutlined,
+} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 // import './visitor-report.css';
 import Highlighter from 'react-highlight-words';
 import { StatusEnum } from 'libs/shared-models';
 import { FabricSwatchService } from 'libs/shared-services';
 
-
 const FabricSwatchApproval = () => {
-    const { Option } = Select
+  const { Option } = Select;
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = React.useState(1);
   // const service = new VisitorService();
@@ -24,12 +45,12 @@ const FabricSwatchApproval = () => {
   const searchInput = useRef(null);
   const [modal, setModal] = useState<boolean>(false);
   const [rejectReason, setRejectReason] = useState('');
-  const fabricService = new FabricSwatchService()
-  const [tagData,setTagData] =  useState<any[]>([])
+  const fabricService = new FabricSwatchService();
+  const [tagData, setTagData] = useState<any[]>([]);
   const [action, setAction] = useState(null);
   const [formData, setFormData] = useState({});
   const [barcodeModal, setBarcodeModal] = useState('');
-  const [activeKey, setActiveKey] = useState('OPEN')
+  const [activeKey, setActiveKey] = useState('OPEN');
 
   useEffect(() => {
     setActiveKey(tabName);
@@ -182,7 +203,6 @@ const FabricSwatchApproval = () => {
   //     visitorRejected(formData);
   //   }
   // };
-  
 
   // const visitorAccepted = (value)=>{
   //   const req = new VisitorStatus(value,form.getFieldValue('tagNumber'))
@@ -218,17 +238,17 @@ const FabricSwatchApproval = () => {
   //   })
   // }
 
-  const handleAccept = (value) =>{
+  const handleAccept = (value) => {
     setAction('accept');
-    setModal(true)
+    setModal(true);
     setFormData(value.visitor_id);
-  }
+  };
 
-  const handelReject = (value)=>{
+  const handelReject = (value) => {
     setAction('reject');
-    setFormData(value.visitor_id );
-    setModal(true)
-  }
+    setFormData(value.visitor_id);
+    setModal(true);
+  };
 
   const columns: any = [
     {
@@ -284,7 +304,7 @@ const FabricSwatchApproval = () => {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
-    },
+      },
     },
     {
       title: 'Item Description',
@@ -298,7 +318,7 @@ const FabricSwatchApproval = () => {
     //   title: 'Status',
     //   dataIndex: 'status',
     // }
-  ]
+  ];
 
   const onReset = () => {
     form.resetFields();
@@ -310,25 +330,26 @@ const FabricSwatchApproval = () => {
   };
 
   const onBarcodeModalCancel = () => {
-    onReset()
-    setBarcodeModal(null)
+    onReset();
+    setBarcodeModal(null);
     setModal(false);
   };
 
-  const barScannerData = (value)=>{
-    setBarcodeModal(null)
-    form.setFieldsValue({tagNumber: value})
-  }
+  const barScannerData = (value) => {
+    setBarcodeModal(null);
+    form.setFieldsValue({ tagNumber: value });
+  };
 
   return (
     <Card
       title={<span>Visitor Approval</span>}
       style={{ textAlign: 'left' }}
-      headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+      headStyle={{ backgroundColor: '#25529a', border: 0, color: 'white' }}
     >
-      <Tabs 
-      // onChange={tabsOnchange} 
-      activeKey={activeKey}>
+      <Tabs
+        // onChange={tabsOnchange}
+        activeKey={activeKey}
+      >
         <TabPane
           key={StatusEnum.OPEN}
           tab={`OPEN : ${countData[0]?.openCount}`}
@@ -341,8 +362,16 @@ const FabricSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-                (o) => !['visitor_check_in','visitor_check_out','check_out_status','duration','rejection_reason','v_card'].includes(o.dataIndex)
-              )}
+              (o) =>
+                ![
+                  'visitor_check_in',
+                  'visitor_check_out',
+                  'check_out_status',
+                  'duration',
+                  'rejection_reason',
+                  'v_card',
+                ].includes(o.dataIndex)
+            )}
             dataSource={data}
             size="small"
           ></Table>
@@ -357,12 +386,11 @@ const FabricSwatchApproval = () => {
                 setPage(current);
               },
             }}
-            
             rowClassName={columnColor}
             scroll={{ x: 'max-content' }}
             columns={columns.filter(
-                (o) => !['rejection_reason','action'].includes(o.dataIndex)
-              )}
+              (o) => !['rejection_reason', 'action'].includes(o.dataIndex)
+            )}
             dataSource={data}
             size="small"
           ></Table>
@@ -379,7 +407,15 @@ const FabricSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-              (o) => !['visitor_check_in','visitor_check_out','check_out_status','duration','v_card','action'].includes(o.dataIndex)
+              (o) =>
+                ![
+                  'visitor_check_in',
+                  'visitor_check_out',
+                  'check_out_status',
+                  'duration',
+                  'v_card',
+                  'action',
+                ].includes(o.dataIndex)
             )}
             dataSource={data}
             size="small"
@@ -392,60 +428,82 @@ const FabricSwatchApproval = () => {
         footer={null}
         style={{ maxWidth: '100%' }}
         destroyOnClose
-        >
+      >
         <Card
-            title={action === 'accept' ? 'Accept' : 'Reject'}
-            size='small'
-            headStyle={{ backgroundColor: '#69c0ff', border: 0, textAlign: 'center' }}
+          title={action === 'accept' ? 'Accept' : 'Reject'}
+          size="small"
+          headStyle={{
+            backgroundColor: '#69c0ff',
+            border: 0,
+            textAlign: 'center',
+          }}
         >
-            <Form form={form} layout='vertical' 
+          <Form
+            form={form}
+            layout="vertical"
             // onFinish={handleFormSubmit}
-            >
+          >
             {action === 'accept' ? (
-                <Row gutter={16}>
+              <Row gutter={16}>
                 <Col>
-                    <Form.Item name='tagNumber' label='Tag' required={true}>
+                  <Form.Item name="tagNumber" label="Tag" required={true}>
                     <Select
-                        suffixIcon={<BarcodeOutlined onClick={(e) => { setBarcodeModal('visitorCode') }}/>}
-                        showSearch
-                        allowClear
-                        optionFilterProp='children'
-                        placeholder={<div style={{ textAlign: 'center' }}>Select Tag</div>}
-                        style={{ width: '150px' }}
+                      suffixIcon={
+                        <BarcodeOutlined
+                          onClick={(e) => {
+                            setBarcodeModal('visitorCode');
+                          }}
+                        />
+                      }
+                      showSearch
+                      allowClear
+                      optionFilterProp="children"
+                      placeholder={
+                        <div style={{ textAlign: 'center' }}>Select Tag</div>
+                      }
+                      style={{ width: '150px' }}
                     >
-                        {tagData.map(e => (
+                      {tagData.map((e) => (
                         <Option key={e.tagId} value={e.tagNumber}>
-                            {e.tagNumber}
+                          {e.tagNumber}
                         </Option>
-                        ))}
+                      ))}
                     </Select>
-                    </Form.Item>
+                  </Form.Item>
                 </Col>
                 {/* {barcodeModal === 'visitorCode' ? <BarcodeScanner handleScan={barScannerData}/>: null} */}
-                </Row>
+              </Row>
             ) : null}
             {action === 'reject' && (
-                <Row gutter={16}>
+              <Row gutter={16}>
                 <Col>
-                    <Form.Item name='rejectionReason' label='Reason' required={true}>
-                    <Input placeholder='Enter Reason' />
-                    </Form.Item>
+                  <Form.Item
+                    name="rejectionReason"
+                    label="Reason"
+                    required={true}
+                  >
+                    <Input placeholder="Enter Reason" />
+                  </Form.Item>
                 </Col>
-                </Row>
+              </Row>
             )}
             <Row>
-                <Col span={24} style={{ textAlign: 'right' }}>
-                <Button type='primary' htmlType='submit'>
-                    Submit
+              <Col span={24} style={{ textAlign: 'right' }}>
+                <Button type="primary" htmlType="submit">
+                  Submit
                 </Button>
-                <Button htmlType='button' style={{ margin: '0 14px' }} onClick={onReset}>
-                    Reset
+                <Button
+                  htmlType="button"
+                  style={{ margin: '0 14px' }}
+                  onClick={onReset}
+                >
+                  Reset
                 </Button>
-                </Col>
+              </Col>
             </Row>
-            </Form>
+          </Form>
         </Card>
-        </Modal>
+      </Modal>
     </Card>
   );
 };

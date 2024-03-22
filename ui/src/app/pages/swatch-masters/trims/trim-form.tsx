@@ -9,6 +9,7 @@ import {
   Row,
   Select,
   Upload,
+  message,
   notification,
 } from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
@@ -139,6 +140,7 @@ export default function TrimSwatchUpload() {
 
   function createUpload(values) {
     if (fileList.length > 0) {
+      console.log(values,'...................')
       mainService.createTrimSwatch(values).then((res) => {
         if (res.status) {
           if (fileList.length > 0) {
@@ -150,19 +152,11 @@ export default function TrimSwatchUpload() {
             mainService.photoUpload(formData).then((fileres) => {
               if (res.status) {
                 res.data.filePath = fileres.data;
-                notification.success({
-                  message: res.internalMessage,
-                  placement: 'top',
-                  duration: 1,
-                });
+                message.success(res.internalMessage,2)
                 onReset();
                 gotoGrid();
               } else {
-                notification.error({
-                  message: res.internalMessage,
-                  placement: 'top',
-                  duration: 1,
-                });
+                message.error(res.internalMessage,2)
               }
             });
           }
@@ -201,6 +195,7 @@ export default function TrimSwatchUpload() {
     <>
       <Card
         title="Trims Swatch"
+        headStyle={{ backgroundColor: '#25529a', color: 'white' }}
         extra={
           <span>
             <Button type="primary" onClick={gotoGrid}>

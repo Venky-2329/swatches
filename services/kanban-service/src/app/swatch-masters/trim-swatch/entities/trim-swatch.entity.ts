@@ -15,7 +15,7 @@ export class TrimSwatchEntity {
     buyerId : number
 
     @Column('int',{name:'supplier_id'})
-    suppplierId : number
+    supplierId : number
 
     @Column('varchar',{
         name:'po_number',

@@ -23,6 +23,7 @@ export class TrimSwatchService {
 
   async createTrimSwatch(req: TrimSwatchDto):Promise<CommonResponseModel>{
     try {
+      console.log(req.supplierId,'-------------------')
       const formattedDate = new Date(req.grnDate).toISOString().slice(0,10)
       const date = new Date(formattedDate)
 
@@ -34,7 +35,7 @@ export class TrimSwatchService {
       }
 
       entityData.buyerId = req.buyerId
-      entityData.suppplierId = req.suppplierId
+      entityData.supplierId = req.supplierId
       entityData.poNumber = req.poNumber
       entityData.itemNo = req.itemNo
       entityData.itemDescription = req.itemDescription
@@ -70,7 +71,7 @@ export class TrimSwatchService {
     try {
       const query = `SELECT ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
-      ts.invoice_no , ts.style_no ,ts.merchant , ts.grn_number , ts.grn_date , ts.checked_by , ts.file_name , ts.file_path ,ts.status
+      ts.invoice_no , ts.style_no ,ts.merchant , ts.grn_number , ts.grn_date , ts.checked_by , ts.file_name , ts.file_path ,ts.status,ts.created_at
       FROM trim_swatch ts
       LEFT JOIN buyer b ON b.buyer_id = ts.buyer_id
       LEFT JOIN supplier s ON s.supplier_id = ts.supplier_id`

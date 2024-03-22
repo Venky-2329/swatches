@@ -4,7 +4,7 @@ export class TrimSwatchDto{
     trimSwatchId : number
     trimSwatchNumber : string
     buyerId : number
-    suppplierId : number
+    supplierId : number
     poNumber: string
     itemNo: string
     itemDescription: string
@@ -27,7 +27,7 @@ export class TrimSwatchDto{
     trimSwatchId : number,
     trimSwatchNumber : string,
     buyerId : number,
-    suppplierId : number,
+    supplierId : number,
     poNumber: string,
     itemNo: string,
     itemDescription: string,
@@ -49,7 +49,7 @@ export class TrimSwatchDto{
         this.trimSwatchId = trimSwatchId
         this.trimSwatchNumber = trimSwatchNumber
         this.buyerId = buyerId
-        this.suppplierId = suppplierId
+        this.supplierId = supplierId
         this.poNumber = poNumber
         this.itemNo = itemNo
         this.itemDescription = itemDescription

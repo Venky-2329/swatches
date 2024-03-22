@@ -106,13 +106,6 @@ export function BasicLayout(props: BasicLayoutProps) {
           icon: <TableOutlined />,
           filepath: '../',
         },
-        {
-          label: 'User',
-          key: 'user-grid',
-          path: '/user-grid',
-          icon: <TableOutlined />,
-          filepath: '../',
-        },
       ],
     },
     {

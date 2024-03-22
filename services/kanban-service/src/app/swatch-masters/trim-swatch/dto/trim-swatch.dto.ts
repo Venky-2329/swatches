@@ -12,7 +12,7 @@ export class TrimSwatchDto {
     buyerId : number
 
     @ApiProperty()
-    suppplierId : number
+    supplierId : number
 
     @ApiProperty()
     poNumber: string

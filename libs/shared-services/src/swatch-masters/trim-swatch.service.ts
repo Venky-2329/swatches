@@ -5,6 +5,7 @@ export class TrimSwatchService extends CommonAxiosServicePms{
     URL = '/trim-swatch'
 
     async createTrimSwatch(req: TrimSwatchDto):Promise<CommonResponseModel>{
+        console.log(req.supplierId,'999999999999999999')
         return this.axiosPostCall(this.URL + '/createTrimSwatch',req)
     }
 
