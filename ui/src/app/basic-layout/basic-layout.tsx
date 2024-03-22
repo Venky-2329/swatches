@@ -44,13 +44,13 @@ export function BasicLayout(props: BasicLayoutProps) {
   }
 
   const baseRouterList: any[] = [
-    {
-      label: 'Home',
-      key: 'home-screen',
-      path: 'home-screen',
-      icon: <HomeOutlined />,
-      filepath: '../',
-    },
+    // {
+    //   label: 'Home',
+    //   key: 'home-screen',
+    //   path: 'home-screen',
+    //   icon: <HomeOutlined />,
+    //   filepath: '../',
+    // },
     {
       label: 'Masters',
       path: '/masters',
@@ -58,37 +58,9 @@ export function BasicLayout(props: BasicLayoutProps) {
       filepath: '../',
       children: [
         {
-          label: 'User',
-          key: 'user-grid',
-          path: '/user-grid',
-          icon: <TableOutlined />,
-          filepath: '../',
-        },
-        {
-          label: 'Brands',
+          label: 'Brand',
           key: 'brands-grid',
           path: '/brands-grid',
-          icon: <TableOutlined />,
-          filepath: '../',
-        },
-        {
-          label: 'Category',
-          key: 'category-grid',
-          path: '/category-grid',
-          icon: <TableOutlined />,
-          filepath: '../',
-        },
-        {
-          label: 'Season',
-          key: 'season-grid',
-          path: '/season-grid',
-          icon: <TableOutlined />,
-          filepath: '../',
-        },
-        {
-          label: 'Location',
-          key: 'location-grid',
-          path: '/location-grid',
           icon: <TableOutlined />,
           filepath: '../',
         },
@@ -100,9 +72,44 @@ export function BasicLayout(props: BasicLayoutProps) {
           filepath: '../',
         },
         {
+          label: 'Category',
+          key: 'category-grid',
+          path: '/category-grid',
+          icon: <TableOutlined />,
+          filepath: '../',
+        },
+        {
+          label: 'Employee',
+          key: 'employee-grid',
+          path: '/employee-grid',
+          icon: <TableOutlined />,
+          filepath: '../',
+        },
+        {
+          label: 'Location',
+          key: 'location-grid',
+          path: '/location-grid',
+          icon: <TableOutlined />,
+          filepath: '../',
+        },
+        {
+          label: 'Season',
+          key: 'season-grid',
+          path: '/season-grid',
+          icon: <TableOutlined />,
+          filepath: '../',
+        },
+        {
           label: 'Supplier',
           key: 'supplier-grid',
           path: '/supplier-grid',
+          icon: <TableOutlined />,
+          filepath: '../',
+        },
+        {
+          label: 'User',
+          key: 'user-grid',
+          path: '/user-grid',
           icon: <TableOutlined />,
           filepath: '../',
         },
@@ -125,6 +132,13 @@ export function BasicLayout(props: BasicLayoutProps) {
           label: 'Trims Upload',
           key: 'trims-swatch-view',
           path: '/trims-swatch-view',
+          icon: <UploadOutlined />,
+          filepath: '../',
+        },
+        {
+          label: 'Fabric Approval',
+          key: 'fabric-swatch-approval',
+          path: '/fabric-swatch-approval',
           icon: <UploadOutlined />,
           filepath: '../',
         },
@@ -163,7 +177,7 @@ export function BasicLayout(props: BasicLayoutProps) {
         }}
       >
         <ProLayout
-          title="Digital Design Room"
+          title="Swatch Card"
           logo={<LogoIcon />}
           locale="en-US"
           // layout='top'

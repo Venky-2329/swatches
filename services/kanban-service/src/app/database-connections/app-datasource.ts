@@ -13,6 +13,10 @@ import { SeasonEntity } from '../masters/season/entity/season.entity';
 import { UserEntity } from '../masters/users/entity/user.entity';
 import { SampleUpload } from '../masters/sample-upload/entity/sample-upload.entity';
 import { FabricSwatchEntity } from '../swatch-masters/fabric-swatch/fabric-swatch-entity';
+import { EmployeeEntity } from '../swatch-masters/employees/entity/employee.entity';
+import { DesignationEntity } from '../swatch-masters/designation/entity/designation.entity';
+import { DepartmentEntity } from '../swatch-masters/department/entity/department.entity';
+import { UnitEntity } from '../swatch-masters/unit/entity/unit.entity';
 
   export const typeOrmConfig: DataSourceOptions = {
     type: "mysql",
@@ -20,7 +24,7 @@ import { FabricSwatchEntity } from '../swatch-masters/fabric-swatch/fabric-swatc
     username: 'internal_apps',
     password: 'Schemax@2023',
     database: 'internal_apps',
-    entities:[RacksEntity,RacksChildEntity,BrandsEntity,CategoryEntity,LocationEntity,SeasonEntity,UserEntity,SampleUpload,FabricSwatchEntity]
+    entities:[RacksEntity,RacksChildEntity,BrandsEntity,CategoryEntity,LocationEntity,SeasonEntity,UserEntity,SampleUpload,FabricSwatchEntity,UnitEntity,EmployeeEntity,DesignationEntity,DepartmentEntity]
   };
   
   export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {

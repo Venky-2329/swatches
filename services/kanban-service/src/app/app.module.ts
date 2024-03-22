@@ -13,11 +13,15 @@ import { UsersModule } from './masters/users/user.module';
 import { FabricSwatchModule } from './swatch-masters/fabric-swatch/fabric-swatch.module';
 import { BuyerModule } from './swatch-masters/buyer/buyer.module';
 import { SupplierModule } from './swatch-masters/supplier/supplier.module';
+import { EmployeeModule } from './swatch-masters/employees/employee.module';
+import { DesignationModule } from './swatch-masters/designation/designation.module';
+import { UnitModule } from './swatch-masters/unit/unit.module';
+import { DepartmentModule } from './swatch-masters/department/department.module';
 import { TrimSwatchEntity } from './swatch-masters/trim-swatch/entities/trim-swatch.entity';
 import { TrimSwatchModule } from './swatch-masters/trim-swatch/trim-swatch.module';
 
 @Module({
-  imports: [DatabaseModule,RacksModule,CategoryModule,BrandsModule,SeasonModule,SampleUploadModule,LocationModule,UsersModule,FabricSwatchModule ,BuyerModule,SupplierModule , TrimSwatchModule],
+  imports: [DatabaseModule,RacksModule,CategoryModule,BrandsModule,SeasonModule,SampleUploadModule,LocationModule,UsersModule,FabricSwatchModule ,BuyerModule,SupplierModule,EmployeeModule,DesignationModule,UnitModule,DepartmentModule , TrimSwatchModule],
   controllers: [AppController],
   providers: [AppService],
 })

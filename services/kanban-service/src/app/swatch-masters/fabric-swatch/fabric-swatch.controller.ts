@@ -6,13 +6,15 @@ import { ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { extname } from "path";
 import { diskStorage } from 'multer';
 import { FabricSwatchDto } from "./fabric-swatch-dto";
+import { ApplicationExceptionHandler } from "libs/backend-utils";
 
 
 
 @Controller('fabric-swatch')
 export class FabricSwatchController{
     constructor(
-        private readonly service: FabricSwatchService
+        private readonly service: FabricSwatchService,
+        private readonly appHandler: ApplicationExceptionHandler
     ){}
     
     @Post('/createFabricSwatch')
@@ -64,6 +66,15 @@ export class FabricSwatchController{
       } catch (err) {
         console.log(err);
       }
+    }
+
+    @Post('/statusCount')
+    async statusCount(): Promise<CommonResponseModel>{
+        try{
+            return await this.service.statusCount()
+        }catch(err){
+            return this.appHandler.returnException(CommonResponseModel,err)
+        }
     }
 
 
