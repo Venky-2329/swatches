@@ -15,4 +15,8 @@ export class FabricSwatchService extends CommonAxiosServicePms{
     async getAllFabricSwatchData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL+ '/getAllFabricSwatchData');
     }
+
+    async statusCount(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL+ '/statusCount');
+    }
 }

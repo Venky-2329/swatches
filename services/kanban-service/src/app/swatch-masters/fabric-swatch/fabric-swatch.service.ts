@@ -32,7 +32,7 @@ export class FabricSwatchService{
             const getId = await this.getMaxId()
 
             if (getId !== undefined) {
-                entityData.fabricSwatchNumber = "FAB" + '-' + Number(getId.fabricSwatchId + 1).toString().padStart(3, '0');
+                entityData.fabricSwatchNumber = "FSW" + '-' + Number(getId.fabricSwatchId + 1).toString().padStart(6, '0');
             }
 
             entityData.buyerId = req.buyerId
@@ -92,4 +92,22 @@ export class FabricSwatchService{
         throw(err)
       }
     }
+
+    async statusCount():Promise<CommonResponseModel>{
+      try{
+          let query = `SELECT
+          COALESCE(SUM(CASE WHEN STATUS = 'open' THEN 1 ELSE 0 END),0) AS openCount,
+          COALESCE(SUM(CASE WHEN STATUS = 'approved' THEN 1 ELSE 0 END),0) AS approvedCount,
+          COALESCE(SUM(CASE WHEN STATUS = 'rejected' THEN 1 ELSE 0 END),0) AS rejectedCount
+          FROM fabric_swatch`
+          const result = await this.dataSource.query(query)
+          if (result.length) {
+              return new CommonResponseModel(true, 1, 'Data retrieved successfully', result);
+            } else {
+              return new CommonResponseModel(false, 0, 'No data found', []);
+            }
+      }catch(err){
+          throw(err)
+      }
+  }
 }

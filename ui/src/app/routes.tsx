@@ -34,6 +34,9 @@ import FabricSwatchGrid from './pages/swatch-masters/fabric-swatch/fabric-swatch
 import SupplierGrid from './pages/swatch-masters/supplier-master/supplier-grid';
 import SupplierForm from './pages/swatch-masters/supplier-master/supplier-form';
 import TrimSwatchUpload from './pages/swatch-masters/trims/trim-form';
+import EmployeeGrid from './pages/swatch-masters/employee/employee-grid';
+import EmployeeForm from './pages/swatch-masters/employee/employee-form';
+import FabricSwatchApproval from './pages/swatch-masters/fabric-swatch/fabric-switch-approval';
 
 export const AppRoutes = () => {
   const router = createHashRouter(
@@ -94,6 +97,14 @@ export const AppRoutes = () => {
               />
             }
           />
+          <Route path="/employee-grid" key="employee-grid" element={<EmployeeGrid />} />
+          <Route path="/employee-form" key="employee-form" element={<EmployeeForm 
+          employeeData={undefined}
+
+          isUpdate={false}
+          closeForm={() => { }}
+          updateDetails={(undefined) => { }}
+          />} />
           <Route path="/user-grid" key="user-grid" element={<UserGrid />} />
           <Route path="/user-form" key="user-form" element={<UserForm />} />
 
@@ -105,6 +116,7 @@ export const AppRoutes = () => {
 
           <Route  path="/separete-card/:id"  key="separete-card"  element={<SeparateView />} />
           <Route  path="/home-screen" key="home-screen" element={<HomeScreen />} />
+          <Route path='/fabric-swatch-approval' key='/fabric-swatch-approval' element={<FabricSwatchApproval/>}/>
 
           <Route
             path="/403"

@@ -1,7 +1,7 @@
 import { Button, Card, Col, Form, Row, Select, Table, message } from 'antd';
 import { FabricSwatchService } from 'libs/shared-services';
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const FabricSwatchGrid = () => {
     const Option = Select;
@@ -104,7 +104,17 @@ const FabricSwatchGrid = () => {
 
   return (
     <div>
-        <Card title="Fabric Swatch" extra={<span><Button type="primary" onClick={gotoGrid}>Create</Button></span>}>
+        <Card title="Fabric Swatch" 
+        headStyle={{ backgroundColor: '#7d33a2', color: 'white' }}
+        extra={
+          (
+              <Link to="/fabric-swatch-upload">
+                  <span style={{ color: "white" }}>
+                      <Button>Create </Button>{" "}
+                  </span>
+              </Link>
+          )
+      }>
             <Form form={form} layout='vertical'>
                 <Row>
                     <Col xs={24} sm={24} md={6} lg={4} xl={4}>
@@ -125,6 +135,7 @@ const FabricSwatchGrid = () => {
             <Table 
             columns={columns} 
             dataSource={mainData}
+            bordered
             scroll={{x:'max-content'}}/>
         </Card>
     </div>
