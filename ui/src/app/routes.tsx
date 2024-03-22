@@ -34,6 +34,7 @@ import FabricSwatchGrid from './pages/swatch-masters/fabric-swatch/fabric-swatch
 import SupplierGrid from './pages/swatch-masters/supplier-master/supplier-grid';
 import SupplierForm from './pages/swatch-masters/supplier-master/supplier-form';
 import TrimSwatchUpload from './pages/swatch-masters/trims/trim-form';
+import { TrimSwatchGrid } from './pages/swatch-masters/trims/trim-grid';
 
 export const AppRoutes = () => {
   const router = createHashRouter(
@@ -71,6 +72,8 @@ export const AppRoutes = () => {
           <Route path="/fabric-swatch-upload"key="fabric-swatch-upload"element={<FabricSwatchUpload />}/>
           <Route path='/fabric-swatch-view' key={'fabric-swatch-view'} element={<FabricSwatchGrid/>}/>
           <Route path="/trims-swatch-upload"key="trims-swatch-upload"element={<TrimSwatchUpload />}/>
+          <Route path="/trims-swatch-view"key="trims-swatch-view"element={<TrimSwatchGrid />}/>
+
           <Route  path="/sample-cards"  key="sample-cards" element={<SampleCards />}  />
           <Route  path="/sample-view"  key="sample-view" element={<DigitalSamplesView />} />
           <Route path="/category-grid" key="category-grid" element={<CategoryGrid />}  />

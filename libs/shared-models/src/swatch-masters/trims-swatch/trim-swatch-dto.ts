@@ -1,0 +1,72 @@
+import { StatusEnum } from "../../enums"
+
+export class TrimSwatchDto{
+    trimSwatchId : number
+    trimSwatchNumber : string
+    buyerId : number
+    suppplierId : number
+    poNumber: string
+    itemNo: string
+    itemDescription: string
+    invoiceNo: string
+    styleNo: string
+    merchant: string
+    grnNumber: string
+    grnDate: Date
+    checkedBy: string
+    fileName: string;
+    filePath: string;
+    status: StatusEnum
+    createdAt: Date
+    createdUser: string | null
+    updatedAt: Date
+    updatedUser: string | null
+    versionFlag: number
+
+    constructor(
+    trimSwatchId : number,
+    trimSwatchNumber : string,
+    buyerId : number,
+    suppplierId : number,
+    poNumber: string,
+    itemNo: string,
+    itemDescription: string,
+    invoiceNo: string,
+    styleNo: string,
+    merchant: string,
+    grnNumber: string,
+    grnDate: Date,
+    checkedBy: string,
+    fileName: string,
+    filePath: string,
+    status: StatusEnum,
+    createdAt: Date,
+    createdUser: string | null,
+    updatedAt: Date,
+    updatedUser: string | null,
+    versionFlag: number,
+    ){
+        this.trimSwatchId = trimSwatchId
+        this.trimSwatchNumber = trimSwatchNumber
+        this.buyerId = buyerId
+        this.suppplierId = suppplierId
+        this.poNumber = poNumber
+        this.itemNo = itemNo
+        this.itemDescription = itemDescription
+        this.invoiceNo = invoiceNo
+        this.styleNo = styleNo
+        this.merchant = merchant
+        this.grnNumber = grnNumber
+        this.grnDate = grnDate
+        this.checkedBy = checkedBy
+        this.fileName = fileName
+        this.filePath = filePath
+        this.status = status
+        this.createdAt = createdAt
+        this.createdUser = createdUser
+        this.updatedAt = updatedAt
+        this.updatedUser = updatedUser
+        this.versionFlag = versionFlag
+    }
+
+}

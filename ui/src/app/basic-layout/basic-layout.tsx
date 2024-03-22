@@ -102,7 +102,7 @@ export function BasicLayout(props: BasicLayoutProps) {
         {
           label: 'Supplier',
           key: 'supplier-grid',
-          path: 'supplier-grid',
+          path: '/supplier-grid',
           icon: <TableOutlined />,
           filepath: '../',
         },
@@ -123,8 +123,8 @@ export function BasicLayout(props: BasicLayoutProps) {
         },
         {
           label: 'Trims Upload',
-          key: 'trims-swatch-upload',
-          path: '/trims-swatch-upload',
+          key: 'trims-swatch-view',
+          path: '/trims-swatch-view',
           icon: <UploadOutlined />,
           filepath: '../',
         },
