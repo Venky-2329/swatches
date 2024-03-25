@@ -65,4 +65,7 @@ export class TrimSwatchDto {
     @ApiProperty()
     versionFlag: number
 
+    @ApiProperty()
+    rejectionReason: string
+
 }

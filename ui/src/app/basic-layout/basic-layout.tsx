@@ -106,6 +106,13 @@ export function BasicLayout(props: BasicLayoutProps) {
           icon: <TableOutlined />,
           filepath: '../',
         },
+        {
+          label: 'Approval Users',
+          key: 'approval-grid',
+          path: '/approval-grid',
+          icon: <TableOutlined />,
+          filepath: '../',
+        },
       ],
     },
     {

@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('buyer')
+@Entity('swatch_buyer')
 export class BuyerEntity {
 
     @PrimaryGeneratedColumn("increment" , {name: 'buyer_id'})

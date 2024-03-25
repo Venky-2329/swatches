@@ -7,4 +7,5 @@ export * from './department'
 export * from './employee'
 export * from './unit'
 export * from './trims-swatch';
+export * from './approval-users';
 
