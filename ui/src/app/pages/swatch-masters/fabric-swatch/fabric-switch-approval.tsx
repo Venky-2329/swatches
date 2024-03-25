@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {Alert,Button,Card,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Row,Select,Table,Tabs,message} from 'antd';
-import { Link } from 'react-router-dom';
-import {SearchOutlined,UndoOutlined,FileExcelOutlined, BarcodeOutlined, SendOutlined} from '@ant-design/icons';
+import {Alert,Button,Card,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Table,Tabs,Tag,Tooltip,message} from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import {SearchOutlined,UndoOutlined,FileImageOutlined, BarcodeOutlined, EyeOutlined} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 // import './visitor-report.css';
 import Highlighter from 'react-highlight-words';
-import { StatusEnum } from 'libs/shared-models';
+import { DateReq, StatusEnum, SwatchStatus } from 'libs/shared-models';
 import { FabricSwatchService } from 'libs/shared-services';
+import TextArea from 'antd/es/input/TextArea';
 
 
 const FabricSwatchApproval = () => {
-    const { Option } = Select
+  let navigate = useNavigate();
+  const { Option } = Select
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = React.useState(1);
   // const service = new VisitorService();
@@ -26,47 +28,42 @@ const FabricSwatchApproval = () => {
   const [rejectReason, setRejectReason] = useState('');
   const fabricService = new FabricSwatchService()
   const [tagData,setTagData] =  useState<any[]>([])
-  const [action, setAction] = useState(null);
   const [formData, setFormData] = useState({});
   const [barcodeModal, setBarcodeModal] = useState('');
   const [activeKey, setActiveKey] = useState('OPEN')
+  const service = new FabricSwatchService()
+  const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [imagePath, setImagePath] = useState('');
+  const [action, setAction] = useState(null);
+
 
   useEffect(() => {
     setActiveKey(tabName);
   }, [tabName]);
 
   useEffect(() => {
-    // getData(tabName);
+    getData(tabName);
     getCount();
-    // getTags()
   }, []);
 
-  // const getData = (value: any) => {
-  //   const req = new DateReq(value, undefined, undefined);
-  //   if (form.getFieldValue('fromDate') !== undefined) {
-  //     req.fromDate = form.getFieldValue('fromDate')[0].format('YYYY-MM-DD');
-  //   }
-  //   if (form.getFieldValue('fromDate') !== undefined) {
-  //     req.toDate = form.getFieldValue('fromDate')[1].format('YYYY-MM-DD');
-  //   }
-  //   service.getVisitors(req).then((res) => {
-  //     if (res.status) {
-  //       setData(res.data);
-  //       message.success(res.internalMessage, 2);
-  //     } else {
-  //       setData([]);
-  //       message.error(res.internalMessage, 2);
-  //     }
-  //   });
-  // };
-
-  // const getTags = ()=>{
-  //   tagService.getAllActiveTag().then((res)=>{
-  //       if(res.status){
-  //           setTagData(res.data)
-  //       }
-  //   })
-  // }
+  const getData = (value: any) => {
+    const req = new DateReq(value, undefined, undefined);
+    if (form.getFieldValue('fromDate') !== undefined) {
+      req.fromDate = form.getFieldValue('fromDate')[0].format('YYYY-MM-DD');
+    }
+    if (form.getFieldValue('fromDate') !== undefined) {
+      req.toDate = form.getFieldValue('fromDate')[1].format('YYYY-MM-DD');
+    }
+    service.getAllFabricSwatchData(req).then((res) => {
+      if (res.status) {
+        setData(res.data);
+        message.success(res.internalMessage, 2);
+      } else {
+        setData([]);
+        message.error(res.internalMessage, 2);
+      }
+    });
+  };
 
   const getCount = () => {
     fabricService.statusCount().then((res) => {
@@ -76,10 +73,10 @@ const FabricSwatchApproval = () => {
     });
   };
 
-  // const tabsOnchange = (value: any) => {
-  //   setTabName(value);
-  //   getData(value);
-  // };
+  const tabsOnchange = (value: any) => {
+    setTabName(value);
+    getData(value);
+  };
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({
@@ -164,72 +161,61 @@ const FabricSwatchApproval = () => {
     setSearchText('');
   }
 
-  // const selectedTabData = data.filter((item) => {
-  //   if (selectedTabKey === '1') {
-  //     return item.status === VisitorStatusEnum.OPEN;
-  //   } else if (selectedTabKey === '2') {
-  //     return item.status === VisitorStatusEnum.ACCEPTED;
-  //   } else if (selectedTabKey === '3') {
-  //     return item.status === VisitorStatusEnum.REJECTED;
-  //   }
-  //   return true;
-  // });
+  const fabricAccepted = (value)=>{
+    console.log(value,',,,,,,,,,,,,,,,,,,,,')
+    const req = new SwatchStatus(value?.fabricSwatchId,value?.fabricSwatchNo)
+    service.updateApprovedStatus(req).then((res)=>{
+        if(res.status){
+            message.success(res.internalMessage,2)
+            setTabName('APPROVED')
+            setActiveKey('APPROVED');
+            getData('APPROVED')
+            getCount()
+        }else{
+            message.error(res.internalMessage,2)
+        }
+    })
+  }
 
-  // const handleFormSubmit = () => {
-  //   if (action === 'accept') {
-  //     visitorAccepted(formData);
-  //   } else if (action === 'reject') {
-  //     visitorRejected(formData);
-  //   }
-  // };
-  
-
-  // const visitorAccepted = (value)=>{
-  //   const req = new VisitorStatus(value,form.getFieldValue('tagNumber'))
-  //   service.updateApprovedStatus(req).then((res)=>{
-  //       if(res.status){
-  //           message.success(res.internalMessage,2)
-  //           setTabName('ACCEPTED')
-  //           setActiveKey('ACCEPTED');
-  //           getData('ACCEPTED')
-  //           getCount()
-  //           setModal(false)
-  //           onReset()
-  //       }else{
-  //           message.error(res.internalMessage,2)
-  //       }
-  //   })
-  // }
-
-  // const visitorRejected =(value)=>{
-  //   const req = new VisitorStatus(value,undefined,form.getFieldValue('rejectionReason'))
-  //   service.updateRejectedStatus(req).then((res)=>{
-  //       if(res.status){
-  //           message.success(res.internalMessage,2)
-  //           setTabName('REJECTED')
-  //           setActiveKey('REJECTED');
-  //           getData('REJECTED')
-  //           getCount()
-  //           setModal(false)
-  //           onReset()
-  //       }else{
-  //           message.error(res.internalMessage,2)
-  //       }
-  //   })
-  // }
-
-  const handleAccept = (value) =>{
-    setAction('accept');
-    setModal(true)
-    setFormData(value.visitor_id);
+  const fabricRejected =(value)=>{
+    console.log(value,'.......................')
+    const req = new SwatchStatus(value,undefined,form.getFieldValue('rejectionReason'))
+    service.updateRejectedStatus(req).then((res)=>{
+        if(res.status){
+            message.success(res.internalMessage,2)
+            setTabName('REJECTED')
+            setActiveKey('REJECTED');
+            getData('REJECTED')
+            getCount()
+            setModal(false)
+            onReset()
+        }else{
+            message.error(res.internalMessage,2)
+        }
+    })
   }
 
   const handelReject = (value)=>{
-    setAction('reject');
-    setFormData(value.visitor_id );
+    setAction('reject')
+    setFormData(value?.fabricSwatchId)
     setModal(true)
   }
 
+  const handleFormSubmit = () => {
+    fabricRejected(formData);
+  };
+
+  const DetailView = (value) => {
+    return (
+      navigate(`/fabric-swatch-detail-view`,{state:{data: value}})
+    )
+  }
+
+  const openImage = (record) => {
+    setAction('image')
+    setImagePath(record?.filePath);
+    setModal(true);
+};
   const columns: any = [
     {
       title: 'S.No',
@@ -294,10 +280,47 @@ const FabricSwatchApproval = () => {
       title: 'Mill/Vendor',
       dataIndex: 'mill',
     },
-    // {
-    //   title: 'Status',
-    //   dataIndex: 'status',
-    // }
+    {
+      title:'Image',
+      dataIndex:'',
+      render:(text,record)=>{
+        return(
+          <Button type="link" onClick={() => openImage(record)}>
+            <FileImageOutlined />
+          </Button>
+        )
+      }
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Action</div>,
+      dataIndex: 'action',
+      render: (text, rowData) => {
+        return(
+          // <span>
+          // <Tooltip placement="top" title="Detail View">
+            
+          //   <EyeOutlined  onClick={() => DetailView(rowData.fabricSwatchId)} style={{color:'blue',fontSize:15}} size={20}/>
+          // </Tooltip>
+          // </span>
+        <div style={{ textAlign: 'center' }}>
+            <Popconfirm
+              title="Are you sure to accept?"
+              onConfirm={() => fabricAccepted(rowData)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary">ACCEPT</Button>
+            </Popconfirm>
+            <Divider type='vertical'/>
+            <Button type="primary" danger onClick={() => handelReject(rowData)}>REJECT</Button>
+        </div>
+        )
+    },
+    },
+    {
+      title:'Rejection Reason',
+      dataIndex: 'rejectionReason'
+    }
   ]
 
   const onReset = () => {
@@ -309,30 +332,27 @@ const FabricSwatchApproval = () => {
     return record.check_out_status === 'OPEN' ? 'open' : '';
   };
 
-  const onBarcodeModalCancel = () => {
+  const onModalCancel = () => {
     onReset()
     setBarcodeModal(null)
     setModal(false);
   };
 
-  const barScannerData = (value)=>{
-    setBarcodeModal(null)
-    form.setFieldsValue({tagNumber: value})
-  }
-
   return (
     <Card
-      title={<span>Visitor Approval</span>}
-      style={{ textAlign: 'left' }}
-      headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
-    >
+      title={<span>Fabric Approval</span>}
+      style={{ textAlign: 'center' }}
+      headStyle={{ backgroundColor: '#7d33a2', color: 'white' }}
+      >
       <Tabs 
-      // onChange={tabsOnchange} 
-      activeKey={activeKey}>
+      onChange={tabsOnchange} 
+      activeKey={activeKey}
+      >
         <TabPane
           key={StatusEnum.OPEN}
           tab={`OPEN : ${countData[0]?.openCount}`}
         >
+          {data.length > 0 ?(
           <Table
             pagination={{
               onChange(current) {
@@ -341,11 +361,18 @@ const FabricSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-                (o) => !['visitor_check_in','visitor_check_out','check_out_status','duration','rejection_reason','v_card'].includes(o.dataIndex)
+                (o) => !['rejectionReason'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
-          ></Table>
+            bordered
+          />):(
+            <Alert 
+            message="No data available☹️" 
+            type="info" 
+            showIcon
+            style={{ width: "160px", margin: "auto" }}/>
+          )}
         </TabPane>
         <TabPane
           key={StatusEnum.APPROVED}
@@ -361,10 +388,11 @@ const FabricSwatchApproval = () => {
             rowClassName={columnColor}
             scroll={{ x: 'max-content' }}
             columns={columns.filter(
-                (o) => !['rejection_reason','action'].includes(o.dataIndex)
+                (o) => !['rejectionReason','action'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
+            bordered
           ></Table>
         </TabPane>
         <TabPane
@@ -379,60 +407,40 @@ const FabricSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-              (o) => !['visitor_check_in','visitor_check_out','check_out_status','duration','v_card','action'].includes(o.dataIndex)
+              (o) => !['action'].includes(o.dataIndex)
             )}
             dataSource={data}
             size="small"
+            bordered
           ></Table>
         </TabPane>
       </Tabs>
       <Modal
         visible={modal}
-        onCancel={onBarcodeModalCancel}
+        onCancel={onModalCancel}
         footer={null}
-        style={{ maxWidth: '100%' }}
+        style={{ maxWidth: '90%' }}
         destroyOnClose
         >
-        <Card
-            title={action === 'accept' ? 'Accept' : 'Reject'}
+          {action === 'image' ? (
+            <img src={imagePath} alt="Fabric Image" style={{ maxWidth: '100%' }} />
+          ):null}
+
+        {action === 'reject' ? (<Card
+            title={'Reject'}
             size='small'
-            headStyle={{ backgroundColor: '#69c0ff', border: 0, textAlign: 'center' }}
-        >
-            <Form form={form} layout='vertical' 
-            // onFinish={handleFormSubmit}
+            headStyle={{ backgroundColor: '#7d33a2', color: 'white',textAlign:'center' }}
             >
-            {action === 'accept' ? (
+            <Form form={form} layout='vertical' 
+            onFinish={handleFormSubmit}
+            >
                 <Row gutter={16}>
-                <Col>
-                    <Form.Item name='tagNumber' label='Tag' required={true}>
-                    <Select
-                        suffixIcon={<BarcodeOutlined onClick={(e) => { setBarcodeModal('visitorCode') }}/>}
-                        showSearch
-                        allowClear
-                        optionFilterProp='children'
-                        placeholder={<div style={{ textAlign: 'center' }}>Select Tag</div>}
-                        style={{ width: '150px' }}
-                    >
-                        {tagData.map(e => (
-                        <Option key={e.tagId} value={e.tagNumber}>
-                            {e.tagNumber}
-                        </Option>
-                        ))}
-                    </Select>
-                    </Form.Item>
-                </Col>
-                {/* {barcodeModal === 'visitorCode' ? <BarcodeScanner handleScan={barScannerData}/>: null} */}
-                </Row>
-            ) : null}
-            {action === 'reject' && (
-                <Row gutter={16}>
-                <Col>
-                    <Form.Item name='rejectionReason' label='Reason' required={true}>
-                    <Input placeholder='Enter Reason' />
+                <Col xl={12} lg={12} xs={10}>
+                    <Form.Item name='rejectionReason' label='Reason' rules={[{ required: true, message: 'Reason is required' }]}>
+                    <TextArea rows={2} placeholder='Enter Reason' />
                     </Form.Item>
                 </Col>
                 </Row>
-            )}
             <Row>
                 <Col span={24} style={{ textAlign: 'right' }}>
                 <Button type='primary' htmlType='submit'>
@@ -444,7 +452,7 @@ const FabricSwatchApproval = () => {
                 </Col>
             </Row>
             </Form>
-        </Card>
+        </Card>): null}
         </Modal>
     </Card>
   );

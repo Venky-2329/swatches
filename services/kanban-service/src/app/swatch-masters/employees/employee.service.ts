@@ -42,10 +42,10 @@ export class EmployeeService {
     try {
       const query = `select e.is_active AS isActive, e.employee_id AS employeeId, e.employee_name AS employeeName,e.employee_code AS employeeCode,e.card_no AS cardNo,e.email_id AS emailId,
       e.gender,e.date_of_birth AS dateOfBirth,e.address ,e.department,d.department_name AS departmentName,s.section_name AS sectionName,e.section ,e.designation,de.designation AS designationName,e.mobile_number AS mobileNumber,u.id as unitId,u.unit_name AS unitName ,e.unit from swatch_employees e
-      left join shahi_department d on d.id = e.department 
-      left join shahi_designation de on de.designation_id = e.designation
-	    left join shahi_sections s on s.section_id = e.section
-      left join shahi_units u on u.unit_code = e.unit WHERE e.is_active = 1 `
+      left join swatch_department d on d.id = e.department 
+      left join swatch_designation de on de.designation_id = e.designation
+	    left join swatch_sections s on s.section_id = e.section
+      left join swatch_units u on u.unit_code = e.unit WHERE e.is_active = 1 `
       const employeeData = await this.employeeRepo.query(query);
       if (employeeData.length > 0) {
         return new CommonResponseModel(true, 221, 'Data retrieved', employeeData);
@@ -75,10 +75,10 @@ export class EmployeeService {
     try {
       const employeeData = await this.employeeRepo.query(`select e.employee_id AS employeeId, e.employee_name AS employeeName,e.employee_code AS employeeCode,e.card_no AS cardNo,e.email_id AS emailId,
       e.gender,e.date_of_birth AS dateOfBirth,e.address ,d.department_name AS departmentName,s.section_name AS section, de.designation,e.mobile_number AS mobileNumber,u.id as unitId,u.unit_name AS unit from swatch_employees e
-      left join shahi_department d on d.id = e.department 
-      left join shahi_designation de on de.designation_id = e.designation
-	    left join shahi_sections s on s.section_id = e.section
-      left join shahi_units u on u.unit_code = e.unit where u.id = ${req.unitId}`);
+      left join swatch_department d on d.id = e.department 
+      left join swatch_designation de on de.designation_id = e.designation
+	    left join swatch_sections s on s.section_id = e.section
+      left join swatch_units u on u.unit_code = e.unit where u.id = ${req.unitId}`);
       if (employeeData.length > 0) {
         return new CommonResponseModel(true, 221, 'Data retrieved', employeeData);
       } else {
@@ -94,10 +94,10 @@ export class EmployeeService {
     try {
       let query = `select e.employee_id AS employeeId, e.employee_name AS employeeName,e.employee_code AS employeeCode,e.card_no AS cardNo,e.email_id AS emailId,e.department,
       e.gender,e.date_of_birth AS dateOfBirth,e.address ,d.department_name AS departmentName,s.section_name AS section, de.designation,e.mobile_number AS mobileNumber,u.id as unitId,u.unit_name AS unit from swatch_employees e
-      left join shahi_department d on d.id = e.department 
-      left join shahi_designation de on de.designation_id = e.designation
-	    left join shahi_sections s on s.section_id = e.section
-      left join shahi_units u on u.unit_code = e.unit `
+      left join swatch_department d on d.id = e.department 
+      left join swatch_designation de on de.designation_id = e.designation
+	    left join swatch_sections s on s.section_id = e.section
+      left join swatch_units u on u.unit_code = e.unit `
       if (req.unitId > 0) {
         query = query + ' where u.id = ' + req.unitId;
       }

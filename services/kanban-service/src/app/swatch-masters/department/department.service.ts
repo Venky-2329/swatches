@@ -49,7 +49,7 @@ export class DepartmentService {
     // console.log(Req,'-------------------')
     try {
       let query = `SELECT DISTINCT department_id,section_id, section_name AS section
-      FROM shahi_sections WHERE department_id > 0`;
+      FROM swatch_sections WHERE department_id > 0`;
   
       if (Req.departmentId) {
         query += ` AND department_id = '${Req.departmentId}'`; 

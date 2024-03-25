@@ -6,3 +6,5 @@ export * from './supplier-req';
 export * from './department'
 export * from './employee'
 export * from './unit'
+export * from'./date-req'
+export * from './email-model'

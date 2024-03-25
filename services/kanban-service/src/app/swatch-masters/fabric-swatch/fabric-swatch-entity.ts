@@ -149,5 +149,10 @@ export class FabricSwatchEntity{
     })
     versionFlag: number
 
+    @Column('varchar',{
+        name:'rejection_reason',
+        length:100
+    })
+    rejectionReason: string
 
 }
