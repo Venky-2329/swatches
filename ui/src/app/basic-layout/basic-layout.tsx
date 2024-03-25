@@ -107,9 +107,9 @@ export function BasicLayout(props: BasicLayoutProps) {
           filepath: '../',
         },
         {
-          label: 'User',
-          key: 'user-grid',
-          path: '/user-grid',
+          label: 'Approval Users',
+          key: 'approval-grid',
+          path: '/approval-grid',
           icon: <TableOutlined />,
           filepath: '../',
         },
@@ -130,8 +130,8 @@ export function BasicLayout(props: BasicLayoutProps) {
         },
         {
           label: 'Trims Upload',
-          key: 'trims-swatch-upload',
-          path: '/trims-swatch-upload',
+          key: 'trims-swatch-view',
+          path: '/trims-swatch-view',
           icon: <UploadOutlined />,
           filepath: '../',
         },

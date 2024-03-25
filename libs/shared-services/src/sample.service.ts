@@ -106,10 +106,13 @@ export async function updateBrands(
   return response.data;
 }
 
-export async function deleteBrands(
+export async function activateOrDeactivateBrands(
   createDto: BrandDto
 ): Promise<CommonResponseModel> {
-  const response = await axios.post(brandUrl + '/deleteBrands', createDto);
+  const response = await axios.post(
+    brandUrl + '/activateOrDeactivateBrands',
+    createDto
+  );
   return response.data;
 }
 

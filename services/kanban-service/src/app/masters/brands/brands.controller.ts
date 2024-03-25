@@ -36,10 +36,10 @@ export class BrandsController {
     }
   }
 
-  @Post('/deleteBrands')
-  async deleteBrands(@Body() req: any): Promise<CommonResponseModel> {
+  @Post('/activateOrDeactivateBrands')
+  async activateOrDeactivateBrands(@Body() req: any): Promise<CommonResponseModel> {
     try {
-      return await this.brandsService.deleteBrands(req);
+      return await this.brandsService.activateOrDeactivateBrands(req);
     } catch (err) {
       return err;
     }

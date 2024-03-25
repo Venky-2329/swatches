@@ -270,7 +270,7 @@ const FabricSwatchApproval = () => {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
-    },
+      },
     },
     {
       title: 'Item Description',
@@ -384,7 +384,6 @@ const FabricSwatchApproval = () => {
                 setPage(current);
               },
             }}
-            
             rowClassName={columnColor}
             scroll={{ x: 'max-content' }}
             columns={columns.filter(
@@ -442,14 +441,18 @@ const FabricSwatchApproval = () => {
                 </Col>
                 </Row>
             <Row>
-                <Col span={24} style={{ textAlign: 'right' }}>
-                <Button type='primary' htmlType='submit'>
-                    Submit
+              <Col span={24} style={{ textAlign: 'right' }}>
+                <Button type="primary" htmlType="submit">
+                  Submit
                 </Button>
-                <Button htmlType='button' style={{ margin: '0 14px' }} onClick={onReset}>
-                    Reset
+                <Button
+                  htmlType="button"
+                  style={{ margin: '0 14px' }}
+                  onClick={onReset}
+                >
+                  Reset
                 </Button>
-                </Col>
+              </Col>
             </Row>
             </Form>
         </Card>): null}

@@ -9,6 +9,7 @@ import {
   Row,
   Select,
   Upload,
+  message,
   notification,
 } from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
@@ -16,11 +17,9 @@ import { useEffect, useState } from 'react';
 import ImgCrop from 'antd-img-crop';
 import {
   BuyerService,
+  SupplierService,
+  TrimSwatchService,
   createSample,
-  getBrandsData,
-  getCategoryData,
-  getLocationData,
-  getSeasonData,
   uploadPhoto,
 } from 'libs/shared-services';
 import imageCompression from 'browser-image-compression';
@@ -34,18 +33,19 @@ export default function TrimSwatchUpload() {
   const [fileList, setFileList] = useState<any[]>([]);
   const [buyer, setBuyer] = useState([]);
   const [category, setCategory] = useState([]);
-  const [location, setLocation] = useState([]);
+  const [supplier, setSupplier] = useState([]);
   const [seasons, setSeasons] = useState([]);
   const users: any = JSON.parse(localStorage.getItem('auth'));
   const createUser = users.userName;
   const [selectedType, setSelectedType] = useState('Garment');
   const typesWithCommonFields = ['Garment', 'Trim'];
   const service = new BuyerService();
+  const service2 = new SupplierService();
+  const mainService = new TrimSwatchService();
 
   useEffect(() => {
     getBuyers();
-    getCategories();
-    getSeason();
+    getSupplier()
   }, []);
 
   function getBuyers() {
@@ -56,29 +56,14 @@ export default function TrimSwatchUpload() {
     });
   }
 
-  function getCategories() {
-    getCategoryData().then((res) => {
+  function getSupplier() {
+    service2.getAllSuppliers().then((res) => {
       if (res.data) {
-        setCategory(res.data);
+        setSupplier(res.data);
       }
     });
   }
 
-  function getLocations() {
-    getLocationData().then((res) => {
-      if (res.data) {
-        setLocation(res.data);
-      }
-    });
-  }
-
-  function getSeason() {
-    getSeasonData().then((res) => {
-      if (res.data) {
-        setSeasons(res.data);
-      }
-    });
-  }
 
   function onReset() {
     form.resetFields();
@@ -86,7 +71,7 @@ export default function TrimSwatchUpload() {
   }
 
   function onFinish(values) {
-    createSampleUpload(values);
+    createUpload(values);
   }
 
   const handleRemove = (file) => {
@@ -153,9 +138,10 @@ export default function TrimSwatchUpload() {
   //     setFileList(newFileList);
   //   };
 
-  function createSampleUpload(values) {
+  function createUpload(values) {
     if (fileList.length > 0) {
-      createSample(values).then((res) => {
+      console.log(values,'...................')
+      mainService.createTrimSwatch(values).then((res) => {
         if (res.status) {
           if (fileList.length > 0) {
             const formData = new FormData();
@@ -163,22 +149,14 @@ export default function TrimSwatchUpload() {
               formData.append('file', file);
             });
             formData.append('id', `${res.data.sampleId}`);
-            uploadPhoto(formData).then((fileres) => {
+            mainService.photoUpload(formData).then((fileres) => {
               if (res.status) {
                 res.data.filePath = fileres.data;
-                notification.success({
-                  message: res.internalMessage,
-                  placement: 'top',
-                  duration: 1,
-                });
+                message.success(res.internalMessage,2)
                 onReset();
                 gotoGrid();
               } else {
-                notification.error({
-                  message: res.internalMessage,
-                  placement: 'top',
-                  duration: 1,
-                });
+                message.error(res.internalMessage,2)
               }
             });
           }
@@ -211,12 +189,13 @@ export default function TrimSwatchUpload() {
   };
 
   function gotoGrid() {
-    navigate('/sample-view');
+    navigate('/trims-swatch-view');
   }
   return (
     <>
       <Card
         title="Trims Swatch"
+        headStyle={{ backgroundColor: '#25529a', color: 'white' }}
         extra={
           <span>
             <Button type="primary" onClick={gotoGrid}>
@@ -258,7 +237,7 @@ export default function TrimSwatchUpload() {
               <Form.Item
                 label="GRN No"
                 name={'grnNumber'}
-                rules={[{ required: false, message: 'GRN is required' }]}
+                rules={[{ required: true, message: 'GRN is required' }]}
               >
                 <Input placeholder="Enter GRN No" />
               </Form.Item>
@@ -275,7 +254,7 @@ export default function TrimSwatchUpload() {
                 name={'buyerId'}
                 rules={[
                   {
-                    required: false,
+                    required: true,
                     message: 'Buyer is required',
                   },
                 ]}
@@ -310,9 +289,9 @@ export default function TrimSwatchUpload() {
                   optionFilterProp="children"
                   placeholder="Select Supplier"
                 >
-                  {buyer.map((item) => {
+                  {supplier.map((item) => {
                     return (
-                      <Option value={item.buyerId}>{item.buyerName}</Option>
+                      <Option value={item.supplierId}>{item.supplierName}</Option>
                     );
                   })}
                 </Select>
@@ -430,6 +409,21 @@ export default function TrimSwatchUpload() {
                 <Input placeholder="Enter Merchant" />
               </Form.Item>
             </Col>
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 6 }}
+              lg={{ span: 6 }}
+              xl={{ span: 4 }}
+            >
+              <Form.Item
+                label="Checked By"
+                name={'checkedBy'}
+                rules={[{ required: true, message: 'Checked by is required' }]}
+              >
+                <Input placeholder="Enter Checked By" />
+              </Form.Item>
+            </Col>
           </Row>
           <Row gutter={24}>
             <Col
@@ -446,11 +440,13 @@ export default function TrimSwatchUpload() {
                   fileList={fileList}
                   onPreview={onPreview}
                   style={{ width: '200px', height: '200px' }}
+                  accept=".png,.jpeg,.PNG,.jpg,.JPG"
                 >
-                  {fileList.length < 5 && '+ Upload'}
+                  {fileList.length < 1 && '+ Upload'}
                 </Upload>
               </Form.Item>
             </Col>
+            
           </Row>
           <br></br>
           <Row gutter={24} style={{ alignContent: 'end' }}>

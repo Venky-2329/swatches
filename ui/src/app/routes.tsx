@@ -37,6 +37,9 @@ import TrimSwatchUpload from './pages/swatch-masters/trims/trim-form';
 import EmployeeGrid from './pages/swatch-masters/employee/employee-grid';
 import EmployeeForm from './pages/swatch-masters/employee/employee-form';
 import FabricSwatchApproval from './pages/swatch-masters/fabric-swatch/fabric-switch-approval';
+import { TrimSwatchGrid } from './pages/swatch-masters/trims/trim-grid';
+import ApprovedUserForm from './pages/swatch-masters/authorised/authorised-form';
+import ApproverGrid from './pages/swatch-masters/authorised/authorised-grid';
 
 export const AppRoutes = () => {
   const router = createHashRouter(
@@ -74,6 +77,8 @@ export const AppRoutes = () => {
           <Route path="/fabric-swatch-upload"key="fabric-swatch-upload"element={<FabricSwatchUpload />}/>
           <Route path='/fabric-swatch-view' key={'fabric-swatch-view'} element={<FabricSwatchGrid/>}/>
           <Route path="/trims-swatch-upload"key="trims-swatch-upload"element={<TrimSwatchUpload />}/>
+          <Route path="/trims-swatch-view"key="trims-swatch-view"element={<TrimSwatchGrid />}/>
+
           <Route  path="/sample-cards"  key="sample-cards" element={<SampleCards />}  />
           <Route  path="/sample-view"  key="sample-view" element={<DigitalSamplesView />} />
           <Route path="/category-grid" key="category-grid" element={<CategoryGrid />}  />
@@ -113,6 +118,10 @@ export const AppRoutes = () => {
           
           <Route path='supplier-grid' key='supplier-grid' element={<SupplierGrid />} />
           <Route path='supplier-form' key='supplier-form' element={<SupplierForm supplierData={undefined} isUpdate={false} updateDetails={() => {undefined}}  closeForm={() => {}}/>} />
+
+          <Route path='approval-grid' key='approval-grid' element={<ApproverGrid />} />
+          <Route path='approval-form' key='approval-form' element={<ApprovedUserForm data={undefined} isUpdate={false} updateApprovalUser={() => {undefined}}  closeForm={() => {}}/>} />
+
 
           <Route  path="/separete-card/:id"  key="separete-card"  element={<SeparateView />} />
           <Route  path="/home-screen" key="home-screen" element={<HomeScreen />} />

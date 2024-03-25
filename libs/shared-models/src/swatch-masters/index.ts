@@ -8,3 +8,6 @@ export * from './employee'
 export * from './unit'
 export * from'./date-req'
 export * from './email-model'
+export * from './trims-swatch';
+export * from './approval-users';
+

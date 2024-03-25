@@ -316,8 +316,8 @@ export default function FabricSwatchUpload() {
                   </Link>
               )
           }
-        headStyle={{ backgroundColor: '#7d33a2', color: 'black' }}
-      >
+          headStyle={{ backgroundColor: '#25529a', color: 'white' }}
+          >
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row gutter={24}>
             {/* <Col
