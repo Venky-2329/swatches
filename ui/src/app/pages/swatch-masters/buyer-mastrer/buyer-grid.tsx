@@ -143,10 +143,11 @@ import { BuyerDto, BuyerReq } from 'libs/shared-models';
       <>
         <Card
           title="Buyers"
+          headStyle={{ backgroundColor: '#25529a', color: 'white' }}
           extra={
             <span>
-              <Button onClick={goToForm} type="primary">
-                Add
+              <Button onClick={goToForm}>
+                Create
               </Button>
             </span>
           }

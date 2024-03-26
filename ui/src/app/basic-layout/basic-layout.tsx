@@ -58,6 +58,13 @@ export function BasicLayout(props: BasicLayoutProps) {
       filepath: '../',
       children: [
         {
+          label: 'Approval Users',
+          key: 'approval-grid',
+          path: '/approval-grid',
+          icon: <TableOutlined />,
+          filepath: '../',
+        },
+        {
           label: 'Brand',
           key: 'brands-grid',
           path: '/brands-grid',
@@ -107,9 +114,9 @@ export function BasicLayout(props: BasicLayoutProps) {
           filepath: '../',
         },
         {
-          label: 'Approval Users',
-          key: 'approval-grid',
-          path: '/approval-grid',
+          label: 'Users',
+          key: 'user-grid',
+          path: '/user-grid',
           icon: <TableOutlined />,
           filepath: '../',
         },

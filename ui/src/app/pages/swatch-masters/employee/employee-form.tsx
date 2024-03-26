@@ -113,8 +113,10 @@ useEffect(()=>{
     }
 },[props.isUpdate])
     return (
-        <Card title={<span style={{ color: 'white' }}>Employee Form</span>}
-            style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#7d33a2', border: 0 }} extra={props.isUpdate == true ? "" : <Link to='/employee-grid' ><span style={{ color: 'white' }} ><Button className='panel_button' >Back </Button> </span></Link>} >
+        <Card title={<span style={{ color: 'white' }}>Employee</span>}
+            style={{ textAlign: 'center' }} 
+            headStyle={{ backgroundColor: '#25529a', color: 'white' }}
+            extra={props.isUpdate == true ? "" : <Link to='/employee-grid' ><span style={{ color: 'white' }} ><Button className='panel_button' >Back </Button> </span></Link>} >
             <Form
                 form={form}
                 initialValues={props.employeeData}
@@ -250,7 +252,7 @@ useEffect(()=>{
                                 onChange={getAllSectionsForDrop}
                                 allowClear
                             >
-                                {department.map((rec: any) => {
+                                {department?.map((rec: any) => {
                                     return (
                                         <Option key={rec.id} value={rec.id}>
                                             {rec.departmentName}

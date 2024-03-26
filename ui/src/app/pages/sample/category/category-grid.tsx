@@ -145,11 +145,12 @@ export default function CategoryGrid() {
   return (
     <>
       <Card
-        title="Categories"
+        title="Category"
+        headStyle={{ backgroundColor: '#25529a', color: 'white' }}
         extra={
           <span>
-            <Button onClick={goToForm} type="primary">
-              Add
+            <Button onClick={goToForm}>
+              Create
             </Button>
           </span>
         }

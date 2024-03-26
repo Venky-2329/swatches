@@ -44,7 +44,7 @@ export class TrimSwatchService {
       entityData.merchant = req.merchant
       entityData.grnNumber = req.grnNumber
       entityData.grnDate = date
-      entityData.status = StatusEnum.OPEN
+      entityData.status = StatusEnum.SENT_FOR_APPROVAL
       entityData.checkedBy = req.checkedBy
       const saveData = await this.repo.save(entityData)
       return new CommonResponseModel(true , 1 , `${saveData.trimSwatchNumber} created successfully` ,saveData)

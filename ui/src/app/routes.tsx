@@ -36,7 +36,7 @@ import SupplierForm from './pages/swatch-masters/supplier-master/supplier-form';
 import TrimSwatchUpload from './pages/swatch-masters/trims/trim-form';
 import EmployeeGrid from './pages/swatch-masters/employee/employee-grid';
 import EmployeeForm from './pages/swatch-masters/employee/employee-form';
-import FabricSwatchApproval from './pages/swatch-masters/fabric-swatch/fabric-switch-approval';
+import FabricSwatchApproval from './pages/swatch-masters/fabric-swatch/fabric-swatch-approval';
 import { TrimSwatchGrid } from './pages/swatch-masters/trims/trim-grid';
 import ApprovedUserForm from './pages/swatch-masters/authorised/authorised-form';
 import ApproverGrid from './pages/swatch-masters/authorised/authorised-grid';

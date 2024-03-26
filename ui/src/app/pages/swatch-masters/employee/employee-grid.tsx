@@ -255,8 +255,9 @@ const EmployeeGrid = () => {
     ]
     return (
         <div>
-            <Card title={<span style={{ color: 'white' }}>Employee Details</span>}
-                style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#7d33a2', border: 0 }}
+            <Card title={<span style={{ color: 'white' }}>Employee</span>}
+                style={{ textAlign: 'center' }} 
+                headStyle={{ backgroundColor: '#25529a', color: 'white' }}
                 extra={<Link to="/employee-form"  ><span style={{ color: 'white' }} ><Button className='panel_button' >Create </Button>
                 </span></Link>}>
                 <br></br>

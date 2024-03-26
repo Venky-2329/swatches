@@ -1,7 +1,7 @@
 import {Button,Card,Col,Form,Input,Row,Select,Upload,message,notification} from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useEffect, useState } from 'react';
-import {BuyerService,EmailService,EmployeeService,FabricSwatchService,createSample,getBrandsData,getCategoryData,getLocationData,getSeasonData,uploadPhoto,} from 'libs/shared-services';
+import {ApprovalUserService, BuyerService,EmailService,EmployeeService,FabricSwatchService,createSample,getBrandsData,getCategoryData,getLocationData,getSeasonData,uploadPhoto,} from 'libs/shared-services';
 import imageCompression from 'browser-image-compression';
 import { Link, useNavigate } from 'react-router-dom';
 import moment from 'moment';
@@ -23,10 +23,11 @@ export default function FabricSwatchUpload() {
   const typesWithCommonFields = ['Garment', 'Trim'];
   const buyerService = new BuyerService();
   const service = new FabricSwatchService();
-  const employeeService = new EmployeeService()
+  const employeeService = new ApprovalUserService()
   const [ employeeData, setEmployeeData ] = useState<any[]>([])
   const [uploading, setUploading] = useState(false);
   const mailService = new EmailService()
+  const [ resData, setResData ] = useState<any[]>([])
 
   useEffect(() => {
     getBrands();
@@ -74,7 +75,7 @@ export default function FabricSwatchUpload() {
   }
 
   const getEmployeeData = ()=>{
-    employeeService.getAllEmployees().then((res)=>{
+    employeeService.getAllApprovalUser().then((res)=>{
       if(res.status){
         setEmployeeData(res.data)
       }
@@ -153,6 +154,8 @@ export default function FabricSwatchUpload() {
             formData.append('id', `${res.data.fabricSwatchId}`);
             service.uploadPhoto(formData).then((fileres) => {
               if (res.status) {
+                form.setFieldsValue({fabricSwatchNumber: res?.data?.fabricSwatchNumber})
+                setResData(res.data)
                 res.data.filePath = fileres.data;
                 sendMailForApprovalUser()
                 message.success(res.internalMessage, 2);
@@ -192,8 +195,7 @@ export default function FabricSwatchUpload() {
   }
 
   const onUserChange =(value,option)=>{
-         console.log(option?.name,'........................')
-         form.setFieldsValue({employeeMail: option?.name})
+         form.setFieldsValue({approverMail: option?.name})
   }
 
   const handleChange = (info) => {
@@ -204,11 +206,13 @@ export default function FabricSwatchUpload() {
     }
   };
 
+  console.log(resData[0],'resdata')
+
     let mailerSent = false;
     async function sendMailForApprovalUser() {
         const swatchDetails = new EmailModel();
-        swatchDetails.swatchNo = 'FSW-000001';
-        swatchDetails.to = 'playstore2636@gmail.com';
+        swatchDetails.swatchNo = form.getFieldValue('fabricSwatchNumber')
+        swatchDetails.to = form.getFieldValue('approverMail')
         swatchDetails.html = `
         <html>
         <head>
@@ -239,8 +243,8 @@ export default function FabricSwatchUpload() {
         </head>
         <body>
           <p>Dear team,</p>
-          <p>Please find the Swatch details below:</p>
-          <p>Fabric Swatch No: FSW-000001</p>
+          <p>Please find the Fabric Swatch details below:</p>
+          <p>Fabric Swatch No: ${form.getFieldValue('fabricSwatchNumber')}</p>
           <p>
             Some items moved from Address: ${form.getFieldValue('fromUnit')} to
             Address: ${form.getFieldValue('toAddresserName')}
@@ -248,47 +252,10 @@ export default function FabricSwatchUpload() {
           <p>Please click the link below for details:</p>
           <input type="hidden" id="assignBy" value=${form.getFieldValue('assignBy')} /> 
           <input type="hidden" id="dcId" value=${form.getFieldValue('dcId')} />
-      
-          <a
-            href="http://gpdc.seplcloud.com/#/dc-email-detail-view/${form.getFieldValue('dcId')}"
-            style="
-              display: inline-block;
-              padding: 10px 20px;
-              background-color: #007bff;
-              color: #fff;
-              text-decoration: none;
-              border-radius: 5px;
-            "
-            >View Details of GatePass</a
-          >
-          <a
-          href="http://gpdc.seplcloud.com/#/dc-email/${form.getFieldValue('dcId')}"
-          style="
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #108f1a;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-          "
-          >Accept DC</a
-        >
-        <a
-          href="http://gpdc.seplcloud.com/#/dc-reject-mail/${form.getFieldValue('dcId')}"
-          style="
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #ff001e;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-          "
-          >Reject DC</a
-        >
         </body>
       </html>
       `
-        swatchDetails.subject = "Fabric Swatch : " + 'FSW-000001'
+        swatchDetails.subject = "Fabric Swatch : " + form.getFieldValue('fabricSwatchNumber')
         const res = await mailService.sendSwatchMail(swatchDetails)
         console.log(res)
         if (res.status == 201) {
@@ -338,6 +305,7 @@ export default function FabricSwatchUpload() {
                 </Select>
               </Form.Item>
             </Col> */}
+            <Form.Item hidden name={'fabricSwatchNumber'}></Form.Item>
             <Col
               xs={24} sm={12} md={8} lg={6} xl={4}
             >
@@ -542,21 +510,21 @@ export default function FabricSwatchUpload() {
               xs={24} sm={12} md={8} lg={6} xl={4}
             >
               <Form.Item
-                label="User"
-                name={'employeeId'}
-                rules={[{ required: false, message: 'User is required' }]}
+                label="Approver"
+                name={'approverId'}
+                rules={[{ required: true, message: 'Approver is required' }]}
               >
                 <Select
                   allowClear
                   showSearch
                   optionFilterProp="children"
-                  placeholder="Select User"
+                  placeholder="Select Approver"
                   onChange={onUserChange}
                 >
                   {employeeData.map((item) => {
                     return (
-                      <Option key={item.employeeId} value={item.employeeId} name={item.emailId}>
-                        {item.employeeName}
+                      <Option key={item.approvedId} value={item.approvedId} name={item.emailId}>
+                        {item.approvedUserName}
                         </Option>
                     );
                   })}
@@ -564,7 +532,7 @@ export default function FabricSwatchUpload() {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-      <Form.Item label="User Mail" name={'employeeMail'}>
+      <Form.Item label="Approver Mail" name={'approverMail'}>
         <Input disabled />
       </Form.Item>
     </Col>

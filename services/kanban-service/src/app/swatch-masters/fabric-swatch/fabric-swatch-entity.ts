@@ -155,4 +155,10 @@ export class FabricSwatchEntity{
     })
     rejectionReason: string
 
+    @Column('int',{
+        name:'approver_id',
+        nullable:false,
+    })
+    approverId: number
+
 }
