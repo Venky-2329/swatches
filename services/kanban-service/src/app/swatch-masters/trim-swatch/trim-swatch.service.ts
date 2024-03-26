@@ -3,7 +3,7 @@ import { TrimSwatchDto } from './dto/trim-swatch.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TrimSwatchEntity } from './entities/trim-swatch.entity';
 import { Repository } from 'typeorm';
-import { CommonResponseModel, StatusEnum } from 'libs/shared-models';
+import { CommonResponseModel, DateReq, StatusEnum, SwatchStatus } from 'libs/shared-models';
 
 @Injectable()
 export class TrimSwatchService {
@@ -67,14 +67,34 @@ export class TrimSwatchService {
     }
   }
 
-  async getAllTrimSwatchData():Promise<CommonResponseModel>{
+  async getAllTrimSwatchData(req: DateReq):Promise<CommonResponseModel>{
     try {
-      const query = `SELECT ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
+      const fromDate = req.fromDate;
+      const toDate = req.toDate;
+      let query = `SELECT ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
       ts.invoice_no , ts.style_no ,ts.merchant , ts.grn_number , ts.grn_date , ts.checked_by , ts.file_name , ts.file_path ,ts.status,ts.created_at
       FROM trim_swatch ts
       LEFT JOIN buyer b ON b.buyer_id = ts.buyer_id
       LEFT JOIN supplier s ON s.supplier_id = ts.supplier_id`
+
+      if(req.tabName != undefined){
+        if(req.tabName == 'SENT FOR APPROVAL'){
+          query=query+' and ts.status IN("SENT_FOR_APPROVAL")'
+        }
+        if(req.tabName == 'APPROVED'){
+            query= query+' and ts.status IN("APPROVED")'
+        }
+        if(req.tabName == 'REJECTED'){
+            query= query+' and ts.status IN("REJECTED")'
+        }
+      }
+      if(fromDate){
+          query = query +` and DATE(created_at) BETWEEN '${fromDate}' AND '${toDate}'`;
+      }
+
+
+
       const data = await this.repo.query(query)
 
       if (data){
@@ -86,5 +106,59 @@ export class TrimSwatchService {
       throw(error)
     }
   }
+
+  async statusCount():Promise<CommonResponseModel>{
+    try{
+        let query = `SELECT
+        COALESCE(SUM(CASE WHEN STATUS = 'sent_for_approval' THEN 1 ELSE 0 END),0) AS openCount,
+        COALESCE(SUM(CASE WHEN STATUS = 'approved' THEN 1 ELSE 0 END),0) AS approvedCount,
+        COALESCE(SUM(CASE WHEN STATUS = 'rejected' THEN 1 ELSE 0 END),0) AS rejectedCount
+        FROM trim_swatch`
+        const result = await this.repo.query(query)
+        if (result.length) {
+            return new CommonResponseModel(true, 1, 'Data retrieved successfully', result);
+          } else {
+            return new CommonResponseModel(false, 0, 'No data found', []);
+          }
+    }catch(err){
+        throw(err)
+    }
+}
+
+async updateApprovedStatus(req: SwatchStatus): Promise<CommonResponseModel> {
+  try {
+    console.log(req,'service')
+      const checkInData = await this.repo.findOne({ where: { trimSwatchId : req.fabricSwatchId } });
+
+      if (!checkInData) {
+          throw new Error(' Trim data not found');
+      }
+
+      checkInData.status = StatusEnum.APPROVED;
+      checkInData.trimSwatchNumber = req.fabricSwatchNumber;
+      await this.repo.save(checkInData);
+      return new CommonResponseModel(true, 1, 'Approved successfully', checkInData);
+  } catch (err) {
+      throw err;
+  }
+}
+
+async updateRejectedStatus(req: SwatchStatus): Promise<CommonResponseModel> {
+  try {
+      const rejectedData = await this.repo.findOne({ where: { trimSwatchId : req.fabricSwatchId } });
+
+      if (!rejectedData) {
+          throw new Error('Trim data not found');
+      }
+
+      rejectedData.status = StatusEnum.REJECTED;
+      rejectedData.rejectionReason = req.rejectionReason;
+      await this.repo.save(rejectedData);
+      return new CommonResponseModel(true, 1, 'Rejected successfully', rejectedData);
+  } catch (err) {
+      throw err;
+  }
+}
+
 
 }

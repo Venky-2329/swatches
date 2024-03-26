@@ -143,6 +143,7 @@ export const TrimSwatchGrid = () => {
           columns={columns}
           dataSource={data}
           scroll={{ x: 'max-content' }}
+          bordered
         />
       </Card>
     </>
