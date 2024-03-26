@@ -65,11 +65,12 @@ export default function CategoryForm(props: CategoryFormProps) {
   return (
     <>
       <Card
-        title="Category Form"
+        title="Category"
+        headStyle={{ backgroundColor: '#25529a', color: 'white' }}
         extra={
           <span>
             {props.isUpdate == false && (
-              <Button onClick={goToGrid} type="primary">
+              <Button onClick={goToGrid}>
                 View
               </Button>
             )}

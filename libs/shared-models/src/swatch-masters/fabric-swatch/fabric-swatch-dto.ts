@@ -1,7 +1,6 @@
 import { StatusEnum } from "../../enums"
 
 export class FabricSwatchDto{
-    fabricSwatchId: number
     fabricSwatchNumber: string
     buyerId: number
     brandId: number
@@ -19,11 +18,13 @@ export class FabricSwatchDto{
     filePath: string;
     status: StatusEnum;
     grnDate: Date
-    createdAt: Date
-    createdUser: string | null
-    updatedAt: Date
-    updatedUser: string | null
-    versionFlag: number
+    approverId: number
+    createdAt?: Date
+    createdUser?: string | null
+    updatedAt?: Date
+    updatedUser?: string | null
+    versionFlag?: number
+    fabricSwatchId?: number
 
     constructor(
         fabricSwatchNumber: string,
@@ -43,6 +44,7 @@ export class FabricSwatchDto{
         filePath: string,
         status: StatusEnum,
         grnDate: Date,
+        approverId: number,
         createdAt?: Date,
         createdUser?: string | null,
         updatedAt?: Date,
@@ -73,6 +75,7 @@ export class FabricSwatchDto{
         this.updatedAt = updatedAt
         this.updatedUser = updatedUser
         this.versionFlag = versionFlag
+        this.approverId = approverId
     }
 
 }

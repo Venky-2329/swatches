@@ -48,5 +48,7 @@ export class FabricSwatchDto{
     updatedUser: string | null
     @ApiProperty()
     versionFlag: number
+    @ApiProperty()
+    approverId: number
 
 }

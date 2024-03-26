@@ -261,7 +261,7 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
                       optionFilterProp="children"
                       allowClear
                     >
-                      {employee.map((app) => {
+                      {employee?.map((app) => {
                         return (
                           <Option key={app.employeeId} value={app.employeeId}>
                             {app.employeeName}

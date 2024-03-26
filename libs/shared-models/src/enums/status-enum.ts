@@ -1,5 +1,5 @@
 export enum StatusEnum{
     APPROVED = 'APPROVED',
     REJECTED = 'REJECTED',
-    OPEN = 'OPEN'
+    SENT_FOR_APPROVAL = 'SENT FOR APPROVAL'
 }

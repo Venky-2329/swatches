@@ -48,7 +48,8 @@ export class FabricSwatchService{
             entityData.poNumber = req.poNumber
             entityData.grnNumber = req.grnNumber
             entityData.grnDate = date
-            entityData.status = StatusEnum.OPEN
+            entityData.status = StatusEnum.SENT_FOR_APPROVAL
+            entityData.approverId = req.approverId
             const saveData = await this.repo.save(entityData)
             return new CommonResponseModel(true,1,`${saveData.fabricSwatchNumber} created successfully`,saveData)
         }catch(err){
@@ -86,8 +87,8 @@ export class FabricSwatchService{
         LEFT JOIN sample_season_master ssm ON ssm.season_id = fs.season_id
         WHERE 1=1`
         if(req.tabName != undefined){
-          if(req.tabName == 'OPEN'){
-              query=query+' and fs.status IN("OPEN")'
+          if(req.tabName == 'SENT FOR APPROVAL'){
+              query=query+' and fs.status IN("SENT_FOR_APPROVAL")'
           }
           if(req.tabName == 'APPROVED'){
               query= query+' and fs.status IN("APPROVED")'
@@ -115,7 +116,7 @@ export class FabricSwatchService{
     async statusCount():Promise<CommonResponseModel>{
       try{
           let query = `SELECT
-          COALESCE(SUM(CASE WHEN STATUS = 'open' THEN 1 ELSE 0 END),0) AS openCount,
+          COALESCE(SUM(CASE WHEN STATUS = 'sent_for_approval' THEN 1 ELSE 0 END),0) AS waitingCount,
           COALESCE(SUM(CASE WHEN STATUS = 'approved' THEN 1 ELSE 0 END),0) AS approvedCount,
           COALESCE(SUM(CASE WHEN STATUS = 'rejected' THEN 1 ELSE 0 END),0) AS rejectedCount
           FROM fabric_swatch`

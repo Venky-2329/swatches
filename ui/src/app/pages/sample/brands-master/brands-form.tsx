@@ -65,11 +65,12 @@ export default function BrandsForm(props: BrandsFormProps) {
   return (
     <>
       <Card
-        title="Brands Form"
+        title="Brands"
+        headStyle={{ backgroundColor: '#25529a', color: 'white' }}
         extra={
           <span>
             {props.isUpdate !== true && (
-              <Button onClick={goToGrid} type="primary">
+              <Button onClick={goToGrid}>
                 View
               </Button>
             )}

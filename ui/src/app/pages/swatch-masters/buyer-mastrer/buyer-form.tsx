@@ -68,11 +68,12 @@ export default function BuyerForm(props: BuyerFormProps) {
   return (
     <>
       <Card
-        title="Buyer Form"
+        title="Buyers"
+        headStyle={{ backgroundColor: '#25529a', color: 'white' }}
         extra={
           <span>
             {props.isUpdate == false && (
-              <Button onClick={goToGrid} type="primary">
+              <Button onClick={goToGrid}>
                 View
               </Button>
             )}
