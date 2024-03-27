@@ -68,4 +68,7 @@ export class TrimSwatchDto {
     @ApiProperty()
     rejectionReason: string
 
+    @ApiProperty()
+    approverId: number
+
 }

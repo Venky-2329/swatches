@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { TrimSwatchService } from './trim-swatch.service';
 import { TrimSwatchDto } from './dto/trim-swatch.dto';
-import { CommonResponseModel } from 'libs/shared-models';
+import { CommonResponseModel, DateReq, SwatchStatus } from 'libs/shared-models';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -63,14 +63,45 @@ export class TrimSwatchController {
   }
 
 
-  @ApiBody({type : TrimSwatchDto})
+  @ApiBody({type:DateReq})
   @Post('/getAllTrimSwatchData')
-  async getAllTrimSwatchData():Promise<CommonResponseModel>{
+  async getAllTrimSwatchData(@Body() req: any):Promise<CommonResponseModel>{
     try {
-      return this.service.getAllTrimSwatchData();
+      return this.service.getAllTrimSwatchData(req);
     } catch (error) {
       console.log(error)
     }
   }
+
+  @Post('/statusCount')
+  async statusCount(): Promise<CommonResponseModel>{
+      try{
+          return await this.service.statusCount()
+      }catch(err){
+          return this.appHandler.returnException(CommonResponseModel,err)
+      }
+  }
+
+  @Post('/updateApprovedStatus')
+  @ApiBody({type: SwatchStatus})
+  async updateApprovedStatus(@Body() req: any): Promise<CommonResponseModel>{
+      try{
+        console.log(req,'...............controller................')
+          return await this.service.updateApprovedStatus(req)
+      }catch(err){
+          return this.appHandler.returnException(CommonResponseModel,err)
+      }
+  }
+
+  @Post('/updateRejectedStatus')
+  @ApiBody({type: SwatchStatus})
+  async updateRejectedStatus(@Body() req: any): Promise<CommonResponseModel>{
+      try{
+          return await this.service.updateRejectedStatus(req)
+      }catch(err){
+          return this.appHandler.returnException(CommonResponseModel,err)
+      }
+  }
+
 
 }

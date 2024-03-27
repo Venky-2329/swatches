@@ -149,6 +149,13 @@ export function BasicLayout(props: BasicLayoutProps) {
           icon: <UploadOutlined />,
           filepath: '../',
         },
+        {
+          label: 'Trim Approval',
+          key: 'trims-swatch-approval',
+          path: '/trims-swatch-approval',
+          icon: <UploadOutlined />,
+          filepath: '../',
+        },
       ],
     },
     // {
