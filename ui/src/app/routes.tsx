@@ -40,6 +40,7 @@ import FabricSwatchApproval from './pages/swatch-masters/fabric-swatch/fabric-sw
 import { TrimSwatchGrid } from './pages/swatch-masters/trims/trim-grid';
 import ApprovedUserForm from './pages/swatch-masters/authorised/authorised-form';
 import ApproverGrid from './pages/swatch-masters/authorised/authorised-grid';
+import FabricSwatchDetailView from './pages/swatch-masters/fabric-swatch/fabric-swatch-detail-view';
 
 export const AppRoutes = () => {
   const router = createHashRouter(
@@ -126,6 +127,7 @@ export const AppRoutes = () => {
           <Route  path="/separete-card/:id"  key="separete-card"  element={<SeparateView />} />
           <Route  path="/home-screen" key="home-screen" element={<HomeScreen />} />
           <Route path='/fabric-swatch-approval' key='/fabric-swatch-approval' element={<FabricSwatchApproval/>}/>
+          <Route path='/fabric-swatch-detail-view/:fabricSwatchId' key='/fabric-swatch-detail-view' element={<FabricSwatchDetailView/>}/>
 
           <Route
             path="/403"

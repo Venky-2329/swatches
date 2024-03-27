@@ -87,7 +87,7 @@ export class FabricSwatchService{
         LEFT JOIN sample_season_master ssm ON ssm.season_id = fs.season_id
         WHERE 1=1`
         if(req.tabName != undefined){
-          if(req.tabName == 'SENT FOR APPROVAL'){
+          if(req.tabName == 'SENT_FOR_APPROVAL'){
               query=query+' and fs.status IN("SENT_FOR_APPROVAL")'
           }
           if(req.tabName == 'APPROVED'){
@@ -168,12 +168,14 @@ async updateRejectedStatus(req: SwatchStatus): Promise<CommonResponseModel> {
 
 async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
   try{
+    console.log(req,'.........')
     let query = `SELECT fs.fabric_swatch_id AS fabricSwatchId,fs.fabric_swatch_number AS fabricSwatchNo, fs.style_no styleNo,fs.item_no AS itemNo,fs.category_type AS categoryType,fs.color,fs.po_number AS poNumber,
     fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.mill, fs.status,
     fs.buyer_id AS buyerId,b.buyer_name AS buyerName,
     fs.brand_id AS brandId,sbm.brand_name AS brandName,
     fs.category_id AS categoryId,scm.category_name AS categoryName,
-    fs.season_id AS seasonId,ssm.season_name AS seasonName,fs.grn_date as grnDate,fs.rejection_reason as rejectionReason
+    fs.season_id AS seasonId,ssm.season_name AS seasonName,
+    fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fs.file_name as fileName, fs.file_path as filePath
     FROM fabric_swatch fs
     LEFT JOIN buyer b ON b.buyer_id = fs.buyer_id
     LEFT JOIN sample_brands_master sbm ON sbm.brand_id = fs.brand_id
