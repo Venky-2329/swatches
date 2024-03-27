@@ -15,14 +15,12 @@ const TrimSwatchApproval = () => {
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = React.useState(1);
   const [form] = Form.useForm();
-  const [tabName, setTabName] = useState<string>('SENT FOR APPROVAL');
+  const [tabName, setTabName] = useState<string>('SENT_FOR_APPROVAL');
   const [countData, setCountData] = useState<any[]>([]);
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null); 
   const [modal, setModal] = useState<boolean>(false);
   const [formData, setFormData] = useState({});
-  const [activeKey, setActiveKey] = useState('SENT FOR APPROVAL')
+  const [activeKey, setActiveKey] = useState('SENT_FOR_APPROVAL')
   const service = new TrimSwatchService()
   const [imagePath, setImagePath] = useState('');
   const [action, setAction] = useState(null);
@@ -70,9 +68,9 @@ const TrimSwatchApproval = () => {
   };
 
 
-  const fabricAccepted = (value)=>{
+  const TrimAccepted = (value)=>{
     console.log(value,',,,,,,,,,,,,,,,,,,,,')
-    const req = new SwatchStatus(value?.fabricSwatchId,value?.fabricSwatchNo)
+    const req = new SwatchStatus(value?.trimSwatchId,value?.trimSwatchId)
     service.updateApprovedStatus(req).then((res)=>{
         if(res.status){
             message.success(res.internalMessage,2)
@@ -86,7 +84,7 @@ const TrimSwatchApproval = () => {
     })
   }
 
-  const fabricRejected =(value)=>{
+  const TrimRejected =(value)=>{
     console.log(value,'.......................')
     const req = new SwatchStatus(value,undefined,form.getFieldValue('rejectionReason'))
     service.updateRejectedStatus(req).then((res)=>{
@@ -106,19 +104,14 @@ const TrimSwatchApproval = () => {
 
   const handelReject = (value)=>{
     setAction('reject')
-    setFormData(value?.fabricSwatchId)
+    setFormData(value?.trimSwatchId)
     setModal(true)
   }
 
   const handleFormSubmit = () => {
-    fabricRejected(formData);
+    TrimRejected(formData);
   };
 
-  // const DetailView = (value) => {
-  //   return (
-  //     navigate(`/fabric-swatch-detail-view`,{state:{data: value}})
-  //   )
-  // }
 
   const openImage = (record) => {
     setAction('image')
@@ -131,48 +124,27 @@ const TrimSwatchApproval = () => {
       render: (val, record, index) => index + 1,
     },
     {
-      title: 'Swatch Number',
-      dataIndex: 'fabricSwatchNo',
+      title: 'Trim Number',
+      dataIndex: 'trim_swatch_number',
     },
     {
-      title: 'Buyer',
-      dataIndex: 'buyerName',
+      title: 'Created At',
+      dataIndex: 'created_at',
+      render: (createdAt) => {
+        const date = new Date(createdAt);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      },
     },
     {
-      title: 'Brand',
-      dataIndex: 'brandName',
-    },
-    {
-      title: 'Category',
-      dataIndex: 'categoryName',
-    },
-    {
-      title: 'Season',
-      dataIndex: 'seasonName',
-    },
-    {
-      title: 'Style No',
-      dataIndex: 'styleNo',
-    },
-    {
-      title: 'Item No',
-      dataIndex: 'itemNo',
-    },
-    {
-      title: 'Category Type',
-      dataIndex: 'categoryType',
-    },
-    {
-      title: 'PO No',
-      dataIndex: 'poNumber',
-    },
-    {
-      title: 'GRN No',
-      dataIndex: 'grnNumber',
+      title: 'GRN Number',
+      dataIndex: 'grn_number',
     },
     {
       title: 'GRN Date',
-      dataIndex: 'grnDate',
+      dataIndex: 'grn_date',
       render: (grnDate) => {
         const date = new Date(grnDate);
         const year = date.getFullYear();
@@ -182,12 +154,44 @@ const TrimSwatchApproval = () => {
       },
     },
     {
-      title: 'Item Description',
-      dataIndex: 'itemDescription',
+      title: 'Buyer',
+      dataIndex: 'buyerName',
     },
     {
-      title: 'Mill/Vendor',
-      dataIndex: 'mill',
+      title: 'Supplier',
+      dataIndex: 'supplier_name',
+    },
+    {
+      title: 'Po No',
+      dataIndex: 'po_number',
+    },
+    {
+      title: 'Style No',
+      dataIndex: 'style_no',
+    },
+    {
+      title: 'Item No',
+      dataIndex: 'item_no',
+    },
+    {
+      title: 'Item Descrpition',
+      dataIndex: 'item_description',
+    },
+    {
+      title: 'Invoice No',
+      dataIndex: 'invoice_no',
+    },
+    {
+      title: 'Merchant',
+      dataIndex: 'merchant',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+    },
+    {
+      title: 'Checked By',
+      dataIndex: 'checked_by',
     },
     {
       title:'Image',
@@ -214,7 +218,7 @@ const TrimSwatchApproval = () => {
         <div style={{ textAlign: 'center' }}>
             <Popconfirm
               title="Are you sure to accept?"
-              onConfirm={() => fabricAccepted(rowData)}
+              onConfirm={() => TrimAccepted(rowData)}
               okText="Yes"
               cancelText="No"
             >
@@ -257,8 +261,8 @@ const TrimSwatchApproval = () => {
       activeKey={activeKey}
       >
         <TabPane
-          key={StatusEnum.OPEN}
-          tab={`OPEN : ${countData[0]?.openCount}`}
+          key={StatusEnum.SENT_FOR_APPROVAL}
+          tab={`WAITING FOR APPROVAL : ${countData[0]?.openCount}`}
         >
           {data.length > 0 ?(
           <Table
@@ -286,6 +290,7 @@ const TrimSwatchApproval = () => {
           key={StatusEnum.APPROVED}
           tab={`APPROVED : ${countData[0]?.approvedCount}`}
         >
+          {data.length > 0 ?(
           <Table
             pagination={{
               onChange(current) {
@@ -300,12 +305,19 @@ const TrimSwatchApproval = () => {
             dataSource={data}
             size="small"
             bordered
-          ></Table>
+          ></Table>):(
+            <Alert 
+            message="No data available☹️" 
+            type="info" 
+            showIcon
+            style={{ width: "160px", margin: "auto" }}/>
+          )}
         </TabPane>
         <TabPane
           key={StatusEnum.REJECTED}
           tab={`REJECTED : ${countData[0]?.rejectedCount}`}
         >
+          { data.length > 0 ? (
           <Table
             pagination={{
               onChange(current) {
@@ -319,7 +331,13 @@ const TrimSwatchApproval = () => {
             dataSource={data}
             size="small"
             bordered
-          ></Table>
+          ></Table>):(
+            <Alert 
+            message="No data available☹️" 
+            type="info" 
+            showIcon
+            style={{ width: "160px", margin: "auto" }}/>
+          )}
         </TabPane>
       </Tabs>
       <Modal
@@ -330,7 +348,7 @@ const TrimSwatchApproval = () => {
         destroyOnClose
         >
           {action === 'image' ? (
-            <img src={imagePath} alt="Fabric Image" style={{ maxWidth: '100%' }} />
+            <img src={imagePath} alt="Trim Image" style={{ maxWidth: '100%' }} />
           ):null}
 
         {action === 'reject' ? (<Card

@@ -46,6 +46,7 @@ export class TrimSwatchService {
       entityData.grnDate = date
       entityData.status = StatusEnum.SENT_FOR_APPROVAL
       entityData.checkedBy = req.checkedBy
+      entityData.approverId = req.approverId
       const saveData = await this.repo.save(entityData)
       return new CommonResponseModel(true , 1 , `${saveData.trimSwatchNumber} created successfully` ,saveData)
 
@@ -73,13 +74,13 @@ export class TrimSwatchService {
       const toDate = req.toDate;
       let query = `SELECT ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
-      ts.invoice_no , ts.style_no ,ts.merchant , ts.grn_number , ts.grn_date , ts.checked_by , ts.file_name , ts.file_path ,ts.status,ts.created_at
+      ts.invoice_no , ts.style_no ,ts.merchant , ts.grn_number , ts.grn_date , ts.checked_by , ts.file_name , ts.file_path ,ts.status,ts.created_at,ts.rejection_reason 
       FROM trim_swatch ts
       LEFT JOIN buyer b ON b.buyer_id = ts.buyer_id
-      LEFT JOIN supplier s ON s.supplier_id = ts.supplier_id`
-
+      LEFT JOIN supplier s ON s.supplier_id = ts.supplier_id
+      WHERE 1=1`
       if(req.tabName != undefined){
-        if(req.tabName == 'SENT FOR APPROVAL'){
+        if(req.tabName == 'SENT_FOR_APPROVAL'){
           query=query+' and ts.status IN("SENT_FOR_APPROVAL")'
         }
         if(req.tabName == 'APPROVED'){
@@ -92,12 +93,8 @@ export class TrimSwatchService {
       if(fromDate){
           query = query +` and DATE(created_at) BETWEEN '${fromDate}' AND '${toDate}'`;
       }
-
-
-
       const data = await this.repo.query(query)
-
-      if (data){
+      if (data.length){
         return new CommonResponseModel(true,1,'Data retrieved successfully',data)
       }else{
         return new CommonResponseModel(false,0,'No data found',[])

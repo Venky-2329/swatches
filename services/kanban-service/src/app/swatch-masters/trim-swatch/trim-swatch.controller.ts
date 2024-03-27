@@ -7,12 +7,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { ApplicationExceptionHandler } from 'libs/backend-utils';
+import { MailerService } from '../fabric-swatch/send-mail';
 
 
 @Controller('trim-swatch')
 export class TrimSwatchController {
   constructor(private readonly service: TrimSwatchService,
-    private readonly appHandler: ApplicationExceptionHandler) {}
+    private readonly appHandler: ApplicationExceptionHandler,
+    private readonly mailService : MailerService) {}
 
   @Post('/createTrimSwatch')
   @ApiBody({type : TrimSwatchDto})
@@ -103,5 +105,25 @@ export class TrimSwatchController {
       }
   }
 
+  // @Post('/getDataById')
+  // @ApiBody({type: SwatchStatus})
+  // async getDataById(@Body() req: any): Promise<CommonResponseModel>{
+  //     try{
+  //         return await this.service.getDataById(req)
+  //     }catch(err){
+  //         return this.appHandler.returnException(CommonResponseModel,err)
+  //     }
+  // }
 
+  @Post('/sendSwatchMail')
+  async sendSwatchMail(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return await this.mailService.sendSwatchMail(req);
+    } catch (error) {
+      console.log('----------error in send mail controller')
+      console.log(error)
+      console.log('-------End in Controller')
+      return this.appHandler.returnException(CommonResponseModel, error);
+    }
+}
 }

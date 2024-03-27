@@ -52,7 +52,7 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
     return {
       ...typeOrmConfig,
       synchronize: false,
-      logging: false,
+      logging: true,
       //namingStrategy: new SnakeNamingStrategy(),
       //logger: new QueryLogger(new PinoLogger({ pinoHttp: { level: configService.get().logLevel } })),
       autoLoadEntities: true,

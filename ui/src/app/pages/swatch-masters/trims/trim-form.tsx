@@ -14,9 +14,11 @@ import {
 } from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useEffect, useState } from 'react';
-import ImgCrop from 'antd-img-crop';
+import { SyncOutlined } from '@ant-design/icons'
 import {
+  ApprovalUserService,
   BuyerService,
+  EmailService,
   SupplierService,
   TrimSwatchService,
   createSample,
@@ -25,9 +27,10 @@ import {
 import imageCompression from 'browser-image-compression';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import { EmailModel } from 'libs/shared-models';
 
 export default function TrimSwatchUpload() {
-  const Option = Select;
+  const {Option} = Select;
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [fileList, setFileList] = useState<any[]>([]);
@@ -42,10 +45,18 @@ export default function TrimSwatchUpload() {
   const service = new BuyerService();
   const service2 = new SupplierService();
   const mainService = new TrimSwatchService();
+  const [uploading, setUploading] = useState(false);
+  const mailService = new EmailService()
+  const employeeService = new ApprovalUserService()
+  const [ employeeData, setEmployeeData ] = useState<any[]>([])
+  const [ resData, setResData ] = useState<any[]>([])
+
+
 
   useEffect(() => {
     getBuyers();
     getSupplier()
+    getEmployeeData() 
   }, []);
 
   function getBuyers() {
@@ -74,10 +85,23 @@ export default function TrimSwatchUpload() {
     createUpload(values);
   }
 
+  const getEmployeeData = ()=>{
+    employeeService.getAllApprovalUser().then((res)=>{
+      if(res.status){
+        setEmployeeData(res.data)
+      }
+    })
+  }
+
   const handleRemove = (file) => {
     setFileList([]);
     // Additional logic for removing file
   };
+
+  const onUserChange =(value,option)=>{
+    console.log(option?.name,';;;;;;;;;;;;;;;;;')
+    form.setFieldsValue({approverMail: option?.name})
+}
 
   const handleBeforeUpload = async (file) => {
     if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
@@ -151,7 +175,10 @@ export default function TrimSwatchUpload() {
             formData.append('id', `${res.data.sampleId}`);
             mainService.photoUpload(formData).then((fileres) => {
               if (res.status) {
+                form.setFieldsValue({trimSwatchNumber: res?.data?.trimSwatchNumber})
+                setResData(res.data)
                 res.data.filePath = fileres.data;
+                sendMailForApprovalUser()
                 message.success(res.internalMessage,2)
                 onReset();
                 gotoGrid();
@@ -191,6 +218,92 @@ export default function TrimSwatchUpload() {
   function gotoGrid() {
     navigate('/trims-swatch-view');
   }
+
+  const handleChange = (info) => {
+    if (info.file.status === 'uploading') {
+      setUploading(true);
+    } else {
+      setUploading(false);
+    }
+  };
+
+  let mailerSent = false;
+    async function sendMailForApprovalUser() {
+        const swatchDetails = new EmailModel();
+        swatchDetails.swatchNo = form.getFieldValue('trimSwatchNumber');
+        swatchDetails.to = 'playstore2636@gmail.com';
+        // swatchDetails.to = form.getFieldValue('approverMail')
+        // TODO:
+        swatchDetails.html = `
+        <html>
+        <head>
+          <meta charset="UTF-8" />
+          <style>
+            #acceptDcLink {
+                  display: inline-block;
+                  padding: 10px 20px;
+                  background-color: #28a745;
+                  color: #fff;
+                  text-decoration: none;
+                  border-radius: 5px;
+                  margin-top: 10px;
+                  transition: background-color 0.3s ease, color 0.3s ease;
+                  cursor: pointer;
+              }
+      
+              #acceptDcLink.accepted {
+                  background-color: #6c757d;
+                  cursor: not-allowed;
+              }
+      
+              #acceptDcLink:hover {
+                  background-color: #218838;
+                  color: #fff;
+              }
+          </style>
+        </head>
+        <body>
+          <p>Dear team,</p>
+          <p>Please find the Trim Swatch details below:</p>
+          <p>Trim Swatch No: ${form.getFieldValue('trimSwatchNumber')}</p>
+          <p>
+            Some items moved from Address: ${form.getFieldValue('fromUnit')} to
+            Address: ${form.getFieldValue('toAddresserName')}
+          </p>
+          <p>Please click the link below for details:</p>
+          <input type="hidden" id="assignBy" value=${form.getFieldValue('assignBy')} /> 
+          <input type="hidden" id="dcId" value=${form.getFieldValue('dcId')} />
+      
+          <a
+            href="http://gpdc.seplcloud.com/#/dc-email-detail-view/${form.getFieldValue('dcId')}"
+            style="
+              display: inline-block;
+              padding: 10px 20px;
+              background-color: #007bff;
+              color: #fff;
+              text-decoration: none;
+              border-radius: 5px;
+            "
+            >View Details of GatePass</a
+          >
+        
+        </body>
+      </html>
+      `
+        swatchDetails.subject = "Fabric Swatch : " + form.getFieldValue('trimSwatchNumber')
+        const res = await mailService.sendSwatchMail(swatchDetails)
+        console.log(res)
+        if (res.status == 201) {
+            if (res.data.status) {
+                message.success("Mail sent successfully")
+                mailerSent = true;
+            } else {
+                message.success("Mail sent successfully")
+            }
+        } else {
+            message.success("Mail also sent successfully")
+        }
+    }
   return (
     <>
       <Card
@@ -242,6 +355,7 @@ export default function TrimSwatchUpload() {
                 <Input placeholder="Enter GRN No" />
               </Form.Item>
             </Col>
+            <Form.Item hidden name={'trimSwatchNumber'}></Form.Item>
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -424,6 +538,36 @@ export default function TrimSwatchUpload() {
                 <Input placeholder="Enter Checked By" />
               </Form.Item>
             </Col>
+            <Col
+              xs={24} sm={12} md={8} lg={6} xl={4}
+            >
+              <Form.Item
+                label="Approver"
+                name={'approverId'}
+                rules={[{ required: true, message: 'Approver is required' }]}
+              >
+                <Select
+                  allowClear
+                  showSearch
+                  optionFilterProp="children"
+                  placeholder="Select Approver"
+                  onChange={onUserChange}
+                >
+                  {employeeData.map((item) => {
+                    return (
+                      <Option key={item.approvedId} value={item.approvedId} name={item.emailId}>
+                        {item.approvedUserName}
+                        </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+      <Form.Item label="Approver Mail" name={'approverMail'}>
+        <Input disabled />
+      </Form.Item>
+    </Col>
           </Row>
           <Row gutter={24}>
             <Col
@@ -441,8 +585,9 @@ export default function TrimSwatchUpload() {
                   onPreview={onPreview}
                   style={{ width: '200px', height: '200px' }}
                   accept=".png,.jpeg,.PNG,.jpg,.JPG"
+                  onChange={handleChange}
                 >
-                  {fileList.length < 1 && '+ Upload'}
+      {uploading ? <SyncOutlined spin /> : (fileList.length < 1 && '+ Upload')}
                 </Upload>
               </Form.Item>
             </Col>
