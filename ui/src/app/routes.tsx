@@ -42,6 +42,7 @@ import ApprovedUserForm from './pages/swatch-masters/authorised/authorised-form'
 import ApproverGrid from './pages/swatch-masters/authorised/authorised-grid';
 import FabricSwatchDetailView from './pages/swatch-masters/fabric-swatch/fabric-swatch-detail-view';
 import TrimSwatchApproval from './pages/swatch-masters/trims/trim-approval';
+import { TrimSwatchDetailView } from './pages/swatch-masters/trims/trim-swatch-detail-view';
 
 export const AppRoutes = () => {
   const router = createHashRouter(
@@ -81,6 +82,8 @@ export const AppRoutes = () => {
           <Route path="/trims-swatch-upload"key="trims-swatch-upload"element={<TrimSwatchUpload />}/>
           <Route path="/trims-swatch-view"key="trims-swatch-view"element={<TrimSwatchGrid />}/>
           <Route path="/trims-swatch-approval"key="trims-swatch-approval"element={<TrimSwatchApproval />}/>
+          <Route path='/trims-swatch-detail-view/:trimSwatchId' key='/trims-swatch-detail-view' element={<TrimSwatchDetailView/>}/>
+
 
           <Route  path="/sample-cards"  key="sample-cards" element={<SampleCards />}  />
           <Route  path="/sample-view"  key="sample-view" element={<DigitalSamplesView />} />
@@ -129,7 +132,7 @@ export const AppRoutes = () => {
           <Route  path="/separete-card/:id"  key="separete-card"  element={<SeparateView />} />
           <Route  path="/home-screen" key="home-screen" element={<HomeScreen />} />
           <Route path='/fabric-swatch-approval' key='/fabric-swatch-approval' element={<FabricSwatchApproval/>}/>
-          <Route path='/fabric-swatch-detail-view/:fabricSwatchId' key='/fabric-swatch-detail-view' element={<FabricSwatchDetailView/>}/>
+         <Route path='/fabric-swatch-detail-view/:fabricSwatchId' key='/fabric-swatch-detail-view' element={<FabricSwatchDetailView/>}/>
 
           <Route
             path="/403"
