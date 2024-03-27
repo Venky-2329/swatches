@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { CommonFields } from "../../racks/entity/common.entity";
 
-@Entity('sample_brands_master')
+@Entity('swatch_brands')
 export class BrandsEntity extends CommonFields{
     @PrimaryGeneratedColumn('increment', {
         name: 'brand_id',

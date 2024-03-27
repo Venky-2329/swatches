@@ -41,6 +41,9 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
   const [employee, setEmployee] = useState<any>([]);
   const authdata = JSON.parse(localStorage.getItem('userName'));
   const employeeService = new EmployeeService();
+  const users: any = JSON.parse(localStorage.getItem('auth'))
+  // const createdUser = users.userName
+
 
   const Service = new ApprovalUserService();
 
@@ -198,6 +201,10 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
     fileList: fileList,
   };
 
+  const onEmployee = (value,option)=>{
+    form.setFieldsValue({emailId:option?.name})
+  }
+
   return (
     <Card
       title={props.isUpdate ? 'Update user' : 'User '}
@@ -260,10 +267,11 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
                       placeholder="Select Name"
                       optionFilterProp="children"
                       allowClear
+                      onChange={onEmployee}
                     >
                       {employee?.map((app) => {
                         return (
-                          <Option key={app.employeeId} value={app.employeeId}>
+                          <Option key={app.employeeId} value={app.employeeId} name={app.emailId}>
                             {app.employeeName}
                           </Option>
                         );
@@ -288,7 +296,7 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
                       },
                     ]}
                   >
-                    <Input placeholder="Enter Email Id " />
+                    <Input placeholder="Enter Email Id " disabled style={{fontWeight:'bolder'}}/>
                   </Form.Item>
                 </Col>
 

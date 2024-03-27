@@ -31,20 +31,20 @@ export class EmployeeEntity {
     designation: number;
 
     @Column("varchar", {
-        nullable: false,
+        nullable: true,
         name: "date_of_birth"
     })
     dateOfBirth: string;
 
     @Column("varchar", {
-        nullable: false,
+        nullable: true,
         length: 50,
         name: "gender"
     })
     gender: string;
 
     @Column("varchar", {
-        nullable: false,
+        nullable: true,
         name: "marital_status"
     })
     maritalStatus: string;
@@ -63,7 +63,7 @@ export class EmployeeEntity {
     department: number;
 
     @Column("int", {
-        nullable: false,
+        nullable: true,
         name: "section"
     })
     section: number;
@@ -75,13 +75,14 @@ export class EmployeeEntity {
     unit: string;
 
     @Column("varchar", {
-        nullable: false,
+        nullable: true,
         name: "address"
     })
     address: string;
 
 
     @Column('varchar',{
+        nullable:true,
         name: "mobile_number",
     })
     mobileNumber: string;

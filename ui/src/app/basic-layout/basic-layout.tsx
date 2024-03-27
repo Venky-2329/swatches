@@ -93,13 +93,6 @@ export function BasicLayout(props: BasicLayoutProps) {
           filepath: '../',
         },
         {
-          label: 'Location',
-          key: 'location-grid',
-          path: '/location-grid',
-          icon: <TableOutlined />,
-          filepath: '../',
-        },
-        {
           label: 'Season',
           key: 'season-grid',
           path: '/season-grid',
