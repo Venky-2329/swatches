@@ -14,7 +14,11 @@ export class UserService {
     const entity = new UserEntity();
     entity.userName = dto.userName;
     entity.password = dto.password;
+    entity.employeeId = dto.employeeId
+    entity.departmentId = dto.departmentId
+    entity.role = dto.role
     entity.createdUser = dto.createdUser;
+    entity.email = dto.email
     const save = await this.userRepo.save(entity)
     if (save) return new CommonResponseModel(true, 1, 'Saved successfully');
     return new CommonResponseModel(false, 0, 'Something went wrong');
@@ -22,14 +26,14 @@ export class UserService {
 
   async getData(): Promise<CommonResponseModel> {
     const data = await this.userRepo.find({where :{isActive : true}})
-     if (data) return new CommonResponseModel(true, 1, 'Data retrived successfully',data);
+     if (data) return new CommonResponseModel(true, 1, 'Data retrieved successfully',data);
      return new CommonResponseModel(false, 0, 'Something went wrong');
    }
 
    async login (dto:any) : Promise<CommonResponseModel>{
     const validateUser = await this.userRepo.findOne({where:{userName : dto.userName , password: dto.password}})
     if(!validateUser) return new CommonResponseModel(false,1111,'Please check your credentials')
-    const authData = new AuthModel(validateUser.userName,validateUser.userId)
-    return new CommonResponseModel(true,1111,'Sucessfully logged in',authData)
+    const authData = new AuthModel(validateUser.userName,validateUser.userId,validateUser.email)
+    return new CommonResponseModel(true,1111,'Successfully logged in',authData)
 }
 }

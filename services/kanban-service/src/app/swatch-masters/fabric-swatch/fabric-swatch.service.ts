@@ -81,10 +81,10 @@ export class FabricSwatchService{
         fs.season_id AS seasonId,ssm.season_name AS seasonName,
         fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fs.file_name as fileName, fs.file_path as filePath
         FROM fabric_swatch fs
-        LEFT JOIN buyer b ON b.buyer_id = fs.buyer_id
-        LEFT JOIN sample_brands_master sbm ON sbm.brand_id = fs.brand_id
-        LEFT JOIN sample_category_master scm ON scm.category_id = fs.category_id
-        LEFT JOIN sample_season_master ssm ON ssm.season_id = fs.season_id
+        LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
+        LEFT JOIN swatch_brands sbm ON sbm.brand_id = fs.brand_id
+        LEFT JOIN swatch_category scm ON scm.category_id = fs.category_id
+        LEFT JOIN swatch_seasons ssm ON ssm.season_id = fs.season_id
         WHERE 1=1`
         if(req.tabName != undefined){
           if(req.tabName == 'SENT_FOR_APPROVAL'){
@@ -177,10 +177,10 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     fs.season_id AS seasonId,ssm.season_name AS seasonName,
     fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fs.file_name as fileName, fs.file_path as filePath
     FROM fabric_swatch fs
-    LEFT JOIN buyer b ON b.buyer_id = fs.buyer_id
-    LEFT JOIN sample_brands_master sbm ON sbm.brand_id = fs.brand_id
-    LEFT JOIN sample_category_master scm ON scm.category_id = fs.category_id
-    LEFT JOIN sample_season_master ssm ON ssm.season_id = fs.season_id
+    LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
+    LEFT JOIN swatch_brands sbm ON sbm.brand_id = fs.brand_id
+    LEFT JOIN swatch_category scm ON scm.category_id = fs.category_id
+    LEFT JOIN swatch_seasons ssm ON ssm.season_id = fs.season_id
     WHERE 1=1`
     if(req.fabricSwatchId){
         query = query +` and fs.fabric_swatch_id = ${req.fabricSwatchId}`;

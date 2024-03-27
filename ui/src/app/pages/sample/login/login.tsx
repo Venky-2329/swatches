@@ -12,7 +12,7 @@ export default function Login() {
       console.log(res);
       if (res.data) {
         console.log(res);
-        navigate('/home-screen', { replace: true });
+        navigate('/', { replace: true });
         localStorage.setItem('auth', JSON.stringify(res.data));
         notification.success({
           message: res.internalMessage,

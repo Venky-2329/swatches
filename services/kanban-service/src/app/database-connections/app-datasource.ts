@@ -18,6 +18,7 @@ import { DesignationEntity } from '../swatch-masters/designation/entity/designat
 import { DepartmentEntity } from '../swatch-masters/department/entity/department.entity';
 import { UnitEntity } from '../swatch-masters/unit/entity/unit.entity';
 import { ApprovalUserEntity } from '../swatch-masters/approval-users/entities/approval-user.entity';
+import { SectionsEntity } from '../swatch-masters/department/entity/section.entity';
 
 export const typeOrmConfig: DataSourceOptions = {
   type: 'mysql',
@@ -28,22 +29,19 @@ export const typeOrmConfig: DataSourceOptions = {
   // host: 'localhost',
   // username: 'root',
   // password: '',
-  // database: 'test',
+  // database: 'testing',
   entities: [
-    RacksEntity,
-    RacksChildEntity,
     BrandsEntity,
     CategoryEntity,
-    LocationEntity,
     SeasonEntity,
     UserEntity,
-    SampleUpload,
     FabricSwatchEntity,
     UnitEntity,
     EmployeeEntity,
     DesignationEntity,
     DepartmentEntity,
     ApprovalUserEntity,
+    SectionsEntity
   ],
 };
 

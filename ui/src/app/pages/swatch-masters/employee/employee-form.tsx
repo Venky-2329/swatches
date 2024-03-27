@@ -153,6 +153,86 @@ useEffect(()=>{
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
+                        <Form.Item name="emailId" label="Email Id:"
+                            rules={[
+                                { required: props.isUpdate ? false : true  },
+                                { type: 'email', message: 'Please enter a valid email address!' }
+                            ]}
+                        >
+                            <Input placeholder=" Enter Email Id" />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
+                        <Form.Item name="designation" label="Designation"
+                            rules={[
+                                { required: props.isUpdate ?  false : true  },
+                            ]}
+                        >
+                            <Select
+                                showSearch
+                                placeholder="Select Designation "
+                                optionFilterProp="children"
+                                dropdownMatchSelectWidth={false}
+                                allowClear
+                            >
+                                {designation?.map((rec: any) => {
+                                    return (
+                                        <Option key={rec.designationId} value={rec.designationId}>
+                                            {rec.designation}
+                                        </Option>
+                                    )
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    
+
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
+                        <Form.Item name="department" label="Department" rules={[
+                                { required: props.isUpdate ? false : true  },
+                            ]}>
+                            <Select
+                                showSearch
+                                placeholder="Select Department "
+                                dropdownMatchSelectWidth={false}
+                                optionFilterProp="children"
+                                // onChange={getAllSectionsForDrop}
+                                allowClear
+                            >
+                                {department?.map((rec: any) => {
+                                    return (
+                                        <Option key={rec.id} value={rec.id}>
+                                            {rec.departmentName}
+                                        </Option>
+                                    )
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
+                        <Form.Item name="unit" label="Unit"
+                            rules={[
+                                { required: true },
+                            ]}
+                        >
+                            <Select
+                                showSearch
+                                placeholder="Select Unit "
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {unit?.map((rec: any) => {
+                                    return (
+                                        <Option key={rec.unitCode} value={rec.unitCode}>
+                                            {rec.unitName}
+                                        </Option>
+                                    )
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
                         <Form.Item name="dateOfBirth" label="Date of Birth"  >
                             <DatePicker
                                 style={{ width: '100%' }}
@@ -201,68 +281,10 @@ useEffect(()=>{
                                     message: `Don't Allow letters and Spaces`
                                 }
                             ]}>
-                            <Input />
+                            <Input placeholder='Enter Mobile No'/>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
-                        <Form.Item name="emailId" label="Email Id:"
-                            rules={[
-                                { required: props.isUpdate ? false : true  },
-                            ]}
-                        >
-                            <Input placeholder=" Enter Email Id" />
-                        </Form.Item>
-                        {/* <Select placeholder=" Enter Employee Code:" style={{ width: 150 }}> */}                        {/* </Select> */}
-                    </Col>
-
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
-                        <Form.Item name="designation" label="Designation"
-                            rules={[
-                                { required: props.isUpdate ?  false : true  },
-                            ]}
-                        >
-                            <Select
-                                showSearch
-                                placeholder="Select Designation "
-                                optionFilterProp="children"
-                                dropdownMatchSelectWidth={false}
-                                allowClear
-                            >
-                                {designation?.map((rec: any) => {
-                                    return (
-                                        <Option key={rec.designationId} value={rec.designationId}>
-                                            {rec.designation}
-                                        </Option>
-                                    )
-                                })}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    
-
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
-                        <Form.Item name="department" label="Department" rules={[
-                                { required: props.isUpdate ? false : true  },
-                            ]}>
-                            <Select
-                                showSearch
-                                placeholder="Select Department "
-                                dropdownMatchSelectWidth={false}
-                                optionFilterProp="children"
-                                onChange={getAllSectionsForDrop}
-                                allowClear
-                            >
-                                {department?.map((rec: any) => {
-                                    return (
-                                        <Option key={rec.id} value={rec.id}>
-                                            {rec.departmentName}
-                                        </Option>
-                                    )
-                                })}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
                         <Form.Item name="section" label="Section" rules={[
                                 { required: false },
                             ]}>
@@ -282,30 +304,7 @@ useEffect(()=>{
                                 })}
                             </Select>
                         </Form.Item>
-                    </Col>
-
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
-                        <Form.Item name="unit" label="Unit"
-                            rules={[
-                                { required: true },
-                            ]}
-                        >
-                            <Select
-                                showSearch
-                                placeholder="Select Unit "
-                                optionFilterProp="children"
-                                allowClear
-                            >
-                                {unit?.map((rec: any) => {
-                                    return (
-                                        <Option key={rec.unitCode} value={rec.unitCode}>
-                                            {rec.unitName}
-                                        </Option>
-                                    )
-                                })}
-                            </Select>
-                        </Form.Item>
-                    </Col>
+                    </Col> */}
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} xl={{ span: 5, offset: 1 }} style={{ margin: '1%' }} >
                         <Form.Item name="address" label="Address" >
                             <TextArea />

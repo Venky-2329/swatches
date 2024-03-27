@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { CommonFields } from "../../racks/entity/common.entity";
 
-@Entity('sample_user_master')
+@Entity('swatch_users')
 export class UserEntity extends CommonFields{
     @PrimaryGeneratedColumn('increment', {
         name: 'user_id',
@@ -9,17 +9,42 @@ export class UserEntity extends CommonFields{
     userId: number
 
     @Column('varchar', {
-        nullable: true,
+        nullable: false,
         name: "user_name",
         length: 250
     })
     userName: string;
 
     @Column('varchar', {
-        nullable: true,
+        nullable: false,
         name: "password",
         length: 250
     })
     password: string;
+
+    @Column('int', {
+        nullable: false,
+        name: "employee_id",
+    })
+    employeeId: number;
+
+    @Column('varchar', {
+        nullable: false,
+        name: "email",
+    })
+    email: string;
+
+    @Column('int', {
+        nullable: false,
+        name: "department_id",
+    })
+    departmentId: number;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "role",
+        length: 50
+    })
+    role: string;
 
 }

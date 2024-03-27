@@ -151,7 +151,7 @@ export class FabricSwatchEntity{
 
     @Column('varchar',{
         name:'rejection_reason',
-        length:100
+        length:255
     })
     rejectionReason: string
 
