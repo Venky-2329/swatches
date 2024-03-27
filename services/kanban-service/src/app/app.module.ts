@@ -17,9 +17,7 @@ import { EmployeeModule } from './swatch-masters/employees/employee.module';
 import { DesignationModule } from './swatch-masters/designation/designation.module';
 import { UnitModule } from './swatch-masters/unit/unit.module';
 import { DepartmentModule } from './swatch-masters/department/department.module';
-import { TrimSwatchEntity } from './swatch-masters/trim-swatch/entities/trim-swatch.entity';
 import { TrimSwatchModule } from './swatch-masters/trim-swatch/trim-swatch.module';
-import { ApprovalUserEntity } from './swatch-masters/approval-users/entities/approval-user.entity';
 import { ApprovalUsersModule } from './swatch-masters/approval-users/approval-users.module';
 
 @Module({

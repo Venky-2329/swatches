@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {Alert,Button,Card,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Table,Tabs,Tag,Tooltip,message} from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {SearchOutlined,UndoOutlined,FileImageOutlined, BarcodeOutlined, EyeOutlined} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
-// import './visitor-report.css';
 import Highlighter from 'react-highlight-words';
-import { DateReq, StatusEnum, SwatchStatus } from 'libs/shared-models';
+import { DateReq, StatusEnum, } from 'libs/shared-models';
 import { FabricSwatchService } from 'libs/shared-services';
-import TextArea from 'antd/es/input/TextArea';
 
 
 const FabricSwatchApproval = () => {
@@ -15,26 +13,20 @@ const FabricSwatchApproval = () => {
   const { Option } = Select
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = React.useState(1);
-  // const service = new VisitorService();
   const { RangePicker } = DatePicker;
   const [form] = Form.useForm();
-  const [tabName, setTabName] = useState<string>('SENT FOR APPROVAL');
+  const [tabName, setTabName] = useState<string>('SENT_FOR_APPROVAL');
   const [selectedTabKey, setSelectedTabKey] = useState('1');
   const [countData, setCountData] = useState<any[]>([]);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
   const [modal, setModal] = useState<boolean>(false);
-  const [rejectReason, setRejectReason] = useState('');
   const fabricService = new FabricSwatchService()
-  const [tagData,setTagData] =  useState<any[]>([])
-  const [formData, setFormData] = useState({});
   const [barcodeModal, setBarcodeModal] = useState('');
-  const [activeKey, setActiveKey] = useState('SENT FOR APPROVAL')
   const service = new FabricSwatchService()
-  const [imageModalVisible, setImageModalVisible] = useState(false);
-  const [imagePath, setImagePath] = useState('');
-  const [action, setAction] = useState(null);
+  const location = useLocation();
+  const [activeKey, setActiveKey] = useState('SENT_FOR_APPROVAL');
 
 
   useEffect(() => {
@@ -42,10 +34,19 @@ const FabricSwatchApproval = () => {
   }, [tabName]);
 
   useEffect(() => {
+    const tabKey = location.state?.tab;
+    if (tabKey) {
+      setActiveKey(tabKey);
+      getData(tabKey);
+    }
+  }, [location.state]);
+
+  useEffect(() => {
     getData(tabName);
     getCount();
   }, []);
 
+  
   const getData = (value: any) => {
     const req = new DateReq(value, undefined, undefined);
     if (form.getFieldValue('fromDate') !== undefined) {
@@ -74,7 +75,7 @@ const FabricSwatchApproval = () => {
   };
 
   const tabsOnchange = (value: any) => {
-    console.log(value,'....................')
+    setSelectedTabKey(value);
     setTabName(value);
     getData(value);
   };
@@ -162,53 +163,6 @@ const FabricSwatchApproval = () => {
     setSearchText('');
   }
 
-  const fabricAccepted = (value)=>{
-    const req = new SwatchStatus(value?.fabricSwatchId,value?.fabricSwatchNo)
-    service.updateApprovedStatus(req).then((res)=>{
-        if(res.status){
-            message.success(res.internalMessage,2)
-            setTabName('APPROVED')
-            setActiveKey('APPROVED');
-            getData('APPROVED')
-            getCount()
-        }else{
-            message.error(res.internalMessage,2)
-        }
-    })
-  }
-
-  const fabricRejected =(value)=>{
-    const req = new SwatchStatus(value,undefined,form.getFieldValue('rejectionReason'))
-    service.updateRejectedStatus(req).then((res)=>{
-        if(res.status){
-            message.success(res.internalMessage,2)
-            setTabName('REJECTED')
-            setActiveKey('REJECTED');
-            getData('REJECTED')
-            getCount()
-            setModal(false)
-            onReset()
-        }else{
-            message.error(res.internalMessage,2)
-        }
-    })
-  }
-
-  const handelReject = (value)=>{
-    setAction('reject')
-    setFormData(value?.fabricSwatchId)
-    setModal(true)
-  }
-
-  const handleFormSubmit = () => {
-    fabricRejected(formData);
-  };
-
-  const openImage = (record) => {
-    setAction('image')
-    setImagePath(record?.filePath);
-    setModal(true);
-};
   const columns: any = [
     {
       title: 'S.No',
@@ -278,33 +232,34 @@ const FabricSwatchApproval = () => {
       dataIndex: 'rejectionReason'
     },
     {
-      title:'Image',
-      dataIndex:'',
-      render:(text,record)=>{
-        return(
-          <Button type="link" onClick={() => openImage(record)}>
-            <FileImageOutlined />
-          </Button>
-        )
-      }
-    },
-    {
       title: <div style={{textAlign:"center"}}>Action</div>,
       dataIndex: 'action',
       render: (text, rowData) => {
         return(
-        <div style={{ textAlign: 'center' }}>
-            <Popconfirm
-              title="Are you sure to accept?"
-              onConfirm={() => fabricAccepted(rowData)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Tooltip title="Approve"><Button >✔️</Button></Tooltip>
-            </Popconfirm>
-            <Divider type='vertical'/>
-            <Tooltip title="Reject"><Button  onClick={() => handelReject(rowData)}>❌</Button></Tooltip>
-        </div>
+          <span>
+                    <Tooltip placement="top" title="Detail View">
+                        <EyeOutlined
+                            onClick={() => {
+                                console.log(rowData.fabricSwatchId);
+                                navigate(`/fabric-swatch-detail-view/${rowData.fabricSwatchId}`)
+                            }}
+                            style={{ color: "blue", fontSize: 20 }}
+                        />
+                        <Divider type='vertical' />
+                    </Tooltip>
+          </span>
+        // <div style={{ textAlign: 'center' }}>
+        //     <Popconfirm
+        //       title="Are you sure to accept?"
+        //       onConfirm={() => fabricAccepted(rowData)}
+        //       okText="Yes"
+        //       cancelText="No"
+        //     >
+        //       <Tooltip title="Approve"><Button >✔️</Button></Tooltip>
+        //     </Popconfirm>
+        //     <Divider type='vertical'/>
+        //     <Tooltip title="Reject"><Button  onClick={() => handelReject(rowData)}>❌</Button></Tooltip>
+        // </div>
         )
     },
     },
@@ -312,7 +267,6 @@ const FabricSwatchApproval = () => {
 
   const onReset = () => {
     form.resetFields();
-    // getData(tabName);
   };
 
   const columnColor = (record: any) => {
@@ -337,7 +291,7 @@ const FabricSwatchApproval = () => {
       >
         <TabPane
           key={StatusEnum.SENT_FOR_APPROVAL}
-          tab={`WAITING FOR APPROVAL : ${countData[0]?.waitingCount}`}
+          tab={<span style={{color:'#d4b417'}}>WAITING FOR APPROVAL : {countData[0]?.waitingCount}</span>}
         >
           {data.length > 0 ?(
           <Table
@@ -348,7 +302,7 @@ const FabricSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-                (o) => !['rejectionReason'].includes(o.dataIndex)
+                (o) => !['rejectionReason','poNumber','grnNumber','grnDate','itemDescription','mill',].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
@@ -363,8 +317,8 @@ const FabricSwatchApproval = () => {
         </TabPane>
         <TabPane
           key={StatusEnum.APPROVED}
-          tab={`APPROVED : ${countData[0]?.approvedCount}`}
-        >
+          tab={<span style={{ color: 'green' }}>APPROVED : {countData[0]?.approvedCount}</span>}
+          >
           {data.length  > 0 ?(<Table
             pagination={{
               onChange(current) {
@@ -389,7 +343,7 @@ const FabricSwatchApproval = () => {
         </TabPane>
         <TabPane
           key={StatusEnum.REJECTED}
-          tab={`REJECTED : ${countData[0]?.rejectedCount}`}
+          tab={<span style={{ color: 'red'}}>REJECTED : {countData[0]?.rejectedCount}</span>}
         >
           {data.length > 0 ?(<Table
             pagination={{
@@ -414,7 +368,7 @@ const FabricSwatchApproval = () => {
           )}
         </TabPane>
       </Tabs>
-      <Modal
+      {/* <Modal
         visible={modal}
         onCancel={onModalCancel}
         footer={null}
@@ -456,7 +410,7 @@ const FabricSwatchApproval = () => {
             </Row>
             </Form>
         </Card>): null}
-        </Modal>
+        </Modal> */}
     </Card>
   );
 };

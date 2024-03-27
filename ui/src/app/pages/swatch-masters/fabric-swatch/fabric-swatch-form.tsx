@@ -113,7 +113,7 @@ export default function FabricSwatchUpload() {
   const compressImage = async (file) => {
     try {
       const options = {
-        maxSizeMB: 50, // Adjust the maximum size as needed
+        maxSizeMB: 5, // Adjust the maximum size as needed
         // maxWidthOrHeight: 1920, // Adjust the maximum width or height as needed
         useWebWorker: true,
       };
@@ -155,7 +155,7 @@ export default function FabricSwatchUpload() {
             service.uploadPhoto(formData).then((fileres) => {
               if (res.status) {
                 form.setFieldsValue({fabricSwatchNumber: res?.data?.fabricSwatchNumber})
-                setResData(res.data)
+                form.setFieldsValue({fabricSwatchNumber: res?.data?.fabricSwatchId})
                 res.data.filePath = fileres.data;
                 sendMailForApprovalUser()
                 message.success(res.internalMessage, 2);
@@ -206,7 +206,13 @@ export default function FabricSwatchUpload() {
     }
   };
 
-  console.log(resData[0],'resdata')
+  const onBuyerChange = (value, option)=>{
+    form.setFieldsValue({buyerName: option?.name})
+  }
+
+  const onBrandChange = (value, option)=>{
+    form.setFieldsValue({brandName: option?.name})
+  }
 
     let mailerSent = false;
     async function sendMailForApprovalUser() {
@@ -245,13 +251,27 @@ export default function FabricSwatchUpload() {
           <p>Dear team,</p>
           <p>Please find the Fabric Swatch details below:</p>
           <p>Fabric Swatch No: ${form.getFieldValue('fabricSwatchNumber')}</p>
-          <p>
-            Some items moved from Address: ${form.getFieldValue('fromUnit')} to
-            Address: ${form.getFieldValue('toAddresserName')}
-          </p>
+          <p>Buyer: ${form.getFieldValue('buyerName')}</p>
+          <p>Brand: ${form.getFieldValue('brandName')}</p>
+          <p>Style No: ${form.getFieldValue('styleNo')}</p>
+          <p>Item No: ${form.getFieldValue('itemNo')}</p>
           <p>Please click the link below for details:</p>
           <input type="hidden" id="assignBy" value=${form.getFieldValue('assignBy')} /> 
           <input type="hidden" id="dcId" value=${form.getFieldValue('dcId')} />
+
+          <a
+            href="http://localhost:4200/#/fabric-swatch-detail-view/${form.getFieldValue('fabricSwatchId')}"
+            style="
+              display: inline-block;
+              padding: 10px 20px;
+              background-color: #007bff;
+              color: #fff;
+              text-decoration: none;
+              border-radius: 5px;
+            "
+            >View Details of ${form.getFieldValue('fabricSwatchNumber')}</a
+          >
+
         </body>
       </html>
       `
@@ -287,24 +307,7 @@ export default function FabricSwatchUpload() {
           >
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row gutter={24}>
-            {/* <Col
-              xs={24} sm={12} md={8} lg={6} xl={4}
-            >
-              <Form.Item
-                label="Type"
-                name={'type'}
-                rules={[{ required: true, message: 'Please input Type' }]}
-              >
-                <Select
-                  showSearch
-                  placeholder="Select Type"
-                  onChange={(value) => setSelectedType(value)}
-                >
-                  <Option value={'Fabric'}>Fabric</Option>
-                  <Option value={'Trim'}>Trim</Option>
-                </Select>
-              </Form.Item>
-            </Col> */}
+            <Form.Item hidden name={'fabricSwatchId'}></Form.Item>
             <Form.Item hidden name={'fabricSwatchNumber'}></Form.Item>
             <Col
               xs={24} sm={12} md={8} lg={6} xl={4}
@@ -323,10 +326,11 @@ export default function FabricSwatchUpload() {
                   showSearch
                   optionFilterProp="children"
                   placeholder="Select Buyer"
+                  onChange={onBuyerChange}
                 >
                   {buyerData.map((item) => {
                     return (
-                      <Option key={item.buyerId} value={item.buyerId}>
+                      <Option key={item.buyerId} value={item.buyerId} name={item.buyerName}>
                         {item.buyerName}
                       </Option>
                     );
@@ -334,6 +338,7 @@ export default function FabricSwatchUpload() {
                 </Select>
               </Form.Item>
             </Col>
+            <Form.Item hidden name={'buyerName'}></Form.Item>
             <Col
               xs={24} sm={12} md={8} lg={6} xl={4}
             >
@@ -346,6 +351,7 @@ export default function FabricSwatchUpload() {
                   showSearch
                   optionFilterProp="children"
                   placeholder="Select Brand"
+                  onChange={onBrandChange}
                 >
                   {brands.map((item) => {
                     return (
@@ -355,6 +361,7 @@ export default function FabricSwatchUpload() {
                 </Select>
               </Form.Item>
             </Col>
+            <Form.Item hidden name={'brandName'}></Form.Item>
             <Col
               xs={24} sm={12} md={8} lg={6} xl={4}
             >
@@ -390,7 +397,7 @@ export default function FabricSwatchUpload() {
                   },
                 ]}
               >
-                <Input placeholder="Enter Item Description" />
+                <Input placeholder="Enter Item Description"/>
               </Form.Item>
             </Col>
             <Col
