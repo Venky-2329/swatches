@@ -3,6 +3,7 @@ import { DepartmentService, EmployeeService, createSeason, createUser } from 'li
 import { useNavigate } from 'react-router-dom';
 import type { NotificationPlacement } from 'antd/es/notification/interface';
 import { useEffect, useState } from 'react';
+import { RoleEnum } from 'libs/shared-models';
 
 export default function UserForm() {
   const { Option } = Select
@@ -118,10 +119,11 @@ export default function UserForm() {
               <Col span={12}>
                 <Form.Item label="Role" name={'role'} rules={[{ required: true }]}>
                   <Select placeholder='Select Role'>
-                    <Option value='Admin'>Admin</Option>
-                    <Option value='Marketing'>Marketing</Option>
-                    <Option value='WAREHOUSE'>WAREHOUSE</Option>
-                    <Option value='FACTORY'>FACTORY</Option>
+                    {Object.values(RoleEnum).map((i)=>{
+                      return(
+                        <Option key={i} value={i}>{i}</Option>
+                      )
+                    })}
                   </Select>
                 </Form.Item>
               </Col>

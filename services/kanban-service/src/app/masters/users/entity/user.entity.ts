@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { CommonFields } from "../../racks/entity/common.entity";
+import { RoleEnum } from "libs/shared-models";
 
 @Entity('swatch_users')
 export class UserEntity extends CommonFields{
@@ -40,11 +41,11 @@ export class UserEntity extends CommonFields{
     })
     departmentId: number;
 
-    @Column('varchar', {
-        nullable: true,
+    @Column('enum', {
+        nullable: false,
         name: "role",
-        length: 50
+        enum: RoleEnum 
     })
-    role: string;
+    role: RoleEnum;
 
 }

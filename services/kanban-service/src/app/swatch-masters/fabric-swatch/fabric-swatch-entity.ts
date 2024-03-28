@@ -74,19 +74,19 @@ export class FabricSwatchEntity{
 
     @Column('varchar',{
         name:'color',
-        nullable: false
+        nullable: true
     })
     color: string
 
     @Column('varchar',{
         name:'po_number',
-        nullable: false
+        nullable: true
     })
     poNumber: string
 
     @Column('varchar',{
         name:'grn_number',
-        nullable: false
+        nullable: true
     })
     grnNumber: string
     

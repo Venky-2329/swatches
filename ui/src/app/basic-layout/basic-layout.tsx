@@ -11,7 +11,7 @@ import ProLayout from '@ant-design/pro-layout';
 import { LightModeIcon } from '../icons/lightmode.icon';
 import { treeRouter } from '../utils/common';
 import { DarkModeIcon } from '../icons/darkmode.icon';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Tooltip, theme } from 'antd';
 import {
   UserOutlined,
@@ -35,8 +35,10 @@ export function BasicLayout(props: BasicLayoutProps) {
   const {
     token: { colorPrimary, colorPrimaryActive, colorPrimaryBg },
   } = useToken();
-  const createUser: any = JSON.parse(localStorage.getItem('auth'));
+  const createUser = JSON.parse(localStorage.getItem('auth'));
   const user = createUser.userName;
+  const userRole = createUser.role;
+  console.log(userRole,'k-----------------------')
 
   function handleLogout() {
     localStorage.clear();
@@ -44,13 +46,6 @@ export function BasicLayout(props: BasicLayoutProps) {
   }
 
   const baseRouterList: any[] = [
-    // {
-    //   label: 'Home',
-    //   key: 'home-screen',
-    //   path: 'home-screen',
-    //   icon: <HomeOutlined />,
-    //   filepath: '../',
-    // },
     {
       label: 'Masters',
       path: '/masters',
@@ -148,33 +143,12 @@ export function BasicLayout(props: BasicLayoutProps) {
           path: '/trims-swatch-approval',
           icon: <UploadOutlined />,
           filepath: '../',
-        },
+        }
       ],
     },
-    // {
-    //   label: 'Sample Upload',
-    //   key: 'sample-view',
-    //   path: 'sample-view',
-    //   icon: <UploadOutlined />,
-    //   filepath: '../',
-    // },
-
-    // {
-    //   label: 'Design Studio',
-    //   key: 'sample-cards',
-    //   path: 'sample-cards',
-    //   icon: <RobotOutlined />,
-    //   filepath: '../',
-    // },
-
-    // {
-    //   label: "Samples View",
-    //   key: "sample-view",
-    //   path: "sample-view",
-    //   icon: <TableOutlined />,
-    //   filepath: "../",
-    // },
   ];
+
+
   return (
     <ProConfigProvider dark={dark}>
       <div
