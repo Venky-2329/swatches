@@ -3,7 +3,7 @@ import { TrimSwatchDto } from './dto/trim-swatch.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TrimSwatchEntity } from './entities/trim-swatch.entity';
 import { Repository } from 'typeorm';
-import { CommonResponseModel, DateReq, StatusEnum, SwatchStatus } from 'libs/shared-models';
+import { CommonResponseModel, DateReq, StatusEnum, TrimSwatchStatus } from 'libs/shared-models';
 
 @Injectable()
 export class TrimSwatchService {
@@ -93,8 +93,9 @@ export class TrimSwatchService {
       if(fromDate){
           query = query +` and DATE(created_at) BETWEEN '${fromDate}' AND '${toDate}'`;
       }
+      
       const data = await this.repo.query(query)
-      if (data.length){
+      if (data.length>0){
         return new CommonResponseModel(true,1,'Data retrieved successfully',data)
       }else{
         return new CommonResponseModel(false,0,'No data found',[])
@@ -122,17 +123,17 @@ export class TrimSwatchService {
     }
 }
 
-async updateApprovedStatus(req: SwatchStatus): Promise<CommonResponseModel> {
+async updateApprovedStatus(req: TrimSwatchStatus): Promise<CommonResponseModel> {
   try {
     console.log(req,'service')
-      const checkInData = await this.repo.findOne({ where: { trimSwatchId : req.fabricSwatchId } });
+      const checkInData = await this.repo.findOne({ where: { trimSwatchId : req.trimSwatchId } });
 
       if (!checkInData) {
           throw new Error(' Trim data not found');
       }
 
       checkInData.status = StatusEnum.APPROVED;
-      checkInData.trimSwatchNumber = req.fabricSwatchNumber;
+      checkInData.trimSwatchNumber = req.trimSwatchNumber;
       await this.repo.save(checkInData);
       return new CommonResponseModel(true, 1, 'Approved successfully', checkInData);
   } catch (err) {
@@ -140,9 +141,9 @@ async updateApprovedStatus(req: SwatchStatus): Promise<CommonResponseModel> {
   }
 }
 
-async updateRejectedStatus(req: SwatchStatus): Promise<CommonResponseModel> {
+async updateRejectedStatus(req: TrimSwatchStatus): Promise<CommonResponseModel> {
   try {
-      const rejectedData = await this.repo.findOne({ where: { trimSwatchId : req.fabricSwatchId } });
+      const rejectedData = await this.repo.findOne({ where: { trimSwatchId : req.trimSwatchId } });
 
       if (!rejectedData) {
           throw new Error('Trim data not found');
@@ -157,5 +158,30 @@ async updateRejectedStatus(req: SwatchStatus): Promise<CommonResponseModel> {
   }
 }
 
+async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
+  try{
+    console.log(req,'.........')
+    let query = `SELECT ts.trim_swatch_id , ts.trim_swatch_number ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
+      ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
+      ts.invoice_no , ts.style_no ,ts.merchant , ts.grn_number , ts.grn_date , ts.checked_by , ts.file_name , ts.file_path ,ts.status,ts.created_at,ts.rejection_reason 
+      FROM trim_swatch ts
+      LEFT JOIN buyer b ON b.buyer_id = ts.buyer_id
+      LEFT JOIN supplier s ON s.supplier_id = ts.supplier_id
+      WHERE 1=1`
+    if(req.trimSwatchId){
+        query = query +` and fs.trim_swatch_id = ${req.trimSwatchId}`;
+    }
+
+    const data = await this.repo.query(query)
+
+    if(data.length>0){
+      return new CommonResponseModel(true,1,'Data retrieved successfully',data)
+    }else{
+      return new CommonResponseModel(false,0,'No data found',[])
+    }
+  }catch(err){
+    throw(err)
+  }
+}
 
 }

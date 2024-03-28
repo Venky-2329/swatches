@@ -1,4 +1,4 @@
-import { CommonResponseModel, DateReq, SwatchStatus, TrimSwatchDto } from "libs/shared-models";
+import { CommonResponseModel, DateReq,  TrimSwatchDto, TrimSwatchStatus } from "libs/shared-models";
 import { CommonAxiosServicePms } from "../common-axios-service-prs";
 
 export class TrimSwatchService extends CommonAxiosServicePms{
@@ -21,15 +21,15 @@ export class TrimSwatchService extends CommonAxiosServicePms{
         return this.axiosPostCall(this.URL+ '/statusCount');
     }
 
-    async updateApprovedStatus(req?:SwatchStatus): Promise<CommonResponseModel> {
+    async updateApprovedStatus(req?:TrimSwatchStatus): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL+ '/updateApprovedStatus',req);
     }
 
-    async updateRejectedStatus(req?:SwatchStatus): Promise<CommonResponseModel> {
+    async updateRejectedStatus(req?:TrimSwatchStatus): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL+ '/updateRejectedStatus',req);
     }
 
-    async getDataById(req: SwatchStatus):Promise<CommonResponseModel>{
+    async getDataById(req: TrimSwatchStatus):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL+ '/getDataById',req)
     }
 }

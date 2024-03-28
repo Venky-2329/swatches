@@ -2,10 +2,11 @@ export class DateReq{
     tabName?: string
     fromDate?: any
     toDate?: any
+
     constructor(
         tabName?: string,
         fromDate?: any,
-        toDate?: any
+        toDate?: any,
     ){
         this.tabName = tabName
         this.fromDate = fromDate
@@ -25,6 +26,22 @@ export class SwatchStatus{
     ){
         this.fabricSwatchId = fabricSwatchId
         this.fabricSwatchNumber = fabricSwatchNumber
+        this.rejectionReason = rejectionReason
+    }
+}
+
+export class TrimSwatchStatus{
+    trimSwatchId:number;
+    trimSwatchNumber?:string;
+    rejectionReason?: string;
+
+    constructor(
+        trimSwatchId:number,
+        trimSwatchNumber?:string,
+        rejectionReason?: string
+    ){
+        this.trimSwatchId = trimSwatchId
+        this.trimSwatchNumber = trimSwatchNumber
         this.rejectionReason = rejectionReason
     }
 }

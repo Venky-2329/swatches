@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {Alert,Button,Card,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Table,Tabs,Tag,Tooltip,message} from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {SearchOutlined,UndoOutlined,FileImageOutlined, BarcodeOutlined, EyeOutlined} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import Highlighter from 'react-highlight-words';
@@ -20,10 +20,12 @@ const TrimSwatchApproval = () => {
   const searchInput = useRef(null); 
   const [modal, setModal] = useState<boolean>(false);
   const [formData, setFormData] = useState({});
+  const [selectedTabKey, setSelectedTabKey] = useState('1');
   const [activeKey, setActiveKey] = useState('SENT_FOR_APPROVAL')
   const service = new TrimSwatchService()
   const [imagePath, setImagePath] = useState('');
   const [action, setAction] = useState(null);
+  const location = useLocation();
 
 
   useEffect(() => {
@@ -34,6 +36,14 @@ const TrimSwatchApproval = () => {
     getData(tabName);
     getCount();
   }, []);
+
+  useEffect(() => {
+    const tabKey = location.state?.tab;
+    if (tabKey) {
+      setActiveKey(tabKey);
+      getData(tabKey);
+    }
+  }, [location.state]);
 
   const getData = (value: any) => {
     const req = new DateReq(value, undefined, undefined);
@@ -63,61 +73,11 @@ const TrimSwatchApproval = () => {
   };
 
   const tabsOnchange = (value: any) => {
+    setSelectedTabKey(value);
     setTabName(value);
     getData(value);
   };
 
-
-  const TrimAccepted = (value)=>{
-    console.log(value,',,,,,,,,,,,,,,,,,,,,')
-    const req = new SwatchStatus(value?.trimSwatchId,value?.trimSwatchId)
-    service.updateApprovedStatus(req).then((res)=>{
-        if(res.status){
-            message.success(res.internalMessage,2)
-            setTabName('APPROVED')
-            setActiveKey('APPROVED');
-            getData('APPROVED')
-            getCount()
-        }else{
-            message.error(res.internalMessage,2)
-        }
-    })
-  }
-
-  const TrimRejected =(value)=>{
-    console.log(value,'.......................')
-    const req = new SwatchStatus(value,undefined,form.getFieldValue('rejectionReason'))
-    service.updateRejectedStatus(req).then((res)=>{
-        if(res.status){
-            message.success(res.internalMessage,2)
-            setTabName('REJECTED')
-            setActiveKey('REJECTED');
-            getData('REJECTED')
-            getCount()
-            setModal(false)
-            onReset()
-        }else{
-            message.error(res.internalMessage,2)
-        }
-    })
-  }
-
-  const handelReject = (value)=>{
-    setAction('reject')
-    setFormData(value?.trimSwatchId)
-    setModal(true)
-  }
-
-  const handleFormSubmit = () => {
-    TrimRejected(formData);
-  };
-
-
-  const openImage = (record) => {
-    setAction('image')
-    setImagePath(record?.filePath);
-    setModal(true);
-};
   const columns: any = [
     {
       title: 'S.No',
@@ -194,39 +154,21 @@ const TrimSwatchApproval = () => {
       dataIndex: 'checked_by',
     },
     {
-      title:'Image',
-      dataIndex:'',
-      render:(text,record)=>{
-        return(
-          <Button type="link" onClick={() => openImage(record)}>
-            <FileImageOutlined />
-          </Button>
-        )
-      }
-    },
-    {
       title: <div style={{textAlign:"center"}}>Action</div>,
       dataIndex: 'action',
       render: (text, rowData) => {
         return(
-          // <span>
-          // <Tooltip placement="top" title="Detail View">
+          <span>
+          <Tooltip placement="top" title="Detail View">
             
-          //   <EyeOutlined  onClick={() => DetailView(rowData.fabricSwatchId)} style={{color:'blue',fontSize:15}} size={20}/>
-          // </Tooltip>
-          // </span>
-        <div style={{ textAlign: 'center' }}>
-            <Popconfirm
-              title="Are you sure to accept?"
-              onConfirm={() => TrimAccepted(rowData)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="primary">ACCEPT</Button>
-            </Popconfirm>
-            <Divider type='vertical'/>
-            <Button type="primary" danger onClick={() => handelReject(rowData)}>REJECT</Button>
-        </div>
+            <EyeOutlined  onClick={() => {
+                                navigate(`/trims-swatch-detail-view/${rowData.trim_swatch_id}`)
+                            }}
+                            style={{ color: "blue", fontSize: 20 }}
+            />
+            <Divider type='vertical' />
+          </Tooltip>
+          </span> 
         )
     },
     },
@@ -254,7 +196,7 @@ const TrimSwatchApproval = () => {
     <Card
       title={<span>Trims Approval</span>}
       style={{ textAlign: 'center' }}
-      headStyle={{ backgroundColor: '#7d33a2', color: 'white' }}
+      headStyle={{ backgroundColor: '#25529a', color: 'white' }}
       >
       <Tabs 
       onChange={tabsOnchange} 
@@ -262,7 +204,8 @@ const TrimSwatchApproval = () => {
       >
         <TabPane
           key={StatusEnum.SENT_FOR_APPROVAL}
-          tab={`WAITING FOR APPROVAL : ${countData[0]?.openCount}`}
+          tab={<span style={{color:'#d4b417'}}>WAITING FOR APPROVAL : {countData[0]?.openCount}</span>}
+
         >
           {data.length > 0 ?(
           <Table
@@ -273,7 +216,7 @@ const TrimSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-                (o) => !['rejectionReason'].includes(o.dataIndex)
+                (o) => !['rejectionReason','po_number','grn_number','grn_date','item_description','style_no'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
@@ -288,7 +231,8 @@ const TrimSwatchApproval = () => {
         </TabPane>
         <TabPane
           key={StatusEnum.APPROVED}
-          tab={`APPROVED : ${countData[0]?.approvedCount}`}
+          tab={<span style={{ color: 'green' }}>APPROVED : {countData[0]?.approvedCount}</span>}
+
         >
           {data.length > 0 ?(
           <Table
@@ -315,7 +259,7 @@ const TrimSwatchApproval = () => {
         </TabPane>
         <TabPane
           key={StatusEnum.REJECTED}
-          tab={`REJECTED : ${countData[0]?.rejectedCount}`}
+          tab={<span style={{ color: 'red'}}>REJECTED : {countData[0]?.rejectedCount}</span>}
         >
           { data.length > 0 ? (
           <Table
@@ -340,7 +284,7 @@ const TrimSwatchApproval = () => {
           )}
         </TabPane>
       </Tabs>
-      <Modal
+      {/* <Modal
         visible={modal}
         onCancel={onModalCancel}
         footer={null}
@@ -382,7 +326,7 @@ const TrimSwatchApproval = () => {
             </Row>
             </Form>
         </Card>): null}
-        </Modal>
+        </Modal> */}
     </Card>
   );
 };
