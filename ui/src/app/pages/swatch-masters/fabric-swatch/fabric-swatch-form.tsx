@@ -18,7 +18,7 @@ export default function FabricSwatchUpload() {
   const [buyerData, setBuyerData] = useState<any[]>([]);
   const [seasons, setSeasons] = useState([]);
   const users: any = JSON.parse(localStorage.getItem('auth'));
-  const createUser = users.userName;
+  const createdUser = users.userName;
   const [selectedType, setSelectedType] = useState('Garment');
   const typesWithCommonFields = ['Garment', 'Trim'];
   const buyerService = new BuyerService();
@@ -28,6 +28,7 @@ export default function FabricSwatchUpload() {
   const [uploading, setUploading] = useState(false);
   const mailService = new EmailService()
   const [ resData, setResData ] = useState<any[]>([])
+
 
   useEffect(() => {
     getBrands();
@@ -155,7 +156,7 @@ export default function FabricSwatchUpload() {
             service.uploadPhoto(formData).then((fileres) => {
               if (res.status) {
                 form.setFieldsValue({fabricSwatchNumber: res?.data?.fabricSwatchNumber})
-                form.setFieldsValue({fabricSwatchNumber: res?.data?.fabricSwatchId})
+                form.setFieldsValue({fabricSwatchId: res?.data?.fabricSwatchId})
                 res.data.filePath = fileres.data;
                 sendMailForApprovalUser()
                 message.success(res.internalMessage, 2);
@@ -256,8 +257,6 @@ export default function FabricSwatchUpload() {
           <p>Style No: ${form.getFieldValue('styleNo')}</p>
           <p>Item No: ${form.getFieldValue('itemNo')}</p>
           <p>Please click the link below for details:</p>
-          <input type="hidden" id="assignBy" value=${form.getFieldValue('assignBy')} /> 
-          <input type="hidden" id="dcId" value=${form.getFieldValue('dcId')} />
 
           <a
             href="http://localhost:4200/#/fabric-swatch-detail-view/${form.getFieldValue('fabricSwatchId')}"
@@ -327,6 +326,7 @@ export default function FabricSwatchUpload() {
                   optionFilterProp="children"
                   placeholder="Select Buyer"
                   onChange={onBuyerChange}
+                  allowClear
                 >
                   {buyerData.map((item) => {
                     return (
@@ -352,16 +352,17 @@ export default function FabricSwatchUpload() {
                   optionFilterProp="children"
                   placeholder="Select Brand"
                   onChange={onBrandChange}
+                  allowClear
                 >
                   {brands.map((item) => {
                     return (
-                      <Option value={item.brandId}>{item.brandName}</Option>
+                      <Option value={item.brandId} name={item.brandName}>{item.brandName}</Option>
                     );
                   })}
                 </Select>
               </Form.Item>
             </Col>
-            <Form.Item hidden name={'brandName'}></Form.Item>
+            <Form.Item hidden name={'brandName'}><Input/></Form.Item>
             <Col
               xs={24} sm={12} md={8} lg={6} xl={4}
             >
@@ -404,7 +405,7 @@ export default function FabricSwatchUpload() {
               xs={24} sm={12} md={8} lg={6} xl={4}
             >
               <Form.Item label="Category Type" name={'categoryType'}>
-                <Select placeholder="Select Type">
+                <Select placeholder="Select Type" allowClear>
                   <Option value={'denim'}>Denim</Option>
                   <Option value={'woven'}>Woven</Option>
                 </Select>
@@ -422,6 +423,7 @@ export default function FabricSwatchUpload() {
                   showSearch
                   optionFilterProp="children"
                   placeholder="Select Category"
+                  allowClear
                 >
                   {category.map((item) => {
                     return (
@@ -445,6 +447,7 @@ export default function FabricSwatchUpload() {
                   showSearch
                   optionFilterProp="children"
                   placeholder="Select season"
+                  allowClear
                 >
                   {seasons.map((item) => {
                     return (
@@ -513,6 +516,11 @@ export default function FabricSwatchUpload() {
                 <DatePicker showToday format="YYYY-MM-DD" style={{ width: '100%' }}/>
               </Form.Item>
             </Col>
+            <Col xs={24} sm={12} md={8} lg={6} xl={4}>
+                <Form.Item name={'createdUser'} initialValue={createdUser} label={'Created By'}>
+                  <Input defaultValue={createdUser} disabled/>
+                </Form.Item>
+              </Col>
             <Col
               xs={24} sm={12} md={8} lg={6} xl={4}
             >
