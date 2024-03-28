@@ -192,7 +192,7 @@ export default function FabricSwatchUpload() {
   };
 
   function gotoGrid() {
-    navigate('/fabric-swatch-view');
+    navigate('/fabric-swatch-approval');
   }
 
   const onUserChange =(value,option)=>{
@@ -295,7 +295,7 @@ export default function FabricSwatchUpload() {
             title={<span style={{ color: "white" }}>Fabric Swatch</span>}
             extra={
               (
-                  <Link to="/fabric-swatch-view">
+                  <Link to="/fabric-swatch-approval">
                       <span style={{ color: "white" }}>
                           <Button>View </Button>{" "}
                       </span>

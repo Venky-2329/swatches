@@ -216,7 +216,7 @@ export default function TrimSwatchUpload() {
   };
 
   function gotoGrid() {
-    navigate('/trims-swatch-view');
+    navigate('/trims-swatch-approval');
   }
 
   const handleChange = (info) => {

@@ -26,6 +26,10 @@ const TrimSwatchApproval = () => {
   const [imagePath, setImagePath] = useState('');
   const [action, setAction] = useState(null);
   const location = useLocation();
+  const createUser = JSON.parse(localStorage.getItem('auth'));
+  const userRole = createUser.role;
+  const department = createUser.departmentId
+
 
 
   useEffect(() => {
@@ -191,12 +195,20 @@ const TrimSwatchApproval = () => {
     onReset()
     setModal(false);
   };
+  function gotoGrid() {
+    navigate('/trims-swatch-upload');
+  }
 
   return (
     <Card
       title={<span>Trims Approval</span>}
       style={{ textAlign: 'center' }}
       headStyle={{ backgroundColor: '#25529a', color: 'white' }}
+      extra={
+        (userRole === 'TRIMS' && department ===2 )&&(<span style={{ color: 'white' }}>
+          <Button onClick={gotoGrid}>Create</Button>{' '}
+        </span>)
+      }
       >
       <Tabs 
       onChange={tabsOnchange} 

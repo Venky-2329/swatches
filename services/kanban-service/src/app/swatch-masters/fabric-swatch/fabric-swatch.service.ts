@@ -50,6 +50,7 @@ export class FabricSwatchService{
             entityData.grnDate = date
             entityData.status = StatusEnum.SENT_FOR_APPROVAL
             entityData.approverId = req.approverId
+            entityData.createdUser = req.createdUser
             const saveData = await this.repo.save(entityData)
             return new CommonResponseModel(true,1,`${saveData.fabricSwatchNumber} created successfully`,saveData)
         }catch(err){

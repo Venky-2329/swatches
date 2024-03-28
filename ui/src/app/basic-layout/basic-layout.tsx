@@ -38,7 +38,6 @@ export function BasicLayout(props: BasicLayoutProps) {
   const createUser = JSON.parse(localStorage.getItem('auth'));
   const user = createUser.userName;
   const userRole = createUser.role;
-  console.log(userRole,'k-----------------------')
 
   function handleLogout() {
     localStorage.clear();
@@ -117,47 +116,46 @@ export function BasicLayout(props: BasicLayoutProps) {
       filepath: '../',
       children: [
         {
-          label: 'Fabric Upload',
-          key: 'fabric-swatch-view',
-          path: '/fabric-swatch-view',
-          icon: <UploadOutlined />,
-          filepath: '../',
-        },
-        {
-          label: 'Trims Upload',
-          key: 'trims-swatch-view',
-          path: '/trims-swatch-view',
-          icon: <UploadOutlined />,
-          filepath: '../',
-        },
-        {
-          label: 'Fabric Approval',
+          label: 'Fabric',
           key: 'fabric-swatch-approval',
           path: '/fabric-swatch-approval',
           icon: <UploadOutlined />,
           filepath: '../',
         },
         {
-          label: 'Trim Approval',
+          label: 'Trims',
           key: 'trims-swatch-approval',
           path: '/trims-swatch-approval',
           icon: <UploadOutlined />,
           filepath: '../',
-        }
+        },
+        // {
+        //   label: 'Fabric Approval',
+        //   key: 'fabric-swatch-approval',
+        //   path: '/fabric-swatch-approval',
+        //   icon: <UploadOutlined />,
+        //   filepath: '../',
+        // },
+        // {
+        //   label: 'Trim Approval',
+        //   key: 'trims-swatch-approval',
+        //   path: '/trims-swatch-approval',
+        //   icon: <UploadOutlined />,
+        //   filepath: '../',
+        // }
       ],
     },
-    // {
-    //   label: 'Sample Upload',
-    //   key: 'sample-view',
-    //   path: 'sample-view',
-    //   icon: <UploadOutlined />,
-    //   filepath: '../',
-    // },
-
     {
       label: 'Design Studio',
       key: 'sample-cards',
       path: 'sample-cards',
+      icon: <RobotOutlined />,
+      filepath: '../',
+    },
+    {
+      label: 'Fabric-Swatch-Cards',
+      key: 'fabric-swatch-cards',
+      path: '/fabric-swatch-cards',
       icon: <RobotOutlined />,
       filepath: '../',
     },
@@ -168,15 +166,42 @@ export function BasicLayout(props: BasicLayoutProps) {
       icon: <RobotOutlined />,
       filepath: '../',
     },
-
-    // {
-    //   label: "Samples View",
-    //   key: "sample-view",
-    //   path: "sample-view",
-    //   icon: <TableOutlined />,
-    //   filepath: "../",
-    // },
   ];
+
+  const filteredRouterList = baseRouterList.reduce((acc, route) => {
+    const department = createUser.departmentId;
+
+    if (userRole === 'ADMIN') {
+        acc.push(route);
+    } else if (userRole === 'TRIMS' || userRole === 'FABRICS') {
+        if (route.path === '/swatch-card') {
+            const swatchCardRoute = {
+                ...route,
+                children: route.children.filter((child) => {
+                    if (userRole === 'TRIMS' && department === 1) {
+                        return child.key === 'trims-swatch-approval';
+                    } else if (userRole === 'TRIMS' && department === 2) {
+                        return child.key === 'trims-swatch-approval';
+                    } else if (userRole === 'FABRICS' && department === 1) {
+                        return child.key === 'fabric-swatch-approval' || child.key === 'fabric-swatch-cards';
+                    } else if (userRole === 'FABRICS' && department === 2) {
+                        return child.key === 'fabric-swatch-approval' || child.key === 'fabric-swatch-cards';
+                    } else if (userRole === 'FABRICS' && department === 3) {
+                        return child.key === 'fabric-swatch-cards';
+                    } else if (userRole === 'TRIMS' && department === 2) {
+                        return child.key === 'trims-swatch-approval' || child.key === 'trim-swatch-cards';
+                    } else if (userRole === 'TRIMS' && department === 3) {
+                        return child.key === 'trim-swatch-cards';
+                    }
+                }),
+            };
+            acc.push(swatchCardRoute);
+        }
+    }
+    return acc;
+}, []);
+
+
 
 
   return (
@@ -205,7 +230,7 @@ export function BasicLayout(props: BasicLayoutProps) {
           }}
           route={{
             path: '/',
-            routes: treeRouter(baseRouterList),
+            routes: treeRouter(filteredRouterList),
           }}
           location={{
             pathname,

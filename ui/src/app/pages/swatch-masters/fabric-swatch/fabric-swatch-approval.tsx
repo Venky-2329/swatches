@@ -27,6 +27,10 @@ const FabricSwatchApproval = () => {
   const service = new FabricSwatchService()
   const location = useLocation();
   const [activeKey, setActiveKey] = useState('SENT_FOR_APPROVAL');
+  const createUser = JSON.parse(localStorage.getItem('auth'));
+  const userRole = createUser.role;
+  const department = createUser.departmentId
+
 
 
   useEffect(() => {
@@ -240,7 +244,6 @@ const FabricSwatchApproval = () => {
                     <Tooltip placement="top" title="Detail View">
                         <EyeOutlined
                             onClick={() => {
-                                console.log(rowData.fabricSwatchId);
                                 navigate(`/fabric-swatch-detail-view/${rowData.fabricSwatchId}`)
                             }}
                             style={{ color: "blue", fontSize: 20 }}
@@ -248,18 +251,6 @@ const FabricSwatchApproval = () => {
                         <Divider type='vertical' />
                     </Tooltip>
           </span>
-        // <div style={{ textAlign: 'center' }}>
-        //     <Popconfirm
-        //       title="Are you sure to accept?"
-        //       onConfirm={() => fabricAccepted(rowData)}
-        //       okText="Yes"
-        //       cancelText="No"
-        //     >
-        //       <Tooltip title="Approve"><Button >✔️</Button></Tooltip>
-        //     </Popconfirm>
-        //     <Divider type='vertical'/>
-        //     <Tooltip title="Reject"><Button  onClick={() => handelReject(rowData)}>❌</Button></Tooltip>
-        // </div>
         )
     },
     },
@@ -284,6 +275,15 @@ const FabricSwatchApproval = () => {
       title={<span>Fabric Approval</span>}
       style={{ textAlign: 'left' }}
       headStyle={{ backgroundColor: '#25529a', color: 'white' }}
+      extra={
+        (userRole === 'FABRICS' && department === 2) && (
+          <Link to="/fabric-swatch-upload">
+            <span style={{ color: 'white' }}>
+              <Button>Create </Button>{' '}
+            </span>
+          </Link>
+        )
+      }      
       >
       <Tabs 
       onChange={tabsOnchange} 

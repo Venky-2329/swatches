@@ -18,6 +18,10 @@ export const TrimSwatchDetailView = () => {
     const [modal , setModal] = useState<boolean>(false);
     const [formData , setFormData] = useState({})
     const [form] = Form.useForm();
+    const createUser = JSON.parse(localStorage.getItem('auth'));
+    const department = createUser.departmentId
+    const userRole = createUser.role
+  
 
     useEffect(() => {
         console.log(trimSwatchId,'kkkkkkkkkkkkkkkkkkkkkkk')
@@ -219,6 +223,8 @@ export const TrimSwatchDetailView = () => {
                 }}
               />
             </Card>
+          {userRole === 'TRIMS' && department === 1 && (
+          <>
           <Divider type='horizontal'/>
             <div style={{ textAlign: 'center' }}>
                 <Popconfirm
@@ -232,6 +238,8 @@ export const TrimSwatchDetailView = () => {
                 <Divider type='vertical'/>
                 <Button type='primary' danger onClick={() => handelReject(data[0])}>REJECT</Button>
             </div>
+            </>
+            )}
             </Col>
             </Row>
           </Card>

@@ -1,6 +1,5 @@
 export enum RoleEnum{
     ADMIN = 'ADMIN',
-    FACTORY = 'FACTORY',
-    MARKETING = 'MARKETING',
-    WAREHOUSE = 'WAREHOUSE'
+    FABRICS = 'FABRICS',
+    TRIMS = 'TRIMS',
 }

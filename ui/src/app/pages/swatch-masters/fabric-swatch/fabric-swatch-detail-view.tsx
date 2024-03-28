@@ -23,6 +23,9 @@ export const FabricSwatchDetailView = () => {
   const [modal, setModal] = useState<boolean>(false);
   const [form] = Form.useForm();
   const mailService = new EmailService()
+  const createUser = JSON.parse(localStorage.getItem('auth'));
+  const department = createUser.departmentId
+  const userRole = createUser.role
 
 
 
@@ -231,19 +234,23 @@ export const FabricSwatchDetailView = () => {
             }}
           />
         </Card>
-      <Divider type='horizontal'/>
-        <div style={{ textAlign: 'center' }}>
-            <Popconfirm
-              title="Are you sure to accept?"
-              onConfirm={() => fabricAccepted(data[0])}
-              okText="Yes"
-              cancelText="No"
-            >
-            <Button  style={{backgroundColor:'green', color:'white'}}>APPROVE</Button>
-            </Popconfirm>
-            <Divider type='vertical'/>
-            <Button type='primary' danger onClick={() => handelReject(data[0])}>REJECT</Button>
-        </div>
+        {userRole === 'FABRICS' && department === 1 && (
+            <>
+              <Divider type='horizontal'/>
+              <div style={{ textAlign: 'center' }}>
+                <Popconfirm
+                  title="Are you sure to accept?"
+                  onConfirm={() => fabricAccepted(data[0])}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button style={{ backgroundColor: 'green', color: 'white' }}>APPROVE</Button>
+                </Popconfirm>
+                <Divider type='vertical'/>
+                <Button type='primary' danger onClick={() => handelReject(data[0])}>REJECT</Button>
+              </div>
+            </>
+          )}
         </Col>
         </Row>
       </Card>
