@@ -2,15 +2,36 @@ export class DateReq{
     tabName?: string
     fromDate?: any
     toDate?: any
+    buyerId?: number;
+    grnNo?: string;
+    supplierId ?: number;
+    poNo?: string;
+    styleNo?: string;
+    itemNo?: string;
+    approverId ?: number;
 
     constructor(
         tabName?: string,
         fromDate?: any,
         toDate?: any,
+        buyerId?: number,
+        grnNo?: string,
+        supplierId ?: number,
+        poNo?: string,
+        styleNo?: string,
+        itemNo?: string,
+        approverId ?: number
     ){
         this.tabName = tabName
         this.fromDate = fromDate
         this.toDate = toDate
+        this.buyerId = buyerId
+        this.grnNo = grnNo
+        this.supplierId = supplierId
+        this.poNo = poNo
+        this.styleNo = styleNo
+        this.itemNo = itemNo
+        this.approverId = approverId
     }
 }
 

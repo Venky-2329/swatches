@@ -39,7 +39,7 @@ export default function TrimSwatchUpload() {
   const [supplier, setSupplier] = useState([]);
   const [seasons, setSeasons] = useState([]);
   const users: any = JSON.parse(localStorage.getItem('auth'));
-  const createUser = users.userName;
+  const createdUser = users.userName;
   const [selectedType, setSelectedType] = useState('Garment');
   const typesWithCommonFields = ['Garment', 'Trim'];
   const service = new BuyerService();
@@ -129,7 +129,7 @@ export default function TrimSwatchUpload() {
   const compressImage = async (file) => {
     try {
       const options = {
-        maxSizeMB: 0.5, // Adjust the maximum size as needed
+        maxSizeMB: 5, // Adjust the maximum size as needed
         // maxWidthOrHeight: 1920, // Adjust the maximum width or height as needed
         useWebWorker: true,
       };
@@ -267,9 +267,9 @@ export default function TrimSwatchUpload() {
           <p>Please find the Trim Swatch details below:</p>
           <p>Trim Swatch No: ${form.getFieldValue('trimSwatchNumber')}</p>
           <p>Buyer: ${form.getFieldValue('buyerName')}</p>
-          <p>Supplier: ${form.getFieldValue('supplier_name')}</p>
-          <p>Style No: ${form.getFieldValue('style_no')}</p>
-          <p>Item No: ${form.getFieldValue('item_no')}</p>
+          <p>Supplier: ${form.getFieldValue('supplierName')}</p>
+          <p>Style No: ${form.getFieldValue('styleNo')}</p>
+          <p>Item No: ${form.getFieldValue('itemNo')}</p>
 
           <p>Please click the link below for details:</p>
           <input type="hidden" id="assignBy" value=${form.getFieldValue('assignBy')} /> 
@@ -304,6 +304,13 @@ export default function TrimSwatchUpload() {
         } else {
             message.success("Mail also sent successfully")
         }
+    }
+
+    const onBuyerChange=(value,option)=>{
+      form.setFieldsValue({buyerName:option?.name})
+    }
+    const onSupplierChange=(value,option)=>{
+      form.setFieldsValue({supplierName:option?.name})
     }
   return (
     <>
@@ -356,6 +363,7 @@ export default function TrimSwatchUpload() {
                 <Input placeholder="Enter GRN No" />
               </Form.Item>
             </Col>
+            <Form.Item hidden name={'trimSwatchId'}></Form.Item>
             <Form.Item hidden name={'trimSwatchNumber'}></Form.Item>
             <Col
               xs={{ span: 24 }}
@@ -378,15 +386,17 @@ export default function TrimSwatchUpload() {
                   showSearch
                   optionFilterProp="children"
                   placeholder="Select Buyer"
+                  onChange={onBuyerChange}
                 >
                   {buyer.map((item) => {
                     return (
-                      <Option value={item.buyerId}>{item.buyerName}</Option>
+                      <Option value={item.buyerId} name={item.buyerName}>{item.buyerName}</Option>
                     );
                   })}
                 </Select>
               </Form.Item>
             </Col>
+            <Form.Item hidden name={'buyerName'}></Form.Item>
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -398,20 +408,23 @@ export default function TrimSwatchUpload() {
                 label="Supplier"
                 name={'supplierId'}
                 rules={[{ required: true, message: 'Please input Supplier' }]}
+
               >
                 <Select
                   showSearch
                   optionFilterProp="children"
                   placeholder="Select Supplier"
+                  onChange={onSupplierChange}
                 >
                   {supplier.map((item) => {
                     return (
-                      <Option value={item.supplierId}>{item.supplierName}</Option>
+                      <Option value={item.supplierId} name={item.supplierName} >{item.supplierName}</Option>
                     );
                   })}
                 </Select>
               </Form.Item>
             </Col>
+            <Form.Item hidden name={'supplierName'}></Form.Item>
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -443,6 +456,7 @@ export default function TrimSwatchUpload() {
                 <Input placeholder="Enter Style No" />
               </Form.Item>
             </Col>
+            <Form.Item hidden name={'styleNo'}></Form.Item>
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -458,6 +472,7 @@ export default function TrimSwatchUpload() {
                 <Input placeholder="Enter Item No" />
               </Form.Item>
             </Col>
+            <Form.Item hidden name={'itemNo'}></Form.Item>
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -509,41 +524,16 @@ export default function TrimSwatchUpload() {
                         <Input placeholder="Enter Mill" />
                       </Form.Item>
                     </Col> */}
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 6 }}
-              lg={{ span: 6 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item
-                label="Merchant"
-                name={'merchant'}
-                rules={[{ required: false, message: 'Merchant is required' }]}
-              >
-                <Input placeholder="Enter Merchant" />
-              </Form.Item>
-            </Col>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 6 }}
-              lg={{ span: 6 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item
-                label="Checked By"
-                name={'checkedBy'}
-                rules={[{ required: true, message: 'Checked by is required' }]}
-              >
-                <Input placeholder="Enter Checked By" />
-              </Form.Item>
-            </Col>
+           <Col xs={24} sm={12} md={8} lg={6} xl={4}>
+                <Form.Item name={'createdUser'} initialValue={createdUser} label={'Created By'}>
+                  <Input defaultValue={createdUser} disabled/>
+                </Form.Item>
+              </Col>
             <Col
               xs={24} sm={12} md={8} lg={6} xl={4}
             >
               <Form.Item
-                label="Approver"
+                label="Approver(Marketing)"
                 name={'approverId'}
                 rules={[{ required: true, message: 'Approver is required' }]}
               >

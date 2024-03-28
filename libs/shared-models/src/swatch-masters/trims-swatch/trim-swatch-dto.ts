@@ -10,18 +10,16 @@ export class TrimSwatchDto{
     itemDescription: string
     invoiceNo: string
     styleNo: string
-    merchant: string
     grnNumber: string
     grnDate: Date
-    checkedBy: string
     fileName: string;
     filePath: string;
     status: StatusEnum
-    createdAt: Date
-    createdUser: string | null
-    updatedAt: Date
-    updatedUser: string | null
-    versionFlag: number
+    createdAt?: Date
+    createdUser?: string | null
+    updatedAt?: Date
+    updatedUser?: string | null
+    versionFlag?: number
     rejectionReason: string
     approverId: number
 
@@ -36,20 +34,18 @@ export class TrimSwatchDto{
     itemDescription: string,
     invoiceNo: string,
     styleNo: string,
-    merchant: string,
     grnNumber: string,
     grnDate: Date,
-    checkedBy: string,
     fileName: string,
     filePath: string,
     status: StatusEnum,
-    createdAt: Date,
-    createdUser: string | null,
-    updatedAt: Date,
-    updatedUser: string | null,
-    versionFlag: number,
-    rejectionReason: string,
-    approverId: number,
+    createdAt?: Date,
+    createdUser?: string | null,
+    updatedAt?: Date,
+    updatedUser?: string | null,
+    versionFlag?: number,
+    rejectionReason?: string,
+    approverId?: number,
 
     ){
         this.trimSwatchId = trimSwatchId
@@ -61,10 +57,8 @@ export class TrimSwatchDto{
         this.itemDescription = itemDescription
         this.invoiceNo = invoiceNo
         this.styleNo = styleNo
-        this.merchant = merchant
         this.grnNumber = grnNumber
         this.grnDate = grnDate
-        this.checkedBy = checkedBy
         this.fileName = fileName
         this.filePath = filePath
         this.status = status

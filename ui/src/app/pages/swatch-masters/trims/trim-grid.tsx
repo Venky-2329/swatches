@@ -91,16 +91,8 @@ export const TrimSwatchGrid = () => {
       dataIndex: 'invoice_no',
     },
     {
-      title: 'Merchant',
-      dataIndex: 'merchant',
-    },
-    {
       title: 'Status',
       dataIndex: 'status',
-    },
-    {
-      title: 'Checked By',
-      dataIndex: 'checked_by',
     },
   ];
 
