@@ -146,16 +146,8 @@ const TrimSwatchApproval = () => {
       dataIndex: 'invoice_no',
     },
     {
-      title: 'Merchant',
-      dataIndex: 'merchant',
-    },
-    {
       title: 'Status',
       dataIndex: 'status',
-    },
-    {
-      title: 'Checked By',
-      dataIndex: 'checked_by',
     },
     {
       title: <div style={{textAlign:"center"}}>Action</div>,

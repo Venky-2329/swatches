@@ -1,8 +1,13 @@
 import { PageContainer } from "@ant-design/pro-components";
-import { Button, Card, Col, Form, Row, Select } from "antd";
+import { Button, Card, Col, FloatButton, Form, Row, Select, message } from "antd";
+import Meta from "antd/es/card/Meta";
 import { Option } from "antd/es/mentions";
 import { ApprovalUserService, BuyerService, SupplierService, TrimSwatchService } from "libs/shared-services";
-import { useEffect, useState } from "react";
+import moment from "moment";
+import { CSSProperties, useEffect, useState } from "react";
+import image from '../../../../../../upload-files/pexels-orlando-s-18290475-101bf.jpg'
+import { useNavigate } from "react-router-dom";
+import { DateReq, TrimCardReq } from "libs/shared-models";
 
 export default function TrimCards() {
    const buyerService = new BuyerService()
@@ -16,7 +21,9 @@ export default function TrimCards() {
    const [styleNo , setStyleNo] = useState<any[]>([])
    const [itemNo , setItemNo] = useState<any[]>([])
    const [approvalUser , setApprovalUser] = useState<any[]>([])
+   const [data, setData] = useState([]);
    const [form] = Form.useForm()
+   const navigate  = useNavigate()
 
     useEffect(()=> {
         getBuyers();
@@ -26,6 +33,7 @@ export default function TrimCards() {
         getApprovalUser();
         getStyleNo();
         getItemNo();
+        getTrimCards()
     },[])
 
     function getBuyers(){
@@ -88,7 +96,47 @@ export default function TrimCards() {
         form.resetFields();
     }
 
+    function getTrimCards() {
+        const req = new DateReq();
+        console.log(req);
+        
+        if(form.getFieldValue('buyerId') != undefined){
+            req.buyerId = form.getFieldValue('buyerId')
+        }
+        if(form.getFieldValue('grnNo') != undefined){
+            req.grnNo = form.getFieldValue('grnNo')
+        }
+        if(form.getFieldValue('supplierId') != undefined){
+            req.supplierId = form.getFieldValue('supplierId')
+        }
+        if(form.getFieldValue('poNo') != undefined){
+            req.poNo = form.getFieldValue('poNo')
+        }
+        if(form.getFieldValue('styleNo') != undefined){
+            req.styleNo = form.getFieldValue('styleNo')
+        }
+        if(form.getFieldValue('itemNo') != undefined){
+            req.itemNo = form.getFieldValue('itemNo')
+        }
+        if(form.getFieldValue('approverId') != undefined){
+            req.approverId = form.getFieldValue('approverId')
+        }
+        
+        trimsService.getAllTrimSwatchData(req).then((res)=>{
+            if(res.data){
+                setData(res.data);
+            }else{
+                message.error(res.internalMessage,2)
+            }
+        })
+    }
 
+    const ViewDetails=(values)=>{
+        navigate(`/trims-swatch-detail-view/${values.trim_swatch_id}`)
+    }
+
+    // const backgroundColors = ['#c8ffc8', '#ffffa0', '#facefa', '#ccccff','#ffd2d2','#d2e1ff','#d2faff','#ffeee8'];
+    const backgroundColors = ['#ffebcd', '#f5deb3', '#ffe4b5', '#fff8dc', '#f0e68c', '#e6e6fa', '#ffefd5', '#f0fff0'];
 
     return(
         <Card title={
@@ -120,14 +168,14 @@ export default function TrimCards() {
                         optionFilterProp="children"
                         placeholder='Select GRN No' >
                             {grnNo.map((items) =>{
-                                return <Option value={items.grnId}>{items.grnNo}</Option>
+                                return <Option value={items.grnNo}>{items.grnNo}</Option>
                             })}
                         </Select>
 
                     </Form.Item>
                 </Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
-                    <Form.Item label='Supplier' name={'supplier'}>
+                    <Form.Item label='Supplier' name={'supplierId'}>
                         <Select 
                         allowClear
                         showSearch  
@@ -148,7 +196,7 @@ export default function TrimCards() {
                         optionFilterProp="children"
                         placeholder='Select Po No' >
                             {poNo.map((items) =>{
-                                return <Option value={items.poId}>{items.PoNo}</Option>
+                                return <Option value={items.poNo}>{items.PoNo}</Option>
                             })}
                         </Select>
                     </Form.Item>
@@ -161,7 +209,7 @@ export default function TrimCards() {
                         optionFilterProp="children"
                         placeholder='Select Style No' >
                             {styleNo.map((items) =>{
-                                return <Option value={items.styleId}>{items.styleNo}</Option>
+                                return <Option value={items.styleNo}>{items.styleNo}</Option>
                             })}
                         </Select>
 
@@ -175,14 +223,14 @@ export default function TrimCards() {
                         optionFilterProp="children"
                         placeholder='Select Item No' >
                             {itemNo.map((items) =>{
-                                return <Option value={items.itemId}>{items.itemNo}</Option>
+                                return <Option value={items.itemNo}>{items.itemNo}</Option>
                             })}
                         </Select>
 
                     </Form.Item>
                 </Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
-                    <Form.Item label='Approver' name={'approver'}>
+                    <Form.Item label='Approver' name={'approverId'}>
                         <Select 
                         allowClear
                         showSearch  
@@ -193,18 +241,62 @@ export default function TrimCards() {
                             })}
                         </Select>
 
-                    </Form.Item>
+                    </Form.Item> 
                 </Col>
             </Row>
             <Row justify='end'>
             <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>  
-           <Button type='primary' onClick={onReset}>Submit</Button>
+           <Button type='primary' onClick={getTrimCards}>Submit</Button>
           </Col>
           <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1 }}>
               <Button onClick={onReset}>Reset</Button>
           </Col>
         </Row>
         </Form>
+        <br/>
+        <Row gutter={[24,24]} >
+            {data.map((i,index) => {
+                const {buyerName , grn_number , style_no , item_no  , created_at , trim_swatch_id } = i
+                const date = moment(created_at).format('YYYY-MM-DD')
+                const cardStyle : CSSProperties = {
+                    background: backgroundColors[index % backgroundColors.length],
+                    color: 'black',
+                    height: '100%', // Adjust the height of the card
+                    width: '100%', // Adjust the width of the card
+                    display: 'flex', // Align cards correctly
+                    flexDirection: 'column' ,
+                };
+                return(
+                    <Col key={i.sampleId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
+                        <Card
+                        hoverable
+                        style={cardStyle}
+                        cover={
+                            <img
+                            style={{ height: '100%', objectFit: 'cover' }}
+                              alt="example"
+                            //   src={'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/'+ i.fileName}
+                            src={image}
+                              onClick={() => ViewDetails(i)}
+                            />
+                          }
+                        >
+                    <Meta
+                  description={
+                    <div className="print">
+                      <div><b>{buyerName}</b></div>
+                      <div><b>{date}</b></div>
+                      <div>Style No&nbsp;&nbsp; : {style_no}</div>
+                      <div>GRN No&nbsp;&nbsp; : {grn_number}</div>
+                    </div>
+                  }
+                />
+                </Card>
+                    </Col>
+                )
+            })}
+        </Row>
+        <FloatButton.BackTop type='primary'/>
         </Card>
     )
 }

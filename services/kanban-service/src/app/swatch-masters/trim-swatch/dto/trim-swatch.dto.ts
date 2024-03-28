@@ -30,16 +30,10 @@ export class TrimSwatchDto {
     styleNo: string
     
     @ApiProperty()
-    merchant: string
-    
-    @ApiProperty()
     grnNumber: string
 
     @ApiProperty()
     grnDate: Date
-
-    @ApiProperty()
-    checkedBy: string
 
     @ApiProperty()
     fileName: string;

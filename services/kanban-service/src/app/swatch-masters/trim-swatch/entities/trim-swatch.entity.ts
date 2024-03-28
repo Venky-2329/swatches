@@ -52,12 +52,6 @@ export class TrimSwatchEntity {
     styleNo: string
 
     @Column('varchar',{
-        name:'merchant',
-        nullable: true
-    })
-    merchant: string
-
-    @Column('varchar',{
         name:'grn_number',
         nullable: false
     })
@@ -68,12 +62,6 @@ export class TrimSwatchEntity {
         // nullable: false
     })
     grnDate: Date
-
-    @Column('varchar',{
-        name:'checked_by',
-        nullable: true
-    })
-    checkedBy: string
 
     @Column('varchar', {
         nullable: true,
