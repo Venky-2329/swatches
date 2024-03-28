@@ -159,13 +159,20 @@ export function BasicLayout(props: BasicLayoutProps) {
     //   filepath: '../',
     // },
 
-    // {
-    //   label: 'Design Studio',
-    //   key: 'sample-cards',
-    //   path: 'sample-cards',
-    //   icon: <RobotOutlined />,
-    //   filepath: '../',
-    // },
+    {
+      label: 'Design Studio',
+      key: 'sample-cards',
+      path: 'sample-cards',
+      icon: <RobotOutlined />,
+      filepath: '../',
+    },
+    {
+      label: 'Trim-Swatch-Cards',
+      key: 'trim-swatch-cards',
+      path: 'trim-swatch-cards',
+      icon: <RobotOutlined />,
+      filepath: '../',
+    },
 
     // {
     //   label: "Samples View",

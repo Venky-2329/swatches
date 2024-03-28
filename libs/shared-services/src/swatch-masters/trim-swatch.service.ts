@@ -32,4 +32,20 @@ export class TrimSwatchService extends CommonAxiosServicePms{
     async getDataById(req: TrimSwatchStatus):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL+ '/getDataById',req)
     }
+    
+    async getGrnNo():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL+ '/getGrnNo')
+    }
+
+    async getPoNo():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL+ '/getPoNo')
+    }
+
+    async getStyleNo():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL+ '/getStyleNo')
+    }
+
+    async getItemNo():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL+ '/getItemNo')
+    }
 }

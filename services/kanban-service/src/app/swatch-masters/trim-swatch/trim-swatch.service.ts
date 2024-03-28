@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TrimSwatchDto } from './dto/trim-swatch.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TrimSwatchEntity } from './entities/trim-swatch.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CommonResponseModel, DateReq, StatusEnum, TrimSwatchStatus } from 'libs/shared-models';
 
 @Injectable()
@@ -10,7 +10,8 @@ export class TrimSwatchService {
 
   constructor(
     @InjectRepository(TrimSwatchEntity)
-    private readonly repo : Repository<TrimSwatchEntity>
+    private readonly repo : Repository<TrimSwatchEntity>,
+    private readonly dataSource : DataSource
   ){}
   async getMaxId(): Promise<any> {
     const id = await this.repo
@@ -76,8 +77,8 @@ export class TrimSwatchService {
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
       ts.invoice_no , ts.style_no ,ts.merchant , ts.grn_number , ts.grn_date , ts.checked_by , ts.file_name , ts.file_path ,ts.status,ts.created_at,ts.rejection_reason 
       FROM trim_swatch ts
-      LEFT JOIN buyer b ON b.buyer_id = ts.buyer_id
-      LEFT JOIN supplier s ON s.supplier_id = ts.supplier_id
+      LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
+      LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
       WHERE 1=1`
       if(req.tabName != undefined){
         if(req.tabName == 'SENT_FOR_APPROVAL'){
@@ -161,15 +162,15 @@ async updateRejectedStatus(req: TrimSwatchStatus): Promise<CommonResponseModel> 
 async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
   try{
     console.log(req,'.........')
-    let query = `SELECT ts.trim_swatch_id , ts.trim_swatch_number ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
+    let query = `SELECT ts.trim_swatch_id , ts.trim_swatch_number ,ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
       ts.invoice_no , ts.style_no ,ts.merchant , ts.grn_number , ts.grn_date , ts.checked_by , ts.file_name , ts.file_path ,ts.status,ts.created_at,ts.rejection_reason 
       FROM trim_swatch ts
-      LEFT JOIN buyer b ON b.buyer_id = ts.buyer_id
-      LEFT JOIN supplier s ON s.supplier_id = ts.supplier_id
-      WHERE 1=1`
+      LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
+      LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
+      `
     if(req.trimSwatchId){
-        query = query +` and fs.trim_swatch_id = ${req.trimSwatchId}`;
+        query = query +`WHERE ts.trim_swatch_id = ${req.trimSwatchId}`;
     }
 
     const data = await this.repo.query(query)
@@ -183,5 +184,61 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
     throw(err)
   }
 }
+
+  async getGrnNo():Promise<CommonResponseModel>{
+    let query = ` SELECT grn_number AS grnNo
+    FROM trim_swatch
+    GROUP BY grn_number`
+    const data = await this.dataSource.query(query)
+
+    if(data.length > 0){
+      return new CommonResponseModel(true, 1, 'Data retrieved', data)
+    }else{
+      return new CommonResponseModel(false,0,'No data',[])
+    }
+  }
+
+  async getPoNo():Promise<CommonResponseModel>{
+    let query = `SELECT po_number AS PoNo
+    FROM trim_swatch
+    WHERE po_number IS NOT NULL
+    GROUP BY po_number`
+    const data = await this.dataSource.query(query)
+
+    if(data.length>0){
+      return new CommonResponseModel(true, 1, 'Data retrieved', data)
+    }else{
+      return new CommonResponseModel(false,0,'No data',[])
+    }
+  }
+
+  async getStyleNo():Promise<CommonResponseModel>{
+    let query = ` SELECT style_no AS styleNo
+    FROM trim_swatch
+    WHERE style_no IS NOT NULL
+    GROUP BY style_no`
+    const data = await this.dataSource.query(query)
+
+    if(data.length>0){
+      return new CommonResponseModel(true , 1 ,'Data retrieved',data)
+    }else{
+      return new CommonResponseModel(false ,0 , 'No Data',[])
+    }
+  }
+
+  async getItemNo():Promise<CommonResponseModel>{
+    let query = `  SELECT item_no AS itemNo
+    FROM trim_swatch
+    GROUP BY item_no`
+    const data = await this.dataSource.query(query)
+
+    if(data.length>0){
+      return new CommonResponseModel(true , 1 ,'Data retrieved',data)
+    }else{
+      return new CommonResponseModel(false ,0 , 'No Data',[])
+    }
+  }
+
+
 
 }

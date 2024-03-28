@@ -59,7 +59,7 @@ export const TrimSwatchDetailView = () => {
         service.updateRejectedStatus(req).then((res)=>{
             if(res.status){
                 message.success(res.internalMessage,2)
-                navigate('/trims-swatch-approval',{ state: { tab: 'APPROVED' } })
+                navigate('/trims-swatch-approval',{ state: { tab: 'REJECTED' } })
                 setModal(false)
                 onReset()
             }else{
@@ -76,7 +76,7 @@ export const TrimSwatchDetailView = () => {
       async function sendMailForApprovalUser() {
           const swatchDetails = new EmailModel();
           swatchDetails.swatchNo = data[0]?.trim_swatch_number
-          swatchDetails.to = 'usplaystore761@gmail.com'
+          swatchDetails.to = 'kushal.siddegowda@shahi.co.in'
           swatchDetails.html = `
           <html>
           <head>
@@ -110,13 +110,13 @@ export const TrimSwatchDetailView = () => {
             <p>Please find the Trim Swatch details below:</p>
             <p>Trim Swatch No: ${data[0]?.trim_swatch_number}</p>
             <p>Buyer: ${data[0]?.buyerName}</p>
-            <p>Supplier: ${data[0]?.supplierName}</p>
-            <p>Style No: ${data[0]?.styleNo}</p>
-            <p>Item No: ${data[0]?.itemNo}</p>
+            <p>Supplier: ${data[0]?.supplier_name }</p>
+            <p>Style No: ${data[0]?.style_no }</p>
+            <p>Item No: ${data[0]?.item_no}</p>
             <p>Please click the link below for details:</p>
   
             <a
-              href="http://localhost:4200/#/trims-swatch-detail-view/${data[0]?.trimSwatchId}"
+              href="http://localhost:4200/#/trims-swatch-detail-view/${data[0]?.trim_swatch_id}"
               style="
                 display: inline-block;
                 padding: 10px 20px;
@@ -159,7 +159,7 @@ export const TrimSwatchDetailView = () => {
       return (
         <div>
           <Card
-            title={<span>Swatch No: {data[0]?.trimSwatchNo}</span>}
+            title={<span>Swatch No: {data[0]?.trim_swatch_number}</span>}
             headStyle={{ backgroundColor: '#25529a', color: 'white' }}
             extra={
               <span style={{ color: 'white' }}>
@@ -192,8 +192,10 @@ export const TrimSwatchDetailView = () => {
                 <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item Descrpition</span> }><span style={{fontSize:'16px'}}>{data[0]?.item_description}</span></DescriptionsItem>
                 <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Invoice No</span> }><span style={{fontSize:'16px'}}>{data[0]?.invoice_no}</span></DescriptionsItem>
                 <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Merchant</span> }><span style={{fontSize:'16px'}}>{data[0]?.merchant}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN No(Kg)</span> }><span style={{fontSize:'16px'}}>{data[0]?.grn_number}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN No</span> }><span style={{fontSize:'16px'}}>{data[0]?.grn_number}</span></DescriptionsItem>
                 <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN Date</span>}><span style={{fontSize:'16px'}}>{moment(data[0]?.grnDate).format('YYYY-MM-DD')}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Checked By</span> }><span style={{fontSize:'16px'}}>{data[0]?.checked_by}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span> }><span style={{fontSize:'16px'}}>{data[0]?.status}</span></DescriptionsItem>
               </Descriptions>
             </Card>
             </Col>

@@ -71,7 +71,7 @@ export class TrimSwatchEntity {
 
     @Column('varchar',{
         name:'checked_by',
-        nullable: false
+        nullable: true
     })
     checkedBy: string
 

@@ -126,4 +126,40 @@ export class TrimSwatchController {
       return this.appHandler.returnException(CommonResponseModel, error);
     }
 }
+
+@Post('/getGrnNo')
+async getGrnNo():Promise<CommonResponseModel>{
+  try {
+    return await this.service.getGrnNo();
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
+
+@Post('/getPoNo')
+async getPoNo():Promise<CommonResponseModel>{
+  try {
+    return await this.service.getPoNo();
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
+
+@Post('/getStyleNo')
+async getStyleNo():Promise<CommonResponseModel>{
+  try {
+    return await this.service.getStyleNo();
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
+@Post('/getItemNo')
+async getItemNo():Promise<CommonResponseModel>{
+  try {
+    return await this.service.getItemNo();
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
+
 }

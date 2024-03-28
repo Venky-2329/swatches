@@ -231,7 +231,7 @@ export default function TrimSwatchUpload() {
     async function sendMailForApprovalUser() {
         const swatchDetails = new EmailModel();
         swatchDetails.swatchNo = form.getFieldValue('trimSwatchNumber');
-        swatchDetails.to = 'playstore2636@gmail.com';
+        swatchDetails.to = 'kushal.siddegowda@shahi.co.in';
         // swatchDetails.to = form.getFieldValue('approverMail')
         // TODO:
         swatchDetails.html = `
@@ -266,17 +266,18 @@ export default function TrimSwatchUpload() {
           <p>Dear team,</p>
           <p>Please find the Trim Swatch details below:</p>
           <p>Trim Swatch No: ${form.getFieldValue('trimSwatchNumber')}</p>
-          <p>
-            Some items moved from Address: ${form.getFieldValue('fromUnit')} to
-            Address: ${form.getFieldValue('toAddresserName')}
-          </p>
+          <p>Buyer: ${form.getFieldValue('buyerName')}</p>
+          <p>Supplier: ${form.getFieldValue('supplier_name')}</p>
+          <p>Style No: ${form.getFieldValue('style_no')}</p>
+          <p>Item No: ${form.getFieldValue('item_no')}</p>
+
           <p>Please click the link below for details:</p>
           <input type="hidden" id="assignBy" value=${form.getFieldValue('assignBy')} /> 
           <input type="hidden" id="dcId" value=${form.getFieldValue('dcId')} />
       
           <a
-            href="http://gpdc.seplcloud.com/#/dc-email-detail-view/${form.getFieldValue('dcId')}"
-            style="
+          href="http://localhost:4200/#/trims-swatch-detail-view/${form.getFieldValue('trimSwatchId')}"
+          style="
               display: inline-block;
               padding: 10px 20px;
               background-color: #007bff;
@@ -284,13 +285,13 @@ export default function TrimSwatchUpload() {
               text-decoration: none;
               border-radius: 5px;
             "
-            >View Details of GatePass</a
+            >View Details of ${form.getFieldValue('trimSwatchNumber')} </a
           >
         
         </body>
       </html>
       `
-        swatchDetails.subject = "Fabric Swatch : " + form.getFieldValue('trimSwatchNumber')
+        swatchDetails.subject = "Trim Swatch : " + form.getFieldValue('trimSwatchNumber')
         const res = await mailService.sendSwatchMail(swatchDetails)
         console.log(res)
         if (res.status == 201) {
@@ -307,11 +308,11 @@ export default function TrimSwatchUpload() {
   return (
     <>
       <Card
-        title="Trims Swatch"
+        title="Trim Swatch"
         headStyle={{ backgroundColor: '#25529a', color: 'white' }}
         extra={
           <span>
-            <Button type="primary" onClick={gotoGrid}>
+            <Button  onClick={gotoGrid}>
               View
             </Button>
           </span>

@@ -37,13 +37,13 @@ const TrimSwatchApproval = () => {
     getCount();
   }, []);
 
-  useEffect(() => {
-    const tabKey = location.state?.tab;
-    if (tabKey) {
-      setActiveKey(tabKey);
-      getData(tabKey);
-    }
-  }, [location.state]);
+  // useEffect(() => {
+  //   const tabKey = location.state?.tab;
+  //   if (tabKey) {
+  //     setActiveKey(tabKey);
+  //     getData(tabKey);
+  //   }
+  // }, [location.state]);
 
   const getData = (value: any) => {
     const req = new DateReq(value, undefined, undefined);
