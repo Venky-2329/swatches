@@ -148,7 +148,7 @@ export const FabricSwatchDetailView = () => {
                 message.success("Mail sent successfully")
             }
         } else {
-            message.success("Mail also sent successfully")
+            message.success("Mail sent successfully")
         }
     }
 
@@ -193,12 +193,7 @@ export const FabricSwatchDetailView = () => {
           <Descriptions size="default" column={{ xs: 1, sm: 2, md: 2, lg: 2, xl: 2 }} >
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Buyer</span>}>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.buyerName}
-              </span>
-            </DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Buyer</span> }>
-              <span style={{fontSize:'16px'}}>
-                {moment(data[0]?.createdDate)?.format('YYYY-MM-DD')}
+                {data[0]?.buyerName || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Style No</span>}>
@@ -226,9 +221,14 @@ export const FabricSwatchDetailView = () => {
                 {data[0]?.poNumber}
               </span>
             </DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN No(Kg)</span> }>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN No</span> }>
               <span style={{fontSize:'16px'}}>
                 {data[0]?.grnNumber}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN Date</span> }>
+              <span style={{fontSize:'16px'}}>
+              {data[0]?.grnDate ? moment(data[0]?.createdDate).format('YYYY-MM-DD') : '-'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item Description</span> }>
@@ -241,14 +241,9 @@ export const FabricSwatchDetailView = () => {
                 {data[0]?.mill}
               </span>
             </DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span> }>
-              <span style={{fontSize:'16px'}}>
-                {data[0]?.status}
-              </span>
-            </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Brand</span> }>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.brandName}
+                {data[0]?.brandName || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Category</span> }>
@@ -266,9 +261,26 @@ export const FabricSwatchDetailView = () => {
                 {data[0]?.grnDate ? moment(data[0]?.grnDate).format('YYYY-MM-DD') : '-'}
               </span>
             </DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span>}><span style={{fontSize:'16px'}}>
-              {StatusDisplayEnum.find(item => item.name === data[0]?.status)?.displayVal || data[0]?.status}
-            </span></DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Created By</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.createdUser}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Created On</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.createdAt ? moment(data[0]?.createdAt).format('YYYY-MM-DD') : '-'}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span>}>
+              <span style={{fontSize:'16px'}}>
+                {StatusDisplayEnum.find(item => item.name === data[0]?.status)?.displayVal || data[0]?.status}
+              </span>
+            </DescriptionsItem>
+            {data[0]?.status === 'REJECTED' ?(<DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Rejection Reason</span>}>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.rejectionReason || "--"}
+              </span>
+            </DescriptionsItem>):[]}
           </Descriptions>
         </Card>
         </Col>
