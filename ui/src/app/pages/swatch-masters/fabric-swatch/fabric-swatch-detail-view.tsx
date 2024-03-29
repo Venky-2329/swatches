@@ -174,17 +174,15 @@ export const FabricSwatchDetailView = () => {
         title={<span>Swatch No: {data[0]?.fabricSwatchNo}</span>}
         headStyle={{ backgroundColor: '#25529a', color: 'white' }}
         extra={
-          <span style={{ color: 'white' }}>
-            <Button
-              className="panel_button"
-              onClick={() => {
-                navigate('/fabric-swatch-approval');
-              }}
-            >
-              BACK
-            </Button>
-          </span>
+          !((userRole === 'FABRICS') && (department === 3)) && (
+            <span style={{ color: 'white' }}>
+              <Button className="panel_button" onClick={() => { navigate('/fabric-swatch-approval'); }}>
+                BACK
+              </Button>
+            </span>
+          )
         }
+        
       >
         <Row gutter={16}>
         <Col

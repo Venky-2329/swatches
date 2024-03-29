@@ -170,36 +170,32 @@ export function BasicLayout(props: BasicLayoutProps) {
 
   const filteredRouterList = baseRouterList.reduce((acc, route) => {
     const department = createUser.departmentId;
-
+  
     if (userRole === 'ADMIN') {
-        acc.push(route);
-    } else if (userRole === 'TRIMS' || userRole === 'FABRICS') {
-        if (route.path === '/swatch-card') {
-            const swatchCardRoute = {
-                ...route,
-                children: route.children.filter((child) => {
-                    if (userRole === 'TRIMS' && department === 1) {
-                        return child.key === 'trims-swatch-approval';
-                    } else if (userRole === 'TRIMS' && department === 2) {
-                        return child.key === 'trims-swatch-approval';
-                    } else if (userRole === 'FABRICS' && department === 1) {
-                        return child.key === 'fabric-swatch-approval' || child.key === 'fabric-swatch-cards';
-                    } else if (userRole === 'FABRICS' && department === 2) {
-                        return child.key === 'fabric-swatch-approval' || child.key === 'fabric-swatch-cards';
-                    } else if (userRole === 'FABRICS' && department === 3) {
-                        return child.key === 'fabric-swatch-cards';
-                    } else if (userRole === 'TRIMS' && department === 2) {
-                        return child.key === 'trims-swatch-approval' || child.key === 'trim-swatch-cards';
-                    } else if (userRole === 'TRIMS' && department === 3) {
-                        return child.key === 'trim-swatch-cards';
-                    }
-                }),
-            };
-            acc.push(swatchCardRoute);
-        }
+      acc.push(route);
+    } else if (userRole === 'FABRICS' && department === 3 && route.path === '/fabric-swatch-cards') {
+      acc.push(route);
+    } else if (userRole === 'TRIMS' && department === 3 && route.path === 'trim-swatch-cards') {
+      acc.push(route);
+    } else if (route.path === '/swatch-card' && !(userRole === 'FABRICS' || userRole === 'TRIMS') && department === 3) {
+      const swatchCardRoute = {
+        ...route,
+        children: route.children.filter((child) => {
+          if (userRole === 'TRIMS' && (department === 1 || department === 2)) {
+            return child.key === 'trims-swatch-approval';
+          } else if (userRole === 'FABRICS' && (department === 1 || department === 2)) {
+            return child.key === 'fabric-swatch-approval';
+          }
+        }),
+      };
+      acc.push(swatchCardRoute);
     }
+  
     return acc;
-}, []);
+  }, []);
+
+
+
 
 
 
