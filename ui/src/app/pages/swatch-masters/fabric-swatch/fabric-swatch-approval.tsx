@@ -328,7 +328,7 @@ const FabricSwatchApproval = () => {
             rowClassName={columnColor}
             scroll={{ x: 'max-content' }}
             columns={columns.filter(
-                (o) => !['rejectionReason','action'].includes(o.dataIndex)
+                (o) => !['rejectionReason'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
@@ -353,7 +353,7 @@ const FabricSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-              (o) => !['action'].includes(o.dataIndex)
+              (o) => ![''].includes(o.dataIndex)
             )}
             dataSource={data}
             size="small"

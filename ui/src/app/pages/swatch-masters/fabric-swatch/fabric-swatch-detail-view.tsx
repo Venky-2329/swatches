@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { EmailService, FabricSwatchService } from 'libs/shared-services';
-import { EmailModel, SwatchStatus } from 'libs/shared-models';
+import { EmailModel, StatusDisplayEnum, SwatchStatus } from 'libs/shared-models';
 import img from '../../../../../../upload-files/pexels-kawaiiart-1767434-1484.jpg';
 import TextArea from 'antd/es/input/TextArea';
 
@@ -26,9 +26,6 @@ export const FabricSwatchDetailView = () => {
   const createUser = JSON.parse(localStorage.getItem('auth'));
   const department = createUser.departmentId
   const userRole = createUser.role
-
-
-
 
   const location = useLocation();
   const currentRoute = location.pathname;
@@ -52,7 +49,7 @@ export const FabricSwatchDetailView = () => {
         if(res.status){
             message.success(res.internalMessage,2)
             navigate('/fabric-swatch-approval',{ state: { tab: 'APPROVED' } })
-            sendMailForApprovalUser()
+            sendMailForApprovalUser('Approved')
         }else{
             message.error(res.internalMessage,2)
         }
@@ -72,6 +69,7 @@ export const FabricSwatchDetailView = () => {
         if(res.status){
             message.success(res.internalMessage,2)
             navigate('/fabric-swatch-approval',{state:{tab:'REJECTED'}})
+            sendMailForApprovalUser('Rejected')
             setModal(false)
             onReset()
         }else{
@@ -80,12 +78,11 @@ export const FabricSwatchDetailView = () => {
     })
   }
 
-
   let mailerSent = false;
-    async function sendMailForApprovalUser() {
+    async function sendMailForApprovalUser(value) {
         const swatchDetails = new EmailModel();
         swatchDetails.swatchNo = data[0]?.fabricSwatchNo
-        swatchDetails.to = 'usplaystore761@gmail.com'
+        swatchDetails.to = data[0]?.createdUserMail
         swatchDetails.html = `
         <html>
         <head>
@@ -116,7 +113,7 @@ export const FabricSwatchDetailView = () => {
         </head>
         <body>
           <p>Dear team,</p>
-          <p>Please find the Fabric Swatch details below:</p>
+          <p>Please find the ${value} Fabric Swatch details below:</p>
           <p>Fabric Swatch No: ${data[0]?.fabricSwatchNo}</p>
           <p>Buyer: ${data[0]?.buyerName}</p>
           <p>Brand: ${data[0]?.brandName}</p>
@@ -194,21 +191,84 @@ export const FabricSwatchDetailView = () => {
           >
         <Card style={{height:'400px', marginTop:''}}>
           <Descriptions size="default" column={{ xs: 1, sm: 2, md: 2, lg: 2, xl: 2 }} >
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Buyer</span>}><span style={{fontSize:'16px'}}>{data[0]?.buyerName}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Buyer</span> }><span style={{fontSize:'16px'}}>{moment(data[0]?.createdDate)?.format('YYYY-MM-DD')}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Style No</span>}><span style={{fontSize:'16px'}}>{data[0]?.styleNo}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item No</span>}><span style={{fontSize:'16px'}}>{data[0]?.itemNo}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Category Type</span> }><span style={{fontSize:'16px'}}>{data[0]?.categoryType}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Color</span> }><span style={{fontSize:'16px'}}>{data[0]?.color}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>PO No</span> }><span style={{fontSize:'16px'}}>{data[0]?.poNumber}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN No(Kg)</span> }><span style={{fontSize:'16px'}}>{data[0]?.grnNumber}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item Description</span> }><span style={{fontSize:'16px'}}>{data[0]?.itemDescription}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Mill/Vendor</span> }><span style={{fontSize:'16px'}}>{data[0]?.mill}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span> }><span style={{fontSize:'16px'}}>{data[0]?.status}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Brand</span> }><span style={{fontSize:'16px'}}>{data[0]?.brandName}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Category</span> }><span style={{fontSize:'16px'}}>{data[0]?.categoryName}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Season</span> }><span style={{fontSize:'16px'}}>{data[0]?.seasonName}</span></DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN Date</span>}><span style={{fontSize:'16px'}}>{moment(data[0]?.grnDate).format('YYYY-MM-DD')}</span></DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Buyer</span>}>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.buyerName}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Buyer</span> }>
+              <span style={{fontSize:'16px'}}>
+                {moment(data[0]?.createdDate)?.format('YYYY-MM-DD')}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Style No</span>}>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.styleNo}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item No</span>}>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.itemNo}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Category Type</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.categoryType}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Color</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.color}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>PO No</span>}>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.poNumber}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN No(Kg)</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.grnNumber}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item Description</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.itemDescription}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Mill/Vendor</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.mill}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.status}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Brand</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.brandName}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Category</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.categoryName || "--"}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Season</span> }>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.seasonName || "--"}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN Date</span>}>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.grnDate ? moment(data[0]?.grnDate).format('YYYY-MM-DD') : '-'}
+              </span>
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span>}><span style={{fontSize:'16px'}}>
+              {StatusDisplayEnum.find(item => item.name === data[0]?.status)?.displayVal || data[0]?.status}
+            </span></DescriptionsItem>
           </Descriptions>
         </Card>
         </Col>
@@ -232,7 +292,7 @@ export const FabricSwatchDetailView = () => {
             }}
           />
         </Card>
-        {userRole === 'FABRICS' && department === 1 && (
+        {userRole === 'FABRICS' && department === 1 && data[0]?.status === 'SENT_FOR_APPROVAL' &&(
             <>
               <Divider type='horizontal'/>
               <div style={{ textAlign: 'center' }}>
