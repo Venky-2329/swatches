@@ -14,6 +14,7 @@ export default function TrimCards() {
    const trimsService = new TrimSwatchService()
    const supplierService = new SupplierService()
    const approvalService = new ApprovalUserService()
+   const [swatchNo , setSwatchNo] = useState<any[]>([])
    const [buyer , setBuyer] = useState<any[]>([])
    const [grnNo , setGrnNo] = useState<any[]>([])
    const [supplier , setSupplier] = useState<any[]>([])
@@ -33,7 +34,8 @@ export default function TrimCards() {
         getApprovalUser();
         getStyleNo();
         getItemNo();
-        getTrimCards()
+        getTrimCards();
+        getswatchNo();
     },[])
 
     function getBuyers(){
@@ -92,6 +94,14 @@ export default function TrimCards() {
         })
     }
 
+    function getswatchNo(){
+        trimsService.getSwatchNo().then((res)=>{
+            if(res.data){
+                setSwatchNo(res.data)
+            }
+        })
+    }
+
     function onReset(){
         form.resetFields();
     }
@@ -136,9 +146,7 @@ export default function TrimCards() {
     }
 
     // const backgroundColors = ['#c8ffc8', '#ffffa0', '#facefa', '#ccccff','#ffd2d2','#d2e1ff','#d2faff','#ffeee8'];
-    const backgroundColors = ['#ffebcd', '#f5deb3', '#ffe4b5', '#fff8dc', '#f0e68c', '#e6e6fa', '#ffefd5', '#f0fff0'];
-
-    return(
+    const backgroundColors = ['#FFE4E1', '#FFD8BE', '#FAFAD2', '#E9E9FF', '#EFDEEF', '#FFBCD9', '#EEE8AA', '#BCFFC3'];    return(
         <Card title={
             <span>Trim Swatch Cards</span>}
             headStyle={{ backgroundColor: '#25529a', color: 'white' }}
@@ -146,6 +154,19 @@ export default function TrimCards() {
         >
         <Form form={form} layout="vertical">
             <Row gutter={24}>
+            <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
+                    <Form.Item label='Swatch No' name={'swatchNo'}>
+                        <Select 
+                        allowClear
+                        showSearch  
+                        optionFilterProp="children"
+                        placeholder='Select Swatch No' >
+                            {swatchNo.map((items) =>{
+                                return <Option value={items.trimSwatchNumber}>{items.trimSwatchNumber}</Option>
+                            })}
+                        </Select>
+                    </Form.Item>
+                </Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
                     <Form.Item label='Buyer' name={'buyerId'}>
                         <Select 
@@ -196,7 +217,7 @@ export default function TrimCards() {
                         optionFilterProp="children"
                         placeholder='Select Po No' >
                             {poNo.map((items) =>{
-                                return <Option value={items.poNo}>{items.PoNo}</Option>
+                                return <Option value={items.poNo}  key={items.poNo}>{items.PoNo}</Option>
                             })}
                         </Select>
                     </Form.Item>
@@ -240,7 +261,6 @@ export default function TrimCards() {
                                 return <Option value={items.approvedUserId}>{items.approvedUserName}</Option>
                             })}
                         </Select>
-
                     </Form.Item> 
                 </Col>
             </Row>
@@ -256,7 +276,7 @@ export default function TrimCards() {
         <br/>
         <Row gutter={[24,24]} >
             {data.map((i,index) => {
-                const {buyerName , grn_number , style_no , item_no  , created_at , trim_swatch_id } = i
+                const {buyerName , grn_number , style_no , item_no  , created_at , trim_swatch_id ,trim_swatch_number,status } = i
                 const date = moment(created_at).format('YYYY-MM-DD')
                 const cardStyle : CSSProperties = {
                     background: backgroundColors[index % backgroundColors.length],
@@ -267,7 +287,7 @@ export default function TrimCards() {
                     flexDirection: 'column' ,
                 };
                 return(
-                    <Col key={i.sampleId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4}}>
+                    <Col key={i.sampleId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6}}>
                         <Card
                         hoverable
                         style={cardStyle}
@@ -288,6 +308,8 @@ export default function TrimCards() {
                       <div><b>{date}</b></div>
                       <div>Style No&nbsp;&nbsp; : {style_no}</div>
                       <div>GRN No&nbsp;&nbsp; : {grn_number}</div>
+                      <div>Swatch No &nbsp; : {trim_swatch_number}</div>
+                      <div>Status &nbsp; : {status}</div>
                     </div>
                   }
                 />

@@ -170,7 +170,7 @@ const TrimSwatchApproval = () => {
     },
     {
       title:'Rejection Reason',
-      dataIndex: 'rejectionReason'
+      dataIndex: 'rejection_reason'
     }
   ]
 

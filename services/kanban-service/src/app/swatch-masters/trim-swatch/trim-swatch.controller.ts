@@ -162,4 +162,13 @@ async getItemNo():Promise<CommonResponseModel>{
   }
 }
 
+@Post('/getSwatchNo')
+async getSwatchNo():Promise<CommonResponseModel>{
+  try {
+    return await this.service.getSwatchNo();
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
+
 }
