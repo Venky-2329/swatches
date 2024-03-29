@@ -21,6 +21,7 @@ export const TrimSwatchDetailView = () => {
     const createUser = JSON.parse(localStorage.getItem('auth'));
     const department = createUser.departmentId
     const userRole = createUser.role
+    const userName = createUser.userName
   
 
     useEffect(() => {
@@ -53,13 +54,13 @@ export const TrimSwatchDetailView = () => {
       }
 
       const handelReject = (value)=>{
-        setFormData(value?.trimSwatchId)
+        setFormData(value?.trim_swatch_id)
         setModal(true)
       }
     
       const TrimRejected =(value)=>{
         console.log(value,'.......................')
-        const req = new TrimSwatchStatus(value,undefined,form.getFieldValue('rejection_reason'))
+        const req = new TrimSwatchStatus(value,undefined,form.getFieldValue('rejectionReason'))
         service.updateRejectedStatus(req).then((res)=>{
             if(res.status){
                 message.success(res.internalMessage,2)
@@ -147,7 +148,7 @@ export const TrimSwatchDetailView = () => {
                   message.success("Mail sent successfully")
               }
           } else {
-              message.success("Mail also sent successfully")
+              message.success(`Alert mail sent to the ${userName}` )
           }
       }
   

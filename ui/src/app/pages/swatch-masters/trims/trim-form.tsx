@@ -177,6 +177,7 @@ export default function TrimSwatchUpload() {
             mainService.photoUpload(formData).then((fileres) => {
               if (res.status) {
                 form.setFieldsValue({trimSwatchNumber: res?.data?.trimSwatchNumber})
+                form.setFieldsValue({trimSwatchId: res?.data?.trimSwatchId})
                 setResData(res.data)
                 res.data.filePath = fileres.data;
                 sendMailForApprovalUser()

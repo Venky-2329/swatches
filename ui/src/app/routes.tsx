@@ -84,7 +84,6 @@ export const AppRoutes = () => {
           <Route path="/trims-swatch-upload"key="trims-swatch-upload"element={<TrimSwatchUpload />}/>
           <Route path="/trims-swatch-view"key="trims-swatch-view"element={<TrimSwatchGrid />}/>
           <Route path="/trims-swatch-approval"key="trims-swatch-approval"element={<TrimSwatchApproval />}/>
-          <Route path='/trims-swatch-detail-view/:trimSwatchId' key='/trims-swatch-detail-view' element={<TrimSwatchDetailView/>}/>
           <Route path='/trim-swatch-cards' key='/trim-swatch-cards' element={<TrimCards/>}/>
 
 
@@ -155,8 +154,8 @@ export const AppRoutes = () => {
           key="/sample-digital-card"
           element={<ScannedCard />}
         />
+        <Route path='/trims-swatch-detail-view/:trimSwatchId' key='/trims-swatch-detail-view' element={<TrimSwatchDetailView/>}/>
 
-        
       </Route>
 
       
