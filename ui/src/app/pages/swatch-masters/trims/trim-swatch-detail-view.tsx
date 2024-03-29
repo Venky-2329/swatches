@@ -45,7 +45,7 @@ export const TrimSwatchDetailView = () => {
             if(res.status){
                 message.success(res.internalMessage,2)
                 navigate('/trims-swatch-approval',{ state: { tab: 'APPROVED' } })
-                sendMailForApprovalUser()
+                sendMailForApprovalUser('Approved ✅')
             }else{
                 message.error(res.internalMessage,2)
             }
@@ -64,6 +64,7 @@ export const TrimSwatchDetailView = () => {
             if(res.status){
                 message.success(res.internalMessage,2)
                 navigate('/trims-swatch-approval',{ state: { tab: 'REJECTED' } })
+                sendMailForApprovalUser('Rejected ❌')
                 setModal(false)
                 onReset()
             }else{
@@ -77,7 +78,7 @@ export const TrimSwatchDetailView = () => {
       };
 
       let mailerSent = false;
-      async function sendMailForApprovalUser() {
+      async function sendMailForApprovalUser(value) {
           const swatchDetails = new EmailModel();
           swatchDetails.swatchNo = data[0]?.trim_swatch_number
           swatchDetails.to = 'kushal.siddegowda@shahi.co.in'
@@ -111,7 +112,7 @@ export const TrimSwatchDetailView = () => {
           </head>
           <body>
             <p>Dear team,</p>
-            <p>Please find the Trim Swatch details below:</p>
+            <p>Please find the ${value} Trim Swatch details below:</p>
             <p>Trim Swatch No: ${data[0]?.trim_swatch_number}</p>
             <p>Buyer: ${data[0]?.buyerName}</p>
             <p>Supplier: ${data[0]?.supplier_name }</p>

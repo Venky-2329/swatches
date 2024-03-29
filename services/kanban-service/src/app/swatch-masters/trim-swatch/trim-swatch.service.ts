@@ -237,6 +237,19 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
     }
   }
 
+  async getSwatchNo():Promise<CommonResponseModel>{
+    let query = `SELECT trim_swatch_number AS trimSwatchNumber
+    FROM trim_swatch
+    GROUP BY trim_swatch_number`
+    const data = await this.dataSource.query(query)
+
+    if(data.length>0){
+      return new CommonResponseModel(true , 1 ,'Data retrieved',data)
+    }else{
+      return new CommonResponseModel(false ,0 , 'No Data',[])
+    }
+  }
+
 
 
 }
