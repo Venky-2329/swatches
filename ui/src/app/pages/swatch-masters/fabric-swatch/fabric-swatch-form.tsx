@@ -19,6 +19,7 @@ export default function FabricSwatchUpload() {
   const [seasons, setSeasons] = useState([]);
   const users: any = JSON.parse(localStorage.getItem('auth'));
   const createdUser = users.userName;
+  const createdUserMail = users.userMail
   const [selectedType, setSelectedType] = useState('Garment');
   const typesWithCommonFields = ['Garment', 'Trim'];
   const buyerService = new BuyerService();
@@ -519,6 +520,9 @@ export default function FabricSwatchUpload() {
             <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                 <Form.Item name={'createdUser'} initialValue={createdUser} label={'Created By'}>
                   <Input defaultValue={createdUser} disabled/>
+                </Form.Item>
+                <Form.Item name={'createdUserMail'} initialValue={createdUserMail} hidden>
+                  <Input defaultValue={createdUser} hidden/>
                 </Form.Item>
               </Col>
             <Col

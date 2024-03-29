@@ -80,6 +80,7 @@ export class MailerService {
   }
   async sendSwatchMail(req: any) {
     try{
+      console.log(req,'llllllllllllll')
       await this.logError(req.subject)
       const sendDcMail = await this.transporter.sendMail({
         from: '"" <no-reply@shahi.co.in>',

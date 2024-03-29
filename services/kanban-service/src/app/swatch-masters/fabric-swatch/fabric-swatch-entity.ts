@@ -129,6 +129,13 @@ export class FabricSwatchEntity{
         length:50
     })
     createdUser: string | null
+    
+    @Column('varchar',{
+        name:'created_user_mail',
+        nullable:false,
+        length:50
+    })
+    createdUserMail: string | null
 
     @UpdateDateColumn({
         name:'updated_at',

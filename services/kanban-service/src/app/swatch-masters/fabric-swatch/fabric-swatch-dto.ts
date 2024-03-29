@@ -43,6 +43,8 @@ export class FabricSwatchDto{
     @ApiProperty()
     createdUser: string | null
     @ApiProperty()
+    createdUserMail: string | null
+    @ApiProperty()
     updatedAt: Date
     @ApiProperty()
     updatedUser: string | null
