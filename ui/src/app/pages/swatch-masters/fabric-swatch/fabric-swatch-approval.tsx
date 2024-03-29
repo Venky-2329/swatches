@@ -37,13 +37,13 @@ const FabricSwatchApproval = () => {
     setActiveKey(tabName);
   }, [tabName]);
 
-  useEffect(() => {
-    const tabKey = location.state?.tab;
-    if (tabKey) {
-      setActiveKey(tabKey);
-      getData(tabKey);
-    }
-  }, [location.state]);
+  // useEffect(() => {
+  //   const tabKey = location.state?.tab;
+  //   if (tabKey) {
+  //     setActiveKey(tabKey);
+  //     getData(tabKey);
+  //   }
+  // }, [location.state]);
 
   useEffect(() => {
     getData(tabName);
@@ -170,74 +170,127 @@ const FabricSwatchApproval = () => {
   const columns: any = [
     {
       title: 'S.No',
-      render: (val, record, index) => index + 1,
+      render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-      title: 'Swatch Number',
+      title:<div style={{textAlign:'center'}}>Swatch Number</div>,
       dataIndex: 'fabricSwatchNo',
+      ...getColumnSearchProps('fabricSwatchNo'),
+      render: (text) => {
+        return text || '-';
+      }
     },
     {
-      title: 'Buyer',
+      title: <div style={{textAlign:'center'}}>Buyer</div>,
       dataIndex: 'buyerName',
+      ...getColumnSearchProps('buyerName'),
+      render: (text) => {
+        return text || '-';
+      }
     },
     {
-      title: 'Brand',
+      title:<div style={{textAlign:'center'}}>Brand</div>,
       dataIndex: 'brandName',
+      ...getColumnSearchProps('brandName'),
+      render: (text) => {
+        return text || '-';
+      }
     },
     {
-      title: 'Category',
+      title:<div style={{textAlign:'center'}}>Category</div>,
       dataIndex: 'categoryName',
+      ...getColumnSearchProps('categoryName'),
+      render: (text) => {
+        return text || '-';
+      }
     },
     {
-      title: 'Season',
+      title:<div style={{textAlign:'center'}}>Season</div>,
       dataIndex: 'seasonName',
+      ...getColumnSearchProps('fabricSwatchNo'),
+      render: (text) => {
+        return text || '-';
+      }
     },
     {
-      title: 'Style No',
+      title:<div style={{textAlign:'center'}}>Style No</div>,
       dataIndex: 'styleNo',
+      ...getColumnSearchProps('fabricSwatchNo'),
+      render: (text) => {
+        return text || '-';
+      }
     },
     {
-      title: 'Item No',
+      title:<div style={{textAlign:'center'}}>Item No</div>,
       dataIndex: 'itemNo',
+      ...getColumnSearchProps('fabricSwatchNo'),
+      render: (text) => {
+        return text || '-';
+      }
     },
     {
-      title: 'Category Type',
+      title:<div style={{textAlign:'center'}}>Category Type</div>,
       dataIndex: 'categoryType',
+      ...getColumnSearchProps('categoryType'),
+      render: (text) => {
+        return text || '-';
+      }
     },
-    {
-      title: 'PO No',
-      dataIndex: 'poNumber',
-    },
-    {
-      title: 'GRN No',
-      dataIndex: 'grnNumber',
-    },
-    {
-      title: 'GRN Date',
-      dataIndex: 'grnDate',
-      render: (grnDate) => {
-        const date = new Date(grnDate);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-      },
-    },
-    {
-      title: 'Item Description',
-      dataIndex: 'itemDescription',
-    },
-    {
-      title: 'Mill/Vendor',
-      dataIndex: 'mill',
-    },
-    {
-      title:'Rejection Reason',
-      dataIndex: 'rejectionReason'
-    },
+    // {
+    //   title:<div style={{textAlign:'center'}}>PO No</div>,
+    //   dataIndex: 'poNumber',
+    //   ...getColumnSearchProps('poNumber'),
+    //   render: (text) => {
+    //     return text || '-';
+    //   }
+    // },
+    // {
+    //   title:<div style={{textAlign:'center'}}>GRN No</div>,
+    //   dataIndex: 'grnNumber',
+    //   ...getColumnSearchProps('grnNumber'),
+    //   render: (text) => {
+    //     return text || '-';
+    //   }
+    // },
+    // {
+    //   title:<div style={{textAlign:'center'}}>GRN Date</div>,
+    //   dataIndex: 'grnDate',
+    //   render: (grnDate) => {
+    //     const date = new Date(grnDate);
+    //     const year = date.getFullYear();
+    //     const month = String(date.getMonth() + 1).padStart(2, '0');
+    //     const day = String(date.getDate()).padStart(2, '0');
+    //     return `${year}-${month}-${day}`;
+    //   },
+    // },
+    // {
+    //   title:<div style={{textAlign:'center'}}>Item Description</div>,
+    //   dataIndex: 'itemDescription',
+    //   ...getColumnSearchProps('itemDescription'),
+    //   render: (text) => {
+    //     return text || '-';
+    //   }
+    // },
+    // {
+    //   title:<div style={{textAlign:'center'}}>Mill/Vendor</div>,
+    //   dataIndex: 'mill',
+    //   ...getColumnSearchProps('mill'),
+    //   render: (text) => {
+    //     return text || '-';
+    //   }
+    // },
+    // {
+    //   title:<div style={{textAlign:'center'}}>Rejection Reason</div>,
+    //   dataIndex: 'rejectionReason',
+    //   ...getColumnSearchProps('rejectionReason'),
+    //   render: (text) => {
+    //     return text || '-';
+    //   }
+    // },
     {
       title: <div style={{textAlign:"center"}}>Action</div>,
       dataIndex: 'action',
+      align:'center',
       render: (text, rowData) => {
         return(
           <span>
