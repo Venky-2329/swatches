@@ -173,11 +173,15 @@ export function BasicLayout(props: BasicLayoutProps) {
   
     if (userRole === 'ADMIN') {
       acc.push(route);
-    } else if (userRole === 'FABRICS' && department === 3 && route.path === '/fabric-swatch-cards') {
-      acc.push(route);
-    } else if (userRole === 'TRIMS' && department === 3 && route.path === 'trim-swatch-cards') {
-      acc.push(route);
-    } else if (route.path === '/swatch-card' && !(userRole === 'FABRICS' || userRole === 'TRIMS') && department === 3) {
+    } else if (userRole === 'FABRICS' && department === 3) {
+      if (route.path === '/fabric-swatch-cards') {
+        acc.push(route);
+      }
+    } else if (userRole === 'TRIMS' && department === 3) {
+      if (route.path === '/trim-swatch-cards') {
+        acc.push(route);
+      }
+    } else if (route.path === '/swatch-card') {
       const swatchCardRoute = {
         ...route,
         children: route.children.filter((child) => {
