@@ -1,7 +1,7 @@
 import { Button, Card, Col, Descriptions, Divider, Form, Image, Modal, Popconfirm, Row, message } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
 import TextArea from "antd/es/input/TextArea"
-import { EmailModel, TrimSwatchStatus } from "libs/shared-models"
+import { EmailModel, StatusDisplayEnum, TrimSwatchStatus } from "libs/shared-models"
 import { EmailService, TrimSwatchService } from "libs/shared-services"
 import moment from "moment"
 import { useEffect, useState } from "react"
@@ -40,7 +40,7 @@ export const TrimSwatchDetailView = () => {
 
     const TrimAccepted = (value)=>{
         console.log(value,',,,,,,,,,,,,,,,,,,,,')
-        const req = new TrimSwatchStatus(value?.trimSwatchId,value?.trimSwatchId)
+        const req = new TrimSwatchStatus(value?.trim_swatch_id,value?.trim_swatch_number,undefined)
         service.updateApprovedStatus(req).then((res)=>{
             if(res.status){
                 message.success(res.internalMessage,2)
@@ -59,7 +59,7 @@ export const TrimSwatchDetailView = () => {
     
       const TrimRejected =(value)=>{
         console.log(value,'.......................')
-        const req = new TrimSwatchStatus(value,undefined,form.getFieldValue('rejectionReason'))
+        const req = new TrimSwatchStatus(value,undefined,form.getFieldValue('rejection_reason'))
         service.updateRejectedStatus(req).then((res)=>{
             if(res.status){
                 message.success(res.internalMessage,2)
@@ -189,18 +189,16 @@ export const TrimSwatchDetailView = () => {
               >
             <Card style={{height:'400px', marginTop:''}}>
               <Descriptions size="default" column={{ xs: 1, sm: 2, md: 2, lg: 2, xl: 2 }} >
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Buyer</span>}><span style={{fontSize:'16px'}}>{data[0]?.buyerName}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Supplier</span> }><span style={{fontSize:'16px'}}>{data[0]?.supplier_name}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>PO No</span> }><span style={{fontSize:'16px'}}>{data[0]?.po_number}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Style No</span>}><span style={{fontSize:'16px'}}>{data[0]?.style_no}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item No</span>}><span style={{fontSize:'16px'}}>{data[0]?.item_no}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item Descrpition</span> }><span style={{fontSize:'16px'}}>{data[0]?.item_description}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Invoice No</span> }><span style={{fontSize:'16px'}}>{data[0]?.invoice_no}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Merchant</span> }><span style={{fontSize:'16px'}}>{data[0]?.merchant}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN No</span> }><span style={{fontSize:'16px'}}>{data[0]?.grn_number}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN Date</span>}><span style={{fontSize:'16px'}}>{moment(data[0]?.grnDate).format('YYYY-MM-DD')}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Checked By</span> }><span style={{fontSize:'16px'}}>{data[0]?.checked_by}</span></DescriptionsItem>
-                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span> }><span style={{fontSize:'16px'}}>{data[0]?.status}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Buyer</span>}><span style={{fontSize:'16px'}}>{data[0]?.buyerName || '--'}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Supplier</span> }><span style={{fontSize:'16px'}}>{data[0]?.supplier_name || '--'}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>PO No</span> }><span style={{fontSize:'16px'}}>{data[0]?.po_number || '--'}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Style No</span>}><span style={{fontSize:'16px'}}>{data[0]?.style_no || '--'}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item No</span>}><span style={{fontSize:'16px'}}>{data[0]?.item_no || '--'}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item Descrpition</span> }><span style={{fontSize:'16px'}}>{data[0]?.item_description || '--'}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Invoice No</span> }><span style={{fontSize:'16px'}}>{data[0]?.invoice_no || '--'}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN No</span> }><span style={{fontSize:'16px'}}>{data[0]?.grn_number || '--'}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN Date</span>}><span style={{fontSize:'16px'}}>{moment(data[0]?.grn_date || '--').format('YYYY-MM-DD')}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span> }><span style={{fontSize:'16px'}}> {StatusDisplayEnum.find(item => item.name === data[0]?.status)?.displayVal || data[0]?.status}</span></DescriptionsItem>
               </Descriptions>
             </Card>
             </Col>
@@ -224,7 +222,7 @@ export const TrimSwatchDetailView = () => {
                 }}
               />
             </Card>
-          {userRole === 'TRIMS' && department === 1 && (
+          {userRole === 'TRIMS' && department === 1 &&   data[0]?.status === 'SENT_FOR_APPROVAL' &&(
           <>
           <Divider type='horizontal'/>
             <div style={{ textAlign: 'center' }}>

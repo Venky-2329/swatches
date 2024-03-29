@@ -90,10 +90,10 @@ export const TrimSwatchGrid = () => {
       title: 'Invoice No',
       dataIndex: 'invoice_no',
     },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-    },
+    // {
+    //   title: 'Status',
+    //   dataIndex: 'status',
+    // },
   ];
 
   function gotoGrid() {

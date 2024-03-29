@@ -40,6 +40,7 @@ export default function TrimSwatchUpload() {
   const [seasons, setSeasons] = useState([]);
   const users: any = JSON.parse(localStorage.getItem('auth'));
   const createdUser = users.userName;
+  const createdUserMail = users.userMail;
   const [selectedType, setSelectedType] = useState('Garment');
   const typesWithCommonFields = ['Garment', 'Trim'];
   const service = new BuyerService();

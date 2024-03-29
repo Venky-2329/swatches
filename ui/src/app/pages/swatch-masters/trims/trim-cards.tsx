@@ -7,7 +7,7 @@ import moment from "moment";
 import { CSSProperties, useEffect, useState } from "react";
 import image from '../../../../../../upload-files/pexels-orlando-s-18290475-101bf.jpg'
 import { useNavigate } from "react-router-dom";
-import { DateReq, TrimCardReq } from "libs/shared-models";
+import { DateReq, StatusDisplayEnum, StatusEnum, TrimCardReq } from "libs/shared-models";
 
 export default function TrimCards() {
    const buyerService = new BuyerService()
@@ -104,12 +104,15 @@ export default function TrimCards() {
 
     function onReset(){
         form.resetFields();
+        getTrimCards();
     }
 
     function getTrimCards() {
         const req = new DateReq();
         console.log(req);
-        
+        if(form.getFieldValue('swatchNo') != undefined){
+            req.swatchNo = form.getFieldValue('swatchNo')
+        }
         if(form.getFieldValue('buyerId') != undefined){
             req.buyerId = form.getFieldValue('buyerId')
         }
@@ -209,7 +212,7 @@ export default function TrimCards() {
 
                     </Form.Item>
                 </Col>
-                <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
+                {/* <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
                     <Form.Item label='Po No' name={'poNo'}>
                         <Select 
                         allowClear
@@ -221,7 +224,7 @@ export default function TrimCards() {
                             })}
                         </Select>
                     </Form.Item>
-                </Col>
+                </Col> */}
                 <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
                     <Form.Item label='Style No' name={'styleNo'}>
                         <Select 
@@ -309,7 +312,7 @@ export default function TrimCards() {
                       <div>Style No&nbsp;&nbsp; : {style_no}</div>
                       <div>GRN No&nbsp;&nbsp; : {grn_number}</div>
                       <div>Swatch No &nbsp; : {trim_swatch_number}</div>
-                      <div>Status &nbsp; : {status}</div>
+                      <div>Status &nbsp; : {StatusDisplayEnum.find((item) => item.name === status)?.displayVal || status}</div>
                     </div>
                   }
                 />

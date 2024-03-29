@@ -77,7 +77,7 @@ export class TrimSwatchService {
       FROM trim_swatch ts
       LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
       LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
-      WHERE 1=1`
+      WHERE 1=1 `
       if(req.tabName != undefined){
         if(req.tabName == 'SENT_FOR_APPROVAL'){
           query=query+' and ts.status IN("SENT_FOR_APPROVAL")'
@@ -92,7 +92,30 @@ export class TrimSwatchService {
       if(fromDate){
           query = query +` and DATE(created_at) BETWEEN '${fromDate}' AND '${toDate}'`;
       }
+
+      if (req.swatchNo !== undefined){
+        query = query + ` and ts.trim_swatch_number = '${req.swatchNo}'`
+      }
       
+      if(req.buyerId != undefined ){
+        query = query + ` and ts.buyer_id  = ${req.buyerId}`
+      }
+      if(req.grnNo != undefined ){
+        query = query + ` and ts.grn_number  = '${req.grnNo}'`
+      }
+      if(req.supplierId != undefined ){
+        query = query + ` and ts.supplier_id  = ${req.supplierId}`
+      }
+      if(req.styleNo != undefined ){
+        query = query + ` and ts.style_no  = '${req.styleNo}'`
+      }
+      if(req.itemNo != undefined ){
+        query = query + ` and ts.item_no  = '${req.itemNo}'`
+      }
+      if(req.approverId != undefined ){
+        query = query + ` and ts.approver_id = ${req.approverId}`
+      }
+
       const data = await this.repo.query(query)
       if (data.length>0){
         return new CommonResponseModel(true,1,'Data retrieved successfully',data)
@@ -242,6 +265,7 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
     FROM trim_swatch
     GROUP BY trim_swatch_number`
     const data = await this.dataSource.query(query)
+
 
     if(data.length>0){
       return new CommonResponseModel(true , 1 ,'Data retrieved',data)
