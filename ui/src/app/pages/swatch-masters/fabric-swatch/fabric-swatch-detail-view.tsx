@@ -276,7 +276,8 @@ export const FabricSwatchDetailView = () => {
                 {StatusDisplayEnum.find(item => item.name === data[0]?.status)?.displayVal || data[0]?.status}
               </span>
             </DescriptionsItem>
-            {data[0]?.status === 'REJECTED' ?(<DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Rejection Reason</span>}>
+            {data[0]?.status === 'REJECTED' ?(
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Rejection Reason</span>}>
               <span style={{fontSize:'16px'}}>
                 {data[0]?.rejectionReason || "--"}
               </span>

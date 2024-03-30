@@ -124,5 +124,31 @@ export class FabricSwatchController{
       }
     }
 
+    @Post('/getAllBuyers')
+    async getAllBuyers(): Promise<CommonResponseModel>{
+        try{
+            return await this.service.getAllBuyers()
+        }catch(err){
+            return this.appHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/getAllCreatedBy')
+    async getAllCreatedBy(): Promise<CommonResponseModel>{
+        try{
+            return await this.service.getAllCreatedBy()
+        }catch(err){
+            return this.appHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/getAllBrands')
+    async getAllBrands(): Promise<CommonResponseModel>{
+        try{
+            return await this.service.getAllBrands()
+        }catch(err){
+            return this.appHandler.returnException(CommonResponseModel,err)
+        }
+    }
 
 }

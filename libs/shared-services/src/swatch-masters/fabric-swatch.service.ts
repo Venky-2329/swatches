@@ -31,4 +31,16 @@ export class FabricSwatchService extends CommonAxiosServicePms{
     async getDataById(req: SwatchStatus):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL+ '/getDataById',req)
     }
+
+    async getAllBuyers():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL+ '/getAllBuyers')
+    }
+
+    async getAllCreatedBy():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL+ '/getAllCreatedBy')
+    }
+
+    async getAllBrands():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL+ '/getAllBrands')
+    }
 }

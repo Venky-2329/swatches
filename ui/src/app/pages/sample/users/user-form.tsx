@@ -53,6 +53,7 @@ export default function UserForm() {
 
   const onEmployee = (value,option)=>{
     form.setFieldsValue({email:option?.name})
+    form.setFieldsValue({departmentId: option?.department})
   }
 
   function onReset() {
@@ -91,7 +92,7 @@ export default function UserForm() {
                 <Form.Item label="Employee" name={'employeeId'} rules={[{ required: true }]}>
                   <Select placeholder='Select Employee' onChange={onEmployee}>
                     {employeeData?.map((item) => (
-                      <Option key={item.employeeId} value={item.employeeId} name={item.emailId}>
+                      <Option key={item.employeeId} value={item.employeeId} name={item.emailId} department={item.department}>
                         {item.employeeName}
                       </Option>
                     ))}
@@ -107,10 +108,10 @@ export default function UserForm() {
             <Row gutter={24}>
               <Col span={12}>
                 <Form.Item label="Department" name={'departmentId'} rules={[{ required: true }]}>
-                  <Select placeholder='Select Department'>
+                  <Select placeholder='Select Department' disabled>
                     {departData?.map((item) => (
                       <Option key={item.id} value={item.id}>
-                        {item.departmentName}
+                        <b>{item.departmentName}</b>
                       </Option>
                     ))}
                   </Select>

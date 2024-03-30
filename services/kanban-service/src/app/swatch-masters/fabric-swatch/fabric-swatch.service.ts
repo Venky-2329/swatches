@@ -103,6 +103,18 @@ export class FabricSwatchService{
         if(fromDate){
             query = query +` and DATE(created_at) BETWEEN '${fromDate}' AND '${toDate}'`;
         }
+        if(req.buyerId != undefined){
+          query = query + ` and fs.buyer_id = ${req.buyerId}`
+        }
+        if(req.brandId != undefined){
+          query = query + ` and fs.brand_id = ${req.brandId}`
+        }
+        if(req.swatchNo != undefined){
+          query = query + ` and fs.fabric_swatch_number = '${req.swatchNo}'`
+        }
+        if(req.createdBy != undefined){
+          query = query + ` and fs.created_user = ${req.createdBy}`
+        }
 
         const data = await this.dataSource.query(query)
 
@@ -171,7 +183,6 @@ async updateRejectedStatus(req: SwatchStatus): Promise<CommonResponseModel> {
 
 async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
   try{
-    console.log(req,'.........')
     let query = `SELECT fs.fabric_swatch_id AS fabricSwatchId,fs.fabric_swatch_number AS fabricSwatchNo, fs.style_no styleNo,fs.item_no AS itemNo,fs.category_type AS categoryType,fs.color,fs.po_number AS poNumber,
     fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.mill, fs.status,
     fs.buyer_id AS buyerId,b.buyer_name AS buyerName,
@@ -200,4 +211,55 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     throw(err)
   }
 }
+
+  async getAllBuyers():Promise<CommonResponseModel>{
+    try{
+      let query =`SELECT fs.buyer_id,sb.buyer_name AS buyerName
+      FROM fabric_swatch fs
+      LEFT JOIN swatch_buyer sb ON sb.buyer_id = fs.buyer_id
+      GROUP BY sb.buyer_name`
+      const data = await this.dataSource.query(query)
+
+      if(data.length > 0){
+        return new CommonResponseModel(true, 1, 'Data retrieved successfully', data)
+      }else{
+        return new CommonResponseModel(false, 2, 'No data found','[]')
+      }
+    }catch(err){
+      throw(err)
+    }
+  }
+
+  async getAllBrands():Promise<CommonResponseModel>{
+    try{
+      let query =`SELECT fs.brand_id,sb.brand_name AS brandName
+      FROM fabric_swatch fs
+      LEFT JOIN swatch_brands sb ON sb.brand_id = fs.brand_id
+      GROUP BY sb.brand_name`
+      const data = await this.dataSource.query(query)
+
+      if(data.length > 0){
+        return new CommonResponseModel(true, 1, 'Data retrieved successfully', data)
+      }else{
+        return new CommonResponseModel(false, 2, 'No data found','[]')
+      }
+    }catch(err){
+      throw(err)
+    }
+  }
+
+  async getAllCreatedBy():Promise<CommonResponseModel>{
+    try{
+      let query =`SELECT fs.created_user AS createdBy FROM fabric_swatch fs GROUP BY fs.created_user`
+      const data = await this.dataSource.query(query)
+
+      if(data.length > 0){
+        return new CommonResponseModel(true, 1, 'Data retrieved successfully', data)
+      }else{
+        return new CommonResponseModel(false, 2, 'No data found','[]')
+      }
+    }catch(err){
+      throw(err)
+    }
+  }
 }

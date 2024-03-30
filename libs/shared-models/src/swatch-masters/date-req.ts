@@ -9,6 +9,9 @@ export class DateReq{
     styleNo?: string;
     itemNo?: string;
     approverId ?: number;
+    brandId?: number
+    swatchNo?: string
+    createdBy?: string
 
     constructor(
         tabName?: string,
@@ -20,7 +23,9 @@ export class DateReq{
         poNo?: string,
         styleNo?: string,
         itemNo?: string,
-        approverId ?: number
+        approverId ?: number,
+        brandId?: number,
+        createdBy?: string
     ){
         this.tabName = tabName
         this.fromDate = fromDate
@@ -32,6 +37,8 @@ export class DateReq{
         this.styleNo = styleNo
         this.itemNo = itemNo
         this.approverId = approverId
+        this.brandId = brandId
+        this.createdBy = createdBy
     }
 }
 

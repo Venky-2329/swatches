@@ -5,50 +5,64 @@ import { Option } from "antd/es/mentions";
 import { ApprovalUserService, BuyerService, FabricSwatchService, SupplierService, TrimSwatchService } from "libs/shared-services";
 import moment from "moment";
 import { CSSProperties, useEffect, useState } from "react";
-import image from '../../../../../../upload-files/pexels-orlando-s-18290475-101bf.jpg'
+import image from '../../../../../../upload-files/pexels-kawaiiart-1767434-1484.jpg'
 import { useNavigate } from "react-router-dom";
 import { DateReq, TrimCardReq } from "libs/shared-models";
 
 export default function FabricSwatch() {
-   const [buyer , setBuyer] = useState<any[]>([])
-   const [grnNo , setGrnNo] = useState<any[]>([])
-   const [supplier , setSupplier] = useState<any[]>([])
-   const [poNo , setPoNo] = useState<any[]>([])
-   const [styleNo , setStyleNo] = useState<any[]>([])
-   const [itemNo , setItemNo] = useState<any[]>([])
-   const [approvalUser , setApprovalUser] = useState<any[]>([])
    const [data, setData] = useState([]);
    const [form] = Form.useForm()
    const navigate  = useNavigate()
    const service = new FabricSwatchService()
+   const [ buyerData, setBuyerData ] = useState<any[]>([])
+   const [ brandData, setBrandData ] = useState<any[]>([])
+   const [ swatchNoData, setSwatchNoData ] = useState<any[]>([])
+   const [ createdByData, setCreatedByData ] = useState<any[]>([])
 
     useEffect(()=> {
-        getTrimCards()
+        getCards()
+        getAllBuyers()
+        getAllCreatedBy()
+        getAllBrands()
     },[])
-
-    useEffect(()=>{
-        console.log(data,'llllllllllllllllll')
-    },[data])
 
     function onReset(){
         form.resetFields();
+        getCards()
     }
 
-    function getTrimCards() {
+    const getAllBuyers = ()=>{
+        service.getAllBuyers().then((res)=>{
+            setBuyerData(res.data)
+        })
+    }
+
+    const getAllBrands = ()=>{
+        service.getAllBrands().then((res)=>{
+            setBrandData(res.data)
+        })
+    }
+
+    const getAllCreatedBy = ()=>{
+        service.getAllCreatedBy().then((res)=>{
+            setCreatedByData(res.data)
+        })
+    }
+
+    function getCards() {
         const req = new DateReq();
-        console.log(req);
         
         if(form.getFieldValue('buyerId') != undefined){
             req.buyerId = form.getFieldValue('buyerId')
         }
-        if(form.getFieldValue('grnNo') != undefined){
-            req.grnNo = form.getFieldValue('grnNo')
+        if(form.getFieldValue('brandId') != undefined){
+            req.brandId = form.getFieldValue('brandId')
         }
-        if(form.getFieldValue('supplierId') != undefined){
-            req.supplierId = form.getFieldValue('supplierId')
+        if(form.getFieldValue('swatchNo') != undefined){
+            req.swatchNo = form.getFieldValue('swatchNo')
         }
-        if(form.getFieldValue('poNo') != undefined){
-            req.poNo = form.getFieldValue('poNo')
+        if(form.getFieldValue('createdBy') != undefined){
+            req.createdBy = form.getFieldValue('createdBy')
         }
         if(form.getFieldValue('styleNo') != undefined){
             req.styleNo = form.getFieldValue('styleNo')
@@ -74,16 +88,30 @@ export default function FabricSwatch() {
     }
 
     // const backgroundColors = ['#c8ffc8', '#ffffa0', '#facefa', '#ccccff','#ffd2d2','#d2e1ff','#d2faff','#ffeee8'];
-    const backgroundColors = ['#ffebcd', '#f5deb3', '#ffe4b5', '#fff8dc', '#f0e68c', '#e6e6fa', '#ffefd5', '#f0fff0'];
+    const backgroundColors = ['#FFE4E1', '#FFD8BE', '#FAFAD2', '#E9E9FF', '#EFDEEF', '#FFBCD9', '#EEE8AA', '#BCFFC3'];
 
     return(
         <Card title={
-            <span>Trim Swatch Cards</span>}
+            <span>Fabric Swatch Cards</span>}
             headStyle={{ backgroundColor: '#25529a', color: 'white' }}
             // {<Badge count={data.length} style={{ backgroundColor: '#52c41a' }}/>}
         >
         <Form form={form} layout="vertical">
             <Row gutter={24}>
+                <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
+                    <Form.Item label='Swatch No' name={'swatchNo'}>
+                        <Select 
+                        allowClear
+                        showSearch  
+                        optionFilterProp="children"
+                        placeholder='Select Swatch No' >
+                            {data?.map((items) =>{
+                                return <Option value={items.fabricSwatchNo}>{items.fabricSwatchNo}</Option>
+                            })}
+                        </Select>
+
+                    </Form.Item>
+                </Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
                     <Form.Item label='Buyer' name={'buyerId'}>
                         <Select 
@@ -91,55 +119,41 @@ export default function FabricSwatch() {
                         showSearch  
                         optionFilterProp="children"
                         placeholder='Select Buyer' >
-                            {buyer.map((items) =>{
-                                return <Option value={items.buyerId}>{items.buyerName}</Option>
+                            {buyerData?.map((items) =>{
+                                return <Option key={items.buyer_id} value={items.buyer_id}>{items.buyerName}</Option>
                             })}
                         </Select>
 
                     </Form.Item>
                 </Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
-                    <Form.Item label='GRN No' name={'grnNo'}>
+                    <Form.Item label='Brand' name={'brandName'}>
                         <Select 
                         allowClear
                         showSearch  
                         optionFilterProp="children"
-                        placeholder='Select GRN No' >
-                            {grnNo.map((items) =>{
-                                return <Option value={items.grnNo}>{items.grnNo}</Option>
+                        placeholder='Select Brand' >
+                            {brandData?.map((items) =>{
+                                return <Option key={items.brand_id} value={items.brand_id}>{items.brandName}</Option>
                             })}
                         </Select>
 
                     </Form.Item>
                 </Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
-                    <Form.Item label='Supplier' name={'supplierId'}>
+                    <Form.Item label='Created By' name={'createdBy'}>
                         <Select 
                         allowClear
                         showSearch  
                         optionFilterProp="children"
-                        placeholder='Select Supplier' >
-                            {supplier.map((items) =>{
-                                return <Option value={items.supplierId}>{items.supplierName}</Option>
-                            })}
-                        </Select>
-
-                    </Form.Item>
-                </Col>
-                <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
-                    <Form.Item label='Po No' name={'poNo'}>
-                        <Select 
-                        allowClear
-                        showSearch  
-                        optionFilterProp="children"
-                        placeholder='Select Po No' >
-                            {poNo.map((items) =>{
-                                return <Option value={items.poNo}>{items.PoNo}</Option>
+                        placeholder='Select Created By' >
+                            {createdByData?.map((items) =>{
+                                return <Option key={items.createdBy} value={items.createdBy}>{items.createdBy}</Option>
                             })}
                         </Select>
                     </Form.Item>
                 </Col>
-                <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
+                {/* <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
                     <Form.Item label='Style No' name={'styleNo'}>
                         <Select 
                         allowClear
@@ -166,25 +180,11 @@ export default function FabricSwatch() {
                         </Select>
 
                     </Form.Item>
-                </Col>
-                <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
-                    <Form.Item label='Approver' name={'approverId'}>
-                        <Select 
-                        allowClear
-                        showSearch  
-                        optionFilterProp="children"
-                        placeholder='Select Approver' >
-                            {approvalUser.map((items) =>{
-                                return <Option value={items.approvedUserId}>{items.approvedUserName}</Option>
-                            })}
-                        </Select>
-
-                    </Form.Item> 
-                </Col>
+                </Col> */}
             </Row>
             <Row justify='end'>
             <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2}}>  
-           <Button type='primary' onClick={getTrimCards}>Submit</Button>
+           <Button type='primary' onClick={getCards}>Submit</Button>
           </Col>
           <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 1 }}>
               <Button onClick={onReset}>Reset</Button>
