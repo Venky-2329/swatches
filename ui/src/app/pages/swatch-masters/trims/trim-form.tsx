@@ -40,6 +40,7 @@ export default function TrimSwatchUpload() {
   const [seasons, setSeasons] = useState([]);
   const users: any = JSON.parse(localStorage.getItem('auth'));
   const createdUser = users.userName;
+  const createdUserMail = users.userMail;
   const [selectedType, setSelectedType] = useState('Garment');
   const typesWithCommonFields = ['Garment', 'Trim'];
   const service = new BuyerService();
@@ -176,6 +177,7 @@ export default function TrimSwatchUpload() {
             mainService.photoUpload(formData).then((fileres) => {
               if (res.status) {
                 form.setFieldsValue({trimSwatchNumber: res?.data?.trimSwatchNumber})
+                form.setFieldsValue({trimSwatchId: res?.data?.trimSwatchId})
                 setResData(res.data)
                 res.data.filePath = fileres.data;
                 sendMailForApprovalUser()

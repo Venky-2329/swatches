@@ -2,6 +2,7 @@ export class DateReq{
     tabName?: string
     fromDate?: any
     toDate?: any
+    swatchNo ?: string
     buyerId?: number;
     grnNo?: string;
     supplierId ?: number;
@@ -17,6 +18,7 @@ export class DateReq{
         tabName?: string,
         fromDate?: any,
         toDate?: any,
+        swatchNo ?: string,
         buyerId?: number,
         grnNo?: string,
         supplierId ?: number,
@@ -30,6 +32,7 @@ export class DateReq{
         this.tabName = tabName
         this.fromDate = fromDate
         this.toDate = toDate
+        this.swatchNo = swatchNo
         this.buyerId = buyerId
         this.grnNo = grnNo
         this.supplierId = supplierId

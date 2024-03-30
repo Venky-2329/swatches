@@ -145,10 +145,10 @@ const TrimSwatchApproval = () => {
       title: 'Invoice No',
       dataIndex: 'invoice_no',
     },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-    },
+    // {
+    //   title: 'Status',
+    //   dataIndex: 'status',
+    // },
     {
       title: <div style={{textAlign:"center"}}>Action</div>,
       dataIndex: 'action',
@@ -220,7 +220,7 @@ const TrimSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-                (o) => !['rejectionReason','po_number','grn_number','grn_date','item_description','style_no'].includes(o.dataIndex)
+                (o) => !['rejection_reason','po_number','grn_number','grn_date','item_description','style_no'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
@@ -248,7 +248,7 @@ const TrimSwatchApproval = () => {
             rowClassName={columnColor}
             scroll={{ x: 'max-content' }}
             columns={columns.filter(
-                (o) => !['rejectionReason','action'].includes(o.dataIndex)
+                (o) => !['rejection_reason','action'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
