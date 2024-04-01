@@ -329,14 +329,14 @@ const FabricSwatchApproval = () => {
       style={{ textAlign: 'left' }}
       headStyle={{ backgroundColor: '#25529a', color: 'white' }}
       extra={
-        (userRole === 'FABRICS' && department === 2) && (
+        (userRole === 'ADMIN' || (department === 2 && userRole === 'STORES')) && (
           <Link to="/fabric-swatch-upload">
             <span style={{ color: 'white' }}>
-              <Button>Create </Button>{' '}
+              <Button>Create</Button>
             </span>
           </Link>
         )
-      }      
+      }            
       >
       <Tabs 
       onChange={tabsOnchange} 

@@ -5,7 +5,7 @@ import { Option } from "antd/es/mentions";
 import { ApprovalUserService, BuyerService, FabricSwatchService, SupplierService, TrimSwatchService } from "libs/shared-services";
 import moment from "moment";
 import { CSSProperties, useEffect, useState } from "react";
-import image from '../../../../../../upload-files/pexels-kawaiiart-1767434-1484.jpg'
+import image from '../../../../../../upload-files/AOB_SwatchBookPT4.webp'
 import { useNavigate } from "react-router-dom";
 import { DateReq, TrimCardReq } from "libs/shared-models";
 
@@ -205,13 +205,13 @@ export default function FabricSwatch() {
                     flexDirection: 'column' ,
                 };
                 return(
-                    <Col key={i.fabricSwatchId} xs={24} sm={12} md={8} lg={6} xl={4}>
+                    <Col key={i.fabricSwatchId} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6}}>
                         <Card
                         hoverable
                         style={cardStyle}
                         cover={
                             <img
-                            style={{ height: '100%', objectFit: 'cover' }}
+                            style={{ height: '200px', objectFit: 'cover' }}
                               alt="example"
                             //   src={'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/'+ i.fileName}
                             src={image}

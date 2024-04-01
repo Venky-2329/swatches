@@ -6,7 +6,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { EmailService, FabricSwatchService } from 'libs/shared-services';
 import { EmailModel, StatusDisplayEnum, SwatchStatus } from 'libs/shared-models';
-import img from '../../../../../../upload-files/pexels-kawaiiart-1767434-1484.jpg';
+import img from '../../../../../../upload-files/shubham-dhage-rzqjQjGvOBQ-unsplash-4104e.jpg';
 import TextArea from 'antd/es/input/TextArea';
 
 export const FabricSwatchDetailView = () => {
@@ -26,6 +26,8 @@ export const FabricSwatchDetailView = () => {
   const createUser = JSON.parse(localStorage.getItem('auth'));
   const department = createUser.departmentId
   const userRole = createUser.role
+  const userName = createUser.userName
+
 
   const location = useLocation();
   const currentRoute = location.pathname;
@@ -49,7 +51,7 @@ export const FabricSwatchDetailView = () => {
         if(res.status){
             message.success(res.internalMessage,2)
             navigate('/fabric-swatch-approval',{ state: { tab: 'APPROVED' } })
-            sendMailForApprovalUser('Approved')
+            sendMailForApprovalUser('Approved ✅')
         }else{
             message.error(res.internalMessage,2)
         }
@@ -69,7 +71,7 @@ export const FabricSwatchDetailView = () => {
         if(res.status){
             message.success(res.internalMessage,2)
             navigate('/fabric-swatch-approval',{state:{tab:'REJECTED'}})
-            sendMailForApprovalUser('Rejected')
+            sendMailForApprovalUser('Rejected ❌')
             setModal(false)
             onReset()
         }else{
@@ -148,7 +150,7 @@ export const FabricSwatchDetailView = () => {
                 message.success("Mail sent successfully")
             }
         } else {
-            message.success("Mail sent successfully")
+            message.success(`Alert mail sent to the ${data[0]?.createdUser}`)
         }
     }
 
@@ -168,6 +170,7 @@ export const FabricSwatchDetailView = () => {
   return (
     <div>
       <Card
+      style={{width:'100%'}}
         title={<span>Swatch No: {data[0]?.fabricSwatchNo}</span>}
         headStyle={{ backgroundColor: '#25529a', color: 'white' }}
         extra={
@@ -292,7 +295,7 @@ export const FabricSwatchDetailView = () => {
         lg={{ span: 6 }}
         xl={{ span: 10 }}
         >
-        <Card style={{ height: '331px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Card style={{ height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Image
             src={img}
             alt="Preview"
@@ -305,25 +308,25 @@ export const FabricSwatchDetailView = () => {
             }}
           />
         </Card>
-        {userRole === 'FABRICS' && department === 1 && data[0]?.status === 'SENT_FOR_APPROVAL' &&(
-            <>
-              <Divider type='horizontal'/>
-              <div style={{ textAlign: 'center' }}>
-                <Popconfirm
-                  title="Are you sure to accept?"
-                  onConfirm={() => fabricAccepted(data[0])}
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <Button style={{ backgroundColor: 'green', color: 'white' }}>APPROVE</Button>
-                </Popconfirm>
-                <Divider type='vertical'/>
-                <Button type='primary' danger onClick={() => handelReject(data[0])}>REJECT</Button>
-              </div>
-            </>
-          )}
         </Col>
         </Row>
+        { (userRole === 'ADMIN' || (userRole === 'MARKETING' && department === 1)) && data[0]?.status === 'SENT_FOR_APPROVAL' && (
+          <>
+            <Divider type='horizontal'/>
+            <div style={{ textAlign: 'center' }}>
+              <Popconfirm
+                title="Are you sure to accept?"
+                onConfirm={() => fabricAccepted(data[0])}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button style={{ backgroundColor: 'green', color: 'white' }}>APPROVE</Button>
+              </Popconfirm>
+              <Divider type='vertical'/>
+              <Button type='primary' danger onClick={() => handelReject(data[0])}>REJECT</Button>
+            </div>
+          </>
+        )}
       </Card>
       <Modal
         visible={modal}

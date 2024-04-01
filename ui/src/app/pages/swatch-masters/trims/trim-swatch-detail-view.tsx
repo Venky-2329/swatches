@@ -6,7 +6,7 @@ import { EmailService, TrimSwatchService } from "libs/shared-services"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import img from '../../../../../../upload-files/pexels-orlando-s-18290475-101bf.jpg'
+import img from '../../../../../../upload-files/cotton-swatches-cobalt.webp'
 
 export const TrimSwatchDetailView = () => {
     
@@ -240,7 +240,7 @@ export const TrimSwatchDetailView = () => {
                 }}
               />
             </Card>
-          {userRole === 'TRIMS' && department === 1 &&   data[0]?.status === 'SENT_FOR_APPROVAL' &&(
+          {(userRole === 'ADMIN' || (userRole === 'MARKETING' && department === 1)) &&   data[0]?.status === 'SENT_FOR_APPROVAL' &&(
           <>
           <Divider type='horizontal'/>
             <div style={{ textAlign: 'center' }}>

@@ -38,6 +38,9 @@ export function BasicLayout(props: BasicLayoutProps) {
   const createUser = JSON.parse(localStorage.getItem('auth'));
   const user = createUser.userName;
   const userRole = createUser.role;
+  const department = createUser.departmentId
+
+  console.log(user,'user',userRole,'userRole',department,'department')
 
   function handleLogout() {
     localStorage.clear();
@@ -129,29 +132,8 @@ export function BasicLayout(props: BasicLayoutProps) {
           icon: <UploadOutlined />,
           filepath: '../',
         },
-        // {
-        //   label: 'Fabric Approval',
-        //   key: 'fabric-swatch-approval',
-        //   path: '/fabric-swatch-approval',
-        //   icon: <UploadOutlined />,
-        //   filepath: '../',
-        // },
-        // {
-        //   label: 'Trim Approval',
-        //   key: 'trims-swatch-approval',
-        //   path: '/trims-swatch-approval',
-        //   icon: <UploadOutlined />,
-        //   filepath: '../',
-        // }
       ],
     },
-    // {
-    //   label: 'Design Studio',
-    //   key: 'sample-cards',
-    //   path: 'sample-cards',
-    //   icon: <RobotOutlined />,
-    //   filepath: '../',
-    // },
     {
       label: 'Fabric-Swatch-Cards',
       key: 'fabric-swatch-cards',
@@ -168,41 +150,22 @@ export function BasicLayout(props: BasicLayoutProps) {
     },
   ];
 
-  const filteredRouterList = baseRouterList.reduce((acc, route) => {
-    const department = createUser.departmentId;
-  
-    if (userRole === 'ADMIN') {
-      acc.push(route);
-    } else if (userRole === 'FABRICS' && department === 3) {
-      if (route.path === '/fabric-swatch-cards') {
-        acc.push(route);
+  function filterRoutesByRole(routes: any[], department: number, userRole: string): any[] {
+    if (department === 1 || department === 2) {
+      if (userRole === 'MARKETING' || userRole === 'STORES') {
+        return routes.filter(route =>
+          ['/swatch-card', '/fabric-swatch-cards', 'trim-swatch-cards'].includes(route.path)
+        );
       }
-    } else if (userRole === 'TRIMS' && department === 3) {
-      if (route.path === '/trim-swatch-cards') {
-        acc.push(route);
-      }
-    } else if (route.path === '/swatch-card') {
-      const swatchCardRoute = {
-        ...route,
-        children: route.children.filter((child) => {
-          if (userRole === 'TRIMS' && (department === 1 || department === 2)) {
-            return child.key === 'trims-swatch-approval';
-          } else if (userRole === 'FABRICS' && (department === 1 || department === 2)) {
-            return child.key === 'fabric-swatch-approval';
-          }
-        }),
-      };
-      acc.push(swatchCardRoute);
+    } else if (department === 3 && userRole === 'FACTORY') {
+      return routes.filter(route =>
+        ['/fabric-swatch-cards', 'trim-swatch-cards'].includes(route.path)
+      );
     }
-  
-    return acc;
-  }, []);
+    return routes;
+  }
 
-
-
-
-
-
+  const filteredRoutes = filterRoutesByRole(baseRouterList, department, userRole);
 
   return (
     <ProConfigProvider dark={dark}>
@@ -216,7 +179,8 @@ export function BasicLayout(props: BasicLayoutProps) {
           title="Swatch Card"
           logo={<LogoIcon />}
           locale="en-US"
-          // layout='top'
+          layout='mix'
+          siderWidth={240}
           colorPrimary="#035199"
           headerContentRender={(props) =>
             props.layout !== 'side' && document.body.clientWidth > 1000 ? (
@@ -230,7 +194,7 @@ export function BasicLayout(props: BasicLayoutProps) {
           }}
           route={{
             path: '/',
-            routes: treeRouter(filteredRouterList),
+            routes: treeRouter(filteredRoutes),
           }}
           location={{
             pathname,

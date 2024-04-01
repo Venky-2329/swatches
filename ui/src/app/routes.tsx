@@ -135,7 +135,6 @@ export const AppRoutes = () => {
           <Route  path="/separete-card/:id"  key="separete-card"  element={<SeparateView />} />
           <Route  path="/home-screen" key="home-screen" element={<HomeScreen />} />
           <Route path='/fabric-swatch-approval' key='/fabric-swatch-approval' element={<FabricSwatchApproval/>}/>
-         <Route path='/fabric-swatch-detail-view/:fabricSwatchId' key='/fabric-swatch-detail-view' element={<FabricSwatchDetailView/>}/>
 
           <Route
             path="/403"
@@ -154,6 +153,8 @@ export const AppRoutes = () => {
           key="/sample-digital-card"
           element={<ScannedCard />}
         />
+        <Route path='/fabric-swatch-detail-view/:fabricSwatchId' key='/fabric-swatch-detail-view' element={<FabricSwatchDetailView/>}/>
+
         <Route path='/trims-swatch-detail-view/:trimSwatchId' key='/trims-swatch-detail-view' element={<TrimSwatchDetailView/>}/>
 
       </Route>

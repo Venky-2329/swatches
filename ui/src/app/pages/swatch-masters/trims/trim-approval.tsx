@@ -197,7 +197,7 @@ const TrimSwatchApproval = () => {
       style={{ textAlign: 'center' }}
       headStyle={{ backgroundColor: '#25529a', color: 'white' }}
       extra={
-        (userRole === 'TRIMS' && department ===2 )&&(<span style={{ color: 'white' }}>
+        (userRole === 'ADMIN' || (department === 2 && userRole === 'STORES'))&&(<span style={{ color: 'white' }}>
           <Button onClick={gotoGrid}>Create</Button>{' '}
         </span>)
       }
