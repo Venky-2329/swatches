@@ -22,6 +22,8 @@ export class TrimSwatchDto{
     versionFlag?: number
     rejectionReason: string
     approverId: number
+    createdUserMail ? : string | null
+
 
 
     constructor(
@@ -46,6 +48,7 @@ export class TrimSwatchDto{
     versionFlag?: number,
     rejectionReason?: string,
     approverId?: number,
+    createdUserMail ? : string | null,
 
     ){
         this.trimSwatchId = trimSwatchId
@@ -69,6 +72,7 @@ export class TrimSwatchDto{
         this.versionFlag = versionFlag
         this.rejectionReason = rejectionReason
         this.approverId = approverId
+        this.createdUserMail = createdUserMail
     }
 
 }

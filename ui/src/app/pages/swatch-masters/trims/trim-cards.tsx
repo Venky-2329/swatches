@@ -279,8 +279,8 @@ export default function TrimCards() {
         <br/>
         <Row gutter={[24,24]} >
             {data.map((i,index) => {
-                const {buyerName , grn_number , style_no , item_no  , created_at , trim_swatch_id ,trim_swatch_number,status } = i
-                const date = moment(created_at).format('YYYY-MM-DD')
+                const {buyerName , grn_number , style_no , item_no  , createdAt , trim_swatch_id ,trim_swatch_number,status } = i
+                const date = moment(createdAt).format('YYYY-MM-DD')
                 const cardStyle : CSSProperties = {
                     background: backgroundColors[index % backgroundColors.length],
                     color: 'black',
@@ -308,7 +308,7 @@ export default function TrimCards() {
                   description={
                     <div className="print">
                       <div><b>{buyerName}</b></div>
-                      <div><b>{date}</b></div>
+                      <div><b>Created At&nbsp;&nbsp; :{date}</b></div>
                       <div>Style No&nbsp;&nbsp; : {style_no}</div>
                       <div>GRN No&nbsp;&nbsp; : {grn_number}</div>
                       <div>Swatch No &nbsp; : {trim_swatch_number}</div>

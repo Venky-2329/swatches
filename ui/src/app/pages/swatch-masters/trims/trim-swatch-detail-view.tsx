@@ -83,6 +83,7 @@ export const TrimSwatchDetailView = () => {
           const swatchDetails = new EmailModel();
           swatchDetails.swatchNo = data[0]?.trim_swatch_number
           swatchDetails.to = 'kushal.siddegowda@shahi.co.in'
+          // swatchDetails.to = data[0]?.createdUserMail
           swatchDetails.html = `
           <html>
           <head>
@@ -148,7 +149,7 @@ export const TrimSwatchDetailView = () => {
                   message.success("Mail sent successfully")
               }
           } else {
-              message.success(`Alert mail sent to the ${userName}` )
+              message.success(`Alert mail sent to the ${data[0]?.createdUser}` )
           }
       }
   
@@ -199,7 +200,23 @@ export const TrimSwatchDetailView = () => {
                 <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Invoice No</span> }><span style={{fontSize:'16px'}}>{data[0]?.invoice_no || '--'}</span></DescriptionsItem>
                 <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN No</span> }><span style={{fontSize:'16px'}}>{data[0]?.grn_number || '--'}</span></DescriptionsItem>
                 <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN Date</span>}><span style={{fontSize:'16px'}}>{moment(data[0]?.grn_date || '--').format('YYYY-MM-DD')}</span></DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Created By</span> }>
+                  <span style={{fontSize:'16px'}}>
+                    {data[0]?.createdUser}
+                  </span>
+                </DescriptionsItem>
+                <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Created On</span> }>
+                  <span style={{fontSize:'16px'}}>
+                    {data[0]?.createdAt ? moment(data[0]?.createdAt).format('YYYY-MM-DD') : '-'}
+                  </span>
+                </DescriptionsItem>
                 <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span> }><span style={{fontSize:'16px'}}> {StatusDisplayEnum.find(item => item.name === data[0]?.status)?.displayVal || data[0]?.status}</span></DescriptionsItem>
+                {data[0]?.status === 'REJECTED' ?(
+              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Rejection Reason</span>}>
+                <span style={{fontSize:'16px'}}>
+                  {data[0]?.rejection_reason || "--"}
+                </span>   
+              </DescriptionsItem>):[]}
               </Descriptions>
             </Card>
             </Col>

@@ -65,4 +65,7 @@ export class TrimSwatchDto {
     @ApiProperty()
     approverId: number
 
+    @ApiProperty()
+    createdUserMail: string
+
 }
