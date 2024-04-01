@@ -11,7 +11,6 @@ export class DateReq{
     itemNo?: string;
     approverId ?: number;
     brandId?: number
-    swatchNo?: string
     createdBy?: string
 
     constructor(
