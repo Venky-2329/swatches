@@ -43,7 +43,7 @@ export default function SeparateView() {
           <Image
             style={{ background: '#3f4648' }}
                 src={
-                  'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/' +
+                  'http://ddr7.shahi.co.in/design_room/dist/services/kanban-service/upload-files/' +
                   data[0]?.fileName
                 }
           />

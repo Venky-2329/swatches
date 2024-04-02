@@ -38,7 +38,7 @@ export default function HomeScreen() {
                   background:'rgb(0 0 0 / 59%)'
                 }}
                 src={
-                  'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/' +
+                  'http://ddr7.shahi.co.in/design_room/dist/services/kanban-service/upload-files/' +
                   i.fileName
                 }
               ></img>

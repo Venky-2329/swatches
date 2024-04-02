@@ -49,7 +49,7 @@ export default function ScannedCard() {
                 alt="example"
                 style={{ height: '100%', objectFit: 'cover' }}
                 src={
-                  'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/' +
+                  'http://ddr7.shahi.co.in/design_room/dist/services/kanban-service/upload-files/' +
                   data[0]?.fileName
                 }
               />
