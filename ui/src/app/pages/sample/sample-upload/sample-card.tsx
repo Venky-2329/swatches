@@ -269,7 +269,7 @@ function onReset(){
                   <img
                   style={{ height: '100%', objectFit: 'cover' }}
                     alt="example"
-                    src={'http://ddr7.shahi.co.in/design_room/dist/services/kanban-service/upload-files/'+ i.fileName}
+                    src={'http://ddr7.shahi.co.in/services/kanban-service/upload-files/'+ i.fileName}
                     onClick={() => ViewDetails(i)}
                   />
                 }
