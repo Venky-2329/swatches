@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { StatusEnum } from "libs/shared-models"
+import { FabricUploadDto } from "./fabric-upload.dto"
 
 export class FabricSwatchDto{
     @ApiProperty()
@@ -30,10 +31,10 @@ export class FabricSwatchDto{
     poNumber: string
     @ApiProperty()
     grnNumber: string
-    @ApiProperty()
-    fileName: string;
-    @ApiProperty()
-    filePath: string;
+    // @ApiProperty()
+    // fileName: string;
+    // @ApiProperty()
+    // filePath: string;
     @ApiProperty()
     status: StatusEnum;
     @ApiProperty()
@@ -52,5 +53,7 @@ export class FabricSwatchDto{
     versionFlag: number
     @ApiProperty()
     approverId: number
+    @ApiProperty({type:[FabricUploadDto]})
+    uploadInfo: FabricUploadDto[]
 
 }
