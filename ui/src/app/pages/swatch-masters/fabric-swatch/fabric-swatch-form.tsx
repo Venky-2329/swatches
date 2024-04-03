@@ -224,7 +224,8 @@ export default function FabricSwatchUpload() {
     async function sendMailForApprovalUser() {
         const swatchDetails = new EmailModel();
         swatchDetails.swatchNo = form.getFieldValue('fabricSwatchNumber')
-        swatchDetails.to = form.getFieldValue('approverMail')
+        swatchDetails.to = 'playstore2636@gmail.com'
+        // swatchDetails.to = form.getFieldValue('approverMail')
         swatchDetails.html = `
         <html>
         <head>

@@ -1,5 +1,6 @@
 import { CommonResponseModel, DateReq,  TrimSwatchDto, TrimSwatchStatus } from "libs/shared-models";
 import { CommonAxiosServicePms } from "../common-axios-service-prs";
+import { Console } from "console";
 
 export class TrimSwatchService extends CommonAxiosServicePms{
     URL = '/trim-swatch'
@@ -10,6 +11,7 @@ export class TrimSwatchService extends CommonAxiosServicePms{
     }
 
     async photoUpload(file: any):Promise<CommonResponseModel>{
+        console.log(file,';shared ser')
         return this.axiosPostCall(this.URL + '/photoUpload',file)
     }
 

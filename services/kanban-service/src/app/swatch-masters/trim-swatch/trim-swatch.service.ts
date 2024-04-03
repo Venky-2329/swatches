@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TrimSwatchEntity } from './entities/trim-swatch.entity';
 import { DataSource, Repository } from 'typeorm';
 import { CommonResponseModel, DateReq, StatusEnum, TrimSwatchStatus } from 'libs/shared-models';
+import { TrimUploadEntity } from './entities/trim-swatch-upload-entity';
 
 @Injectable()
 export class TrimSwatchService {
@@ -56,18 +57,48 @@ export class TrimSwatchService {
     }
   }
 
-  async updatePath(filePath: string , filename:string , trimSwatchId: number):Promise <CommonResponseModel>{
+  async updatePath(filePath: any, trimSwatchId: number): Promise<CommonResponseModel> {
     try {
-      const filePathUpdate = await this.repo.update({trimSwatchId : trimSwatchId} , {filePath: filePath , fileName:filename})
-      if (filePathUpdate.affected){
-        return new CommonResponseModel(true , 1 ,'Uploaded successfully' , filePath)
-      }else{
+      console.log(filePath)
+      let flag = true;
+      const entities=[]
+      for (const res of filePath) {
+        const entity = new TrimUploadEntity()
+        entity.fileName = res.filename
+        entity.filePath = res.path
+        const trimEntity = new TrimSwatchEntity()
+        trimEntity.trimSwatchId = trimSwatchId
+        entity.trimInfo = trimEntity
+        entities.push(entity);
+      }
+      const uploadDoc = await this.repo.save(entities);
+      if (!uploadDoc) {
+        flag = false;
+      }
+      if (flag) {
+        return new CommonResponseModel(true, 11, 'uploaded successfully', filePath);
+      }
+      else {
         return new CommonResponseModel(false, 11, 'uploaded failed', filePath);
       }
-    } catch (error) {
-      throw (error)
+    }
+    catch (error) {
+      console.log(error);
     }
   }
+
+  // async updatePath(filePath: string , filename:string , trimSwatchId: number):Promise <CommonResponseModel>{
+  //   try {
+  //     const filePathUpdate = await this.repo.update({trimSwatchId : trimSwatchId} , {filePath: filePath , fileName:filename})
+  //     if (filePathUpdate.affected){
+  //       return new CommonResponseModel(true , 1 ,'Uploaded successfully' , filePath)
+  //     }else{
+  //       return new CommonResponseModel(false, 11, 'uploaded failed', filePath);
+  //     }
+  //   } catch (error) {
+  //     throw (error)
+  //   }
+  // }
 
   async getAllTrimSwatchData(req: DateReq):Promise<CommonResponseModel>{
     try {

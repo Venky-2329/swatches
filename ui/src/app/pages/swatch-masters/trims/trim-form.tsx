@@ -112,6 +112,7 @@ export default function TrimSwatchUpload() {
   const onUserChange =(value,option)=>{
     console.log(option?.name,';;;;;;;;;;;;;;;;;')
     form.setFieldsValue({approverName: option?.name})
+    form.setFieldsValue({approverMail : option?.mail})
 }
 
   const handleBeforeUpload = async (file) => {
@@ -127,7 +128,7 @@ export default function TrimSwatchUpload() {
 
       if (fileList.length == 3) {
         notification.info({
-          message: 'You Cannot Upload More Than One File At A Time',
+          message: 'You Cannot Upload More Than Three File At A Time',
         });
         return true;
       } else {
@@ -159,7 +160,7 @@ export default function TrimSwatchUpload() {
   };
 
   const uploadFieldProps = {
-    multiple: false,
+    multiple: true,
     onRemove: handleRemove,
     beforeUpload: handleBeforeUpload,
     progress: {
@@ -179,13 +180,14 @@ export default function TrimSwatchUpload() {
     if (fileList.length > 0) {
       console.log(values,'...................')
       mainService.createTrimSwatch(values).then((res) => {
+        console.log(res.data)
         if (res.status) {
           if (fileList.length > 0) {
             const formData = new FormData();
             fileList.forEach((file: any) => {
               formData.append('file', file);
             });
-            formData.append('id', `${res.data.sampleId}`);
+            formData.append('trimSwatchId', `${res.data.trimSwatchId}`);
             mainService.photoUpload(formData).then((fileres) => {
               if (res.status) {
                 form.setFieldsValue({trimSwatchNumber: res?.data?.trimSwatchNumber})
@@ -250,8 +252,8 @@ export default function TrimSwatchUpload() {
     async function sendMailForApprovalUser() {
         const swatchDetails = new EmailModel();
         swatchDetails.swatchNo = form.getFieldValue('trimSwatchNumber');
-        swatchDetails.to = 'kushal.siddegowda@shahi.co.in';
-        // swatchDetails.to = form.getFieldValue('approverMail')
+        // swatchDetails.to = 'kushal.siddegowda@shahi.co.in';
+        swatchDetails.to = form.getFieldValue('approverMail')
         // TODO:
         swatchDetails.html = `
         <html>
@@ -588,7 +590,7 @@ export default function TrimSwatchUpload() {
                 >
                   {employeeData.map((item) => {
                     return (
-                      <Option key={item.approvedId} value={item.approvedId} name={item.approvedUserName}>
+                      <Option key={item.approvedId} value={item.approvedId} name={item.approvedUserName} mail= {item.emailId}>
                         {item.emailId}
                         </Option>
                     );
@@ -597,9 +599,12 @@ export default function TrimSwatchUpload() {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-      <Form.Item label="Approver " name={'approverName'}>
-        <Input disabled />
-      </Form.Item>
+        <Form.Item label="Approver " name={'approverName'}>
+          <Input disabled />
+        </Form.Item>
+
+        <Form.Item  name={'approverMail'} hidden>
+        </Form.Item>
     </Col>
           </Row>
           <Row gutter={24}>
@@ -616,30 +621,15 @@ export default function TrimSwatchUpload() {
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={handlePreview}
-                  showUploadList = {true}
-                  // showPreviewIcon={true}
                   style={{ width: '200px', height: '200px' }}
                   accept=".png,.jpeg,.PNG,.jpg,.JPG"
                 >
                   {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
-                  {previewImage && (
-                <Image
-                  wrapperStyle={{ display: 'none' }}
-                  preview={{
-                    visible: previewOpen,
-                    onVisibleChange: (visible) => setPreviewOpen(visible),
-                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                  }}
-                  src={previewImage}/>)}
+
 
                 </Upload>
-                
-                
               </Form.Item>
-              
             </Col>
-            
-            
           </Row>
           <br></br>
           <Row gutter={24} style={{ alignContent: 'end' }}>
