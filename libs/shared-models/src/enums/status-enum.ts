@@ -8,5 +8,6 @@ export enum StatusEnum{
 export const StatusDisplayEnum = [
     {name:"APPROVED", displayVal:'APPROVED' },
     {name:"REJECTED", displayVal:'REJECTED' },
-    {name:"SENT_FOR_APPROVAL", displayVal:'SENT FOR APPROVAL' }
+    {name:"SENT_FOR_APPROVAL", displayVal:'SENT FOR APPROVAL' },
+    {name:"REWORK", displayVal:'REWORK' }
 ]
