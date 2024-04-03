@@ -20,7 +20,7 @@ import { SampleUpload } from '../masters/sample-upload/entity/sample-upload.enti
     // password: 'Schemax@2023',
     // database: 'internal_apps',
 
-    host: '172.20.50.170',
+    host: 'localhost',
     username: 'sql_ddr7',
     password: 'mjxhMXEHaS2rnxE6',
     database: 'sql_ddr7',

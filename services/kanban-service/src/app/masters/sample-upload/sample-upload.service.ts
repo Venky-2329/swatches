@@ -73,11 +73,11 @@ export class SampleUploadService {
     let query = `SELECT su.mill AS mill, su.smv as smv ,su.created_at as createdDate, su.quantity as quantity, su.brand_id AS brandId , su.sample_id AS sampleId ,su.style_no AS styleNo, su.item_no AS itemNo , su.item_description AS itemDescription ,
     su.category_id AS categoryId , su.season_id AS seasonId , su.fabric_content AS fabricContent , su.fabric_count AS fabricCount , su.gsm AS gsm , su.fob AS fob ,
     su.qty_per_season AS qtyPerSeason, su.location_id AS locationId , su.file_name AS fileName , su.file_path AS filePath,sb.brand_name AS brandName,
-    CONCAT(sc.category_name ,' - ',su.category_type ) AS categoryName,sl.location_name AS locationName,ss.season_name AS seasonName,su.category_type AS categoryType FROM internal_apps.sample_upload su
-    LEFT JOIN internal_apps.sample_brands_master sb ON sb.brand_id = su.brand_id 
-    LEFT JOIN internal_apps.sample_category_master sc ON sc.category_id = su.category_id
-    LEFT JOIN internal_apps.sample_location_master sl ON sl.location_id = su.location_id 
-    LEFT JOIN internal_apps.sample_season_master ss ON ss.season_id = su.season_id WHERE su.sample_id > 0 AND su.is_active = 1 `;
+    CONCAT(sc.category_name ,' - ',su.category_type ) AS categoryName,sl.location_name AS locationName,ss.season_name AS seasonName,su.category_type AS categoryType FROM sql_ddr7.sample_upload su
+    LEFT JOIN sql_ddr7.sample_brands_master sb ON sb.brand_id = su.brand_id 
+    LEFT JOIN sql_ddr7.sample_category_master sc ON sc.category_id = su.category_id
+    LEFT JOIN sql_ddr7.sample_location_master sl ON sl.location_id = su.location_id 
+    LEFT JOIN sql_ddr7.sample_season_master ss ON ss.season_id = su.season_id WHERE su.sample_id > 0 AND su.is_active = 1 `;
     if (req.brandId) {
       query = query + ` AND su.brand_id =  ${req.brandId}`;
     }
