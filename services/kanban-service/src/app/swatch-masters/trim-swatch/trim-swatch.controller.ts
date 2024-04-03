@@ -31,7 +31,7 @@ export class TrimSwatchController {
   @ApiBody({type : TrimSwatchDto})
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file' , {
-    limits : {files:1},
+    limits : {files:3},
     storage : diskStorage({
       destination: './upload-files',
       filename: (req , file , callback) => {
@@ -169,6 +169,16 @@ async getSwatchNo():Promise<CommonResponseModel>{
   } catch (error) {
     return this.appHandler.returnException(CommonResponseModel,error)
   }
+}
+
+@Post('/updateReworkStatus')
+@ApiBody({type: TrimSwatchStatus})
+async updateReworkStatus(@Body() req: any): Promise<CommonResponseModel>{
+    try{
+        return await this.service.updateReworkStatus(req)
+    }catch(err){
+        return this.appHandler.returnException(CommonResponseModel,err)
+    }
 }
 
 }

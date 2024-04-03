@@ -227,7 +227,7 @@ export const TrimSwatchDetailView = () => {
             lg={{ span: 6 }}
             xl={{ span: 10 }}
             >
-            <Card style={{ height: '331px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Card style={{ height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Image
                 src={img}
                 alt="Preview"
@@ -240,7 +240,10 @@ export const TrimSwatchDetailView = () => {
                 }}
               />
             </Card>
-          {(userRole === 'ADMIN' || (userRole === 'MARKETING' && department === 1)) &&   data[0]?.status === 'SENT_FOR_APPROVAL' &&(
+          
+            </Col>
+            </Row>
+            {(userRole === 'ADMIN' || (userRole === 'MARKETING' && department === 1)) &&   data[0]?.status === 'SENT_FOR_APPROVAL' &&(
           <>
           <Divider type='horizontal'/>
             <div style={{ textAlign: 'center' }}>
@@ -257,8 +260,6 @@ export const TrimSwatchDetailView = () => {
             </div>
             </>
             )}
-            </Col>
-            </Row>
           </Card>
           <Modal
             visible={modal}

@@ -64,14 +64,17 @@ export class TrimSwatchStatus{
     trimSwatchId:number;
     trimSwatchNumber?:string;
     rejectionReason?: string;
+    reworkReason?: string;
 
     constructor(
         trimSwatchId:number,
         trimSwatchNumber?:string,
-        rejectionReason?: string
+        rejectionReason?: string,
+        reworkReason?: string
     ){
         this.trimSwatchId = trimSwatchId
         this.trimSwatchNumber = trimSwatchNumber
         this.rejectionReason = rejectionReason
+        this.reworkReason = reworkReason
     }
 }

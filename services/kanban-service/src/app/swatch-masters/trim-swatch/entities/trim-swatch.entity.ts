@@ -1,5 +1,6 @@
 import { StatusEnum } from "libs/shared-models";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { TrimUploadEntity } from "./trim-swatch-upload-entity";
 
 @Entity('trim_swatch')
 export class TrimSwatchEntity {
@@ -125,7 +126,7 @@ export class TrimSwatchEntity {
 
     @Column('varchar',{
         name:'rejection_reason',
-        length: 100
+        length: 255
     })
     rejectionReason: string
 
@@ -134,5 +135,14 @@ export class TrimSwatchEntity {
         nullable:false,
     })
     approverId: number
+
+    @Column('varchar',{
+        name:'rework_reason',
+        length: 255
+    })
+    reworkReason: string
+
+    @OneToMany(() => TrimUploadEntity , trimUpload => trimUpload.trimInfo , {cascade: true})
+    uploadInfo : TrimUploadEntity[]
 
 }

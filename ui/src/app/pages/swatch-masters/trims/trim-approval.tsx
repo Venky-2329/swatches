@@ -93,7 +93,7 @@ const TrimSwatchApproval = () => {
     },
     {
       title: 'Created At',
-      dataIndex: 'created_at',
+      dataIndex: 'createdAt',
       render: (createdAt) => {
         const date = new Date(createdAt);
         const year = date.getFullYear();
@@ -152,6 +152,7 @@ const TrimSwatchApproval = () => {
     {
       title: <div style={{textAlign:"center"}}>Action</div>,
       dataIndex: 'action',
+      align:'center',
       render: (text, rowData) => {
         return(
           <span>
@@ -160,9 +161,9 @@ const TrimSwatchApproval = () => {
             <EyeOutlined  onClick={() => {
                                 navigate(`/trims-swatch-detail-view/${rowData.trim_swatch_id}`)
                             }}
-                            style={{ color: "blue", fontSize: 20 }}
+                            style={{ color: "blue", fontSize: 20  }}
             />
-            <Divider type='vertical' />
+            {/* <Divider type='vertical' /> */}
           </Tooltip>
           </span> 
         )
@@ -171,6 +172,10 @@ const TrimSwatchApproval = () => {
     {
       title:'Rejection Reason',
       dataIndex: 'rejection_reason'
+    },
+    {
+      title:'Rework Reason',
+      dataIndex: 'rework_reason'
     }
   ]
 
@@ -220,7 +225,7 @@ const TrimSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-                (o) => !['rejection_reason','po_number','grn_number','grn_date','item_description','style_no'].includes(o.dataIndex)
+                (o) => !['rework_reason','rejection_reason','po_number','grn_number','grn_date','item_description','style_no'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
@@ -248,7 +253,7 @@ const TrimSwatchApproval = () => {
             rowClassName={columnColor}
             scroll={{ x: 'max-content' }}
             columns={columns.filter(
-                (o) => !['rejection_reason','action'].includes(o.dataIndex)
+                (o) => !['rejection_reason','action' ,'rework_reason'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
@@ -274,7 +279,7 @@ const TrimSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-              (o) => !['action'].includes(o.dataIndex)
+              (o) => !['action','rework_reason'].includes(o.dataIndex)
             )}
             dataSource={data}
             size="small"
@@ -286,6 +291,28 @@ const TrimSwatchApproval = () => {
             showIcon
             style={{ width: "160px", margin: "auto" }}/>
           )}
+        </TabPane>
+        <TabPane  
+        key={StatusEnum.REWORK}
+        tab = { <span style={{ color: 'orange'}}>REWORK : {countData[0]?.reworkCount} </span> }
+        >
+          {data.length > 0 ? (
+            <Table 
+            pagination = {{
+              onChange(current) { setPage(current) },
+            }}
+            scroll={{ x: true }}
+            columns = {columns.filter((o) => !['rejection_reason'].includes(o.dataIndex))}
+            dataSource = {data}
+            size = 'small'
+            bordered
+            ></Table>):(
+              <Alert
+              message = "No data available☹️" 
+              type="info" 
+              showIcon
+              style={{ width: "160px", margin: "auto" }}/>
+            )}
         </TabPane>
       </Tabs>
       {/* <Modal

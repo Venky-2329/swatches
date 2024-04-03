@@ -52,4 +52,8 @@ export class TrimSwatchService extends CommonAxiosServicePms{
     async getSwatchNo():Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL+ '/getSwatchNo')
     }
+
+    async updateReworkStatus(req?:TrimSwatchStatus): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL+ '/updateRejectedStatus',req);
+    }
 }

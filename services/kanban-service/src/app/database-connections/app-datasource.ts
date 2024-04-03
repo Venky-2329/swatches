@@ -29,7 +29,7 @@ export const typeOrmConfig: DataSourceOptions = {
   // host: 'localhost',
   // username: 'root',
   // password: '',
-  // database: 'testing',
+  // database: 'test',
   entities: [
     BrandsEntity,
     CategoryEntity,

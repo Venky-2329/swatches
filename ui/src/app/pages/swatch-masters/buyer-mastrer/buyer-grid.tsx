@@ -64,7 +64,7 @@ import { BuyerDto, BuyerReq } from 'libs/shared-models';
           message.success(res.internalMessage, 2);
           getData();
         } else {
-          message.error(res.internalMessage);
+          message.error(res.internalMessage,2);
         }
       });
     };
@@ -116,8 +116,8 @@ import { BuyerDto, BuyerReq } from 'libs/shared-models';
               }}
               title={
                 rowData.isActive
-                  ? 'Are you sure to Deactivate Address ?'
-                  : 'Are you sure to Activate Address ?'
+                  ? 'Are you sure to Deactivate Buyer ?'
+                  : 'Are you sure to Activate Buyer ?'
               }
             >
               <Switch

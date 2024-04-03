@@ -90,6 +90,9 @@ export class TrimSwatchService {
         if(req.tabName == 'REJECTED'){
             query= query+' and ts.status IN("REJECTED")'
         }
+        if(req.tabName == 'REWORK'){
+            query= query+' and ts.status IN("REWORK")'
+        }
       }
       if(fromDate){
           query = query +` and DATE(createdAt) BETWEEN '${fromDate}' AND '${toDate}'`;
@@ -125,7 +128,7 @@ export class TrimSwatchService {
         return new CommonResponseModel(false,0,'No data found',[])
       }
     } catch (error) {
-      throw(error)
+      throw(error) 
     }
   }
 
@@ -134,7 +137,8 @@ export class TrimSwatchService {
         let query = `SELECT
         COALESCE(SUM(CASE WHEN STATUS = 'sent_for_approval' THEN 1 ELSE 0 END),0) AS openCount,
         COALESCE(SUM(CASE WHEN STATUS = 'approved' THEN 1 ELSE 0 END),0) AS approvedCount,
-        COALESCE(SUM(CASE WHEN STATUS = 'rejected' THEN 1 ELSE 0 END),0) AS rejectedCount
+        COALESCE(SUM(CASE WHEN STATUS = 'rejected' THEN 1 ELSE 0 END),0) AS rejectedCount,
+        COALESCE(SUM(CASE WHEN STATUS = 'rework' THEN 1 ELSE 0 END),0) AS reworkCount
         FROM trim_swatch`
         const result = await this.repo.query(query)
         if (result.length) {
@@ -276,6 +280,22 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
     }
   }
 
+  async updateReworkStatus(req: TrimSwatchStatus): Promise<CommonResponseModel> {
+    try {
+        const reworkedData = await this.repo.findOne({ where: { trimSwatchId : req.trimSwatchId } });
+  
+        if (!reworkedData) {
+            throw new Error('Trim data not found');
+        }
+  
+        reworkedData.status = StatusEnum.REWORK;
+        reworkedData.reworkReason = req.reworkReason;
+        await this.repo.save(reworkedData);
+        return new CommonResponseModel(true, 1, 'Rework done successfully', reworkedData);
+    } catch (err) {
+        throw err;
+    }
+  }
 
 
 }

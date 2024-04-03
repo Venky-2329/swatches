@@ -11,10 +11,12 @@ import {
   Upload,
   message,
   notification,
+  Spin,
+  Image,
 } from 'antd';
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useEffect, useState } from 'react';
 import { SyncOutlined } from '@ant-design/icons'
+import type {  UploadFile, UploadProps } from 'antd';
 import {
   ApprovalUserService,
   BuyerService,
@@ -28,6 +30,7 @@ import imageCompression from 'browser-image-compression';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { EmailModel } from 'libs/shared-models';
+import dayjs from 'dayjs'
 
 export default function TrimSwatchUpload() {
   const {Option} = Select;
@@ -51,6 +54,11 @@ export default function TrimSwatchUpload() {
   const employeeService = new ApprovalUserService()
   const [ employeeData, setEmployeeData ] = useState<any[]>([])
   const [ resData, setResData ] = useState<any[]>([])
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+
+
 
 
 
@@ -95,16 +103,20 @@ export default function TrimSwatchUpload() {
   }
 
   const handleRemove = (file) => {
-    setFileList([]);
-    // Additional logic for removing file
+    // setFileList([]);
+    console.log(file,'-----------fileId')
+    const updatedFileList = fileList.filter(item => item.uid !== file.uid);
+    setFileList(updatedFileList);
   };
 
   const onUserChange =(value,option)=>{
     console.log(option?.name,';;;;;;;;;;;;;;;;;')
-    form.setFieldsValue({approverMail: option?.name})
+    form.setFieldsValue({approverName: option?.name})
 }
 
   const handleBeforeUpload = async (file) => {
+    console.log(file,'-------------------------')
+    setUploading(true)
     if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
       notification.info({ message: 'Only png, jpeg, jpg files are allowed!' });
       return true;
@@ -113,13 +125,15 @@ export default function TrimSwatchUpload() {
     try {
       const compressedImage = await compressImage(file);
 
-      if (fileList.length === 1) {
+      if (fileList.length == 3) {
         notification.info({
           message: 'You Cannot Upload More Than One File At A Time',
         });
         return true;
       } else {
         setFileList([...fileList, compressedImage]);
+        setUploading(false)
+
         return false;
       }
     } catch (error) {
@@ -158,10 +172,8 @@ export default function TrimSwatchUpload() {
     },
     fileList: fileList,
   };
+  console.log(uploadFieldProps,'kkkkkkkkkkkkkkk')
 
-  //   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-  //     setFileList(newFileList);
-  //   };
 
   function createUpload(values) {
     if (fileList.length > 0) {
@@ -202,32 +214,37 @@ export default function TrimSwatchUpload() {
     }
   }
 
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as RcFile);
-        reader.onload = () => resolve(reader.result as string);
-      });
+
+
+  const getBase64 = (file: UploadFile ): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file.originFileObj as Blob);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file);
     }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
   };
 
   function gotoGrid() {
     navigate('/trims-swatch-approval');
   }
 
-  const handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-      setUploading(true);
-    } else {
-      setUploading(false);
-    }
-  };
+  // const handleChange = (info) => {
+  //   console.log(info.file.status)
+  //   if (info.file.status === 'uploading') {
+  //     setUploading(true);
+  //   } else {
+  //     setUploading(false);
+  //   }
+  // };
 
   let mailerSent = false;
     async function sendMailForApprovalUser() {
@@ -316,6 +333,26 @@ export default function TrimSwatchUpload() {
     }
   return (
     <>
+    {/* Loading overlay */}
+    {uploading && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(255, 255, 255, 0.7)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000, // Adjust the z-index as needed
+            }}
+          >
+            <Spin size="large" />
+            <div style={{ marginLeft: 10 }}> Uploading...</div>
+          </div>
+        )}
       <Card
         title="Trim Swatch"
         headStyle={{ backgroundColor: '#25529a', color: 'white' }}
@@ -339,7 +376,7 @@ export default function TrimSwatchUpload() {
               <Form.Item
                 label="GRN Date"
                 name={'grnDate'}
-                initialValue={moment()}
+                initialValue={dayjs()}
                 rules={[
                   {
                     required: false,
@@ -535,10 +572,10 @@ export default function TrimSwatchUpload() {
                 </Form.Item>
               </Col>
             <Col
-              xs={24} sm={12} md={8} lg={6} xl={4}
+              xs={24} sm={12} md={8} lg={6} xl={6}
             >
               <Form.Item
-                label="Approver(Marketing)"
+                label="Approver Mail(Marketing)"
                 name={'approverId'}
                 rules={[{ required: true, message: 'Approver is required' }]}
               >
@@ -551,8 +588,8 @@ export default function TrimSwatchUpload() {
                 >
                   {employeeData.map((item) => {
                     return (
-                      <Option key={item.approvedId} value={item.approvedId} name={item.emailId}>
-                        {item.approvedUserName}
+                      <Option key={item.approvedId} value={item.approvedId} name={item.approvedUserName}>
+                        {item.emailId}
                         </Option>
                     );
                   })}
@@ -560,7 +597,7 @@ export default function TrimSwatchUpload() {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-      <Form.Item label="Approver Mail" name={'approverMail'}>
+      <Form.Item label="Approver " name={'approverName'}>
         <Input disabled />
       </Form.Item>
     </Col>
@@ -571,22 +608,37 @@ export default function TrimSwatchUpload() {
               sm={{ span: 24 }}
               md={{ span: 6 }}
               lg={{ span: 6 }}
-              xl={{ span: 5 }}
+              xl={{ span: 15 }}
             >
               <Form.Item label={'Trim Image'} required={true}>
                 <Upload
                   {...uploadFieldProps}
                   listType="picture-card"
                   fileList={fileList}
-                  onPreview={onPreview}
+                  onPreview={handlePreview}
+                  showUploadList = {true}
+                  // showPreviewIcon={true}
                   style={{ width: '200px', height: '200px' }}
                   accept=".png,.jpeg,.PNG,.jpg,.JPG"
-                  onChange={handleChange}
                 >
-      {uploading ? <SyncOutlined spin /> : (fileList.length < 1 && '+ Upload')}
+                  {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
+                  {previewImage && (
+                <Image
+                  wrapperStyle={{ display: 'none' }}
+                  preview={{
+                    visible: previewOpen,
+                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                  }}
+                  src={previewImage}/>)}
+
                 </Upload>
+                
+                
               </Form.Item>
+              
             </Col>
+            
             
           </Row>
           <br></br>
