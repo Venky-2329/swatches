@@ -304,7 +304,7 @@ export default function TrimSwatchUpload() {
                 message.success("Mail sent successfully")
             }
         } else {
-            message.success("Mail also sent successfully")
+            message.success("Notification Mail Sent to Approval User")
         }
     }
 
@@ -529,6 +529,9 @@ export default function TrimSwatchUpload() {
            <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                 <Form.Item name={'createdUser'} initialValue={createdUser} label={'Created By'}>
                   <Input defaultValue={createdUser} disabled/>
+                </Form.Item>
+                <Form.Item name={'createdUserMail'} initialValue={createdUserMail} hidden>
+                  <Input defaultValue={createdUserMail} hidden/>
                 </Form.Item>
               </Col>
             <Col

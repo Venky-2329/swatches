@@ -209,7 +209,7 @@ export function BasicLayout(props: BasicLayoutProps) {
           actionsRender={(props) => {
             // if (props.isMobile) return [];
             return [
-              <Tooltip placement="bottom" title={'Switch mode'}>
+              <Tooltip placement="topLeft" title={'Switch mode'}>
                 {/* <Switch
                             checkedChildren="🌜"
                             unCheckedChildren="🌞"
