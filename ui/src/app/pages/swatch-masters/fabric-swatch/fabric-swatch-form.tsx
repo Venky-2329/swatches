@@ -8,6 +8,9 @@ import moment from 'moment';
 import DatePicker from 'antd/lib/date-picker';
 import { SyncOutlined } from '@ant-design/icons'
 import { EmailModel } from 'libs/shared-models';
+import dayjs from 'dayjs';
+import AlertMessages from 'ui/src/app/common/notifications/notifications';
+
 export default function FabricSwatchUpload() {
   const {Option} = Select;
   const [form] = Form.useForm();
@@ -29,6 +32,7 @@ export default function FabricSwatchUpload() {
   const [uploading, setUploading] = useState(false);
   const mailService = new EmailService()
   const [ resData, setResData ] = useState<any[]>([])
+
 
 
   useEffect(() => {
@@ -98,7 +102,7 @@ export default function FabricSwatchUpload() {
     try {
       const compressedImage = await compressImage(file);
 
-      if (fileList.length === 1) {
+      if (fileList.length == 3) {
         notification.info({
           message: 'You Cannot Upload More Than One File At A Time',
         });
@@ -130,7 +134,7 @@ export default function FabricSwatchUpload() {
   };
 
   const uploadFieldProps = {
-    multiple: false,
+    multiple: true,
     onRemove: handleRemove,
     beforeUpload: handleBeforeUpload,
     progress: {
@@ -153,13 +157,13 @@ export default function FabricSwatchUpload() {
             fileList.forEach((file: any) => {
               formData.append('file', file);
             });
-            formData.append('id', `${res.data.fabricSwatchId}`);
+            formData.append('fabricSwatchId', `${res.data.fabricSwatchId}`);
             service.uploadPhoto(formData).then((fileres) => {
               if (res.status) {
                 form.setFieldsValue({fabricSwatchNumber: res?.data?.fabricSwatchNumber})
                 form.setFieldsValue({fabricSwatchId: res?.data?.fabricSwatchId})
                 res.data.filePath = fileres.data;
-                sendMailForApprovalUser()
+                // sendMailForApprovalUser()
                 message.success(res.internalMessage, 2);
                 onReset();
                 gotoGrid();
@@ -197,7 +201,7 @@ export default function FabricSwatchUpload() {
   }
 
   const onUserChange =(value,option)=>{
-         form.setFieldsValue({approverMail: option?.name})
+         form.setFieldsValue({approverName: option?.name})
   }
 
   const handleChange = (info) => {
@@ -506,7 +510,7 @@ export default function FabricSwatchUpload() {
               <Form.Item
                 name={'grnDate'}
                 label={'GRN Date'}
-                initialValue={moment()}
+                initialValue={dayjs()}
                 rules={[
                   {
                     required: false,
@@ -524,16 +528,34 @@ export default function FabricSwatchUpload() {
                 <Form.Item name={'createdUserMail'} initialValue={createdUserMail} hidden>
                   <Input defaultValue={createdUser} hidden/>
                 </Form.Item>
-              </Col>
-            <Col
-              xs={24} sm={12} md={8} lg={6} xl={4}
-            >
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+              <Form.Item label="Approver Mail(Marketing)" name={'approverId'} rules={[{ required: true, message: 'Approver is required' }]}>
+              <Select
+                  allowClear
+                  showSearch
+                  optionFilterProp="children"
+                  placeholder="Select Approver Mail"
+                  onChange={onUserChange}
+                >
+                  {employeeData.map((item) => {
+                    return (
+                      <Option key={item.approvedId} value={item.approvedId} name={item.approvedUserName}>
+                        {item.emailId}
+                        </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12} md={8} lg={6} xl={4}>
               <Form.Item
                 label="Approver"
-                name={'approverId'}
-                rules={[{ required: true, message: 'Approver is required' }]}
+                name={'approverName'}
+                rules={[{ required: false, message: 'Approver is required' }]}
               >
-                <Select
+                <Input disabled placeholder='Approver'/>
+                {/* <Select
                   allowClear
                   showSearch
                   optionFilterProp="children"
@@ -547,29 +569,24 @@ export default function FabricSwatchUpload() {
                         </Option>
                     );
                   })}
-                </Select>
+                </Select> */}
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-      <Form.Item label="Approver Mail" name={'approverMail'}>
-        <Input disabled />
-      </Form.Item>
-    </Col>
-    <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 18 }} lg={{ span: 15 }} xl={{ span: 15 }}>
-      <Form.Item label={'Fabric Image'} required={true}>
-      <Upload
-      {...uploadFieldProps}
-      listType="picture-card"
-      fileList={fileList}
-      onPreview={onPreview}
-      style={{ width: '200px', height: '200px' }}
-      accept=".png,.jpeg,.PNG,.jpg,.JPG"
-      onChange={handleChange}
-    >
-      {uploading ? <SyncOutlined spin /> : (fileList.length < 1 && '+ Upload')}
-    </Upload>
-      </Form.Item>
-    </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 18 }} lg={{ span: 15 }} xl={{ span: 15 }}>
+              <Form.Item label={'Fabric Image'} required={true}>
+              <Upload
+              {...uploadFieldProps}
+              listType="picture-card"
+              fileList={fileList}
+              onPreview={onPreview}
+              style={{ width: '200px', height: '200px' }}
+              accept=".png,.jpeg,.PNG,.jpg,.JPG"
+              onChange={handleChange}
+            >
+              {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
+            </Upload>
+              </Form.Item>
+            </Col>
           </Row>
           <br></br>
           <Row>

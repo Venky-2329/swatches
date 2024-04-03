@@ -1,16 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { FabricSwatchEntity } from "./fabric-swatch-entity";
 import { CommonResponseModel, DateReq, StatusEnum, SwatchStatus } from "libs/shared-models";
-import { FabricSwatchDto } from "./fabric-swatch-dto";
+import { FabricSwatchDto } from "./dtos/fabric-swatch-dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
+import { FabricSwatchEntity } from "./entities/fabric-swatch-entity";
+import { FabricUploadEntity } from "./entities/fabric-swatch-upload-entity";
 
 @Injectable()
 export class FabricSwatchService{
     constructor(
       @InjectRepository(FabricSwatchEntity)
       private readonly repo: Repository<FabricSwatchEntity>,
-      private readonly dataSource: DataSource
+      private readonly dataSource: DataSource,
+      @InjectRepository(FabricUploadEntity)
+      private readonly uploadRepo: Repository<FabricUploadEntity>
     ){}
 
     async getMaxId(): Promise<any> {
@@ -59,17 +62,47 @@ export class FabricSwatchService{
         }
     }
 
-    async updatePath(filePath: string,filename: string,fabricSwatchId: number): Promise<CommonResponseModel> {
-        try {
-          const filePathUpdate = await this.repo.update({ fabricSwatchId: fabricSwatchId },{ filePath: filePath, fileName: filename });
-        //   const result = await this.repo.findOne({where: { fabricSwatchId: fabricSwatchId } });
-          if (filePathUpdate.affected > 0) {
-            return new CommonResponseModel(true,11,'uploaded successfully',filePath);
-          } else {
-            return new CommonResponseModel(false, 11, 'uploaded failed', filePath);
-          }
-        } catch (error) {}
+    
+    async updatePath(filePath: any, fabricSwatchId: number): Promise<CommonResponseModel> {
+      try {
+        let flag = true;
+        const entities=[]
+        for (const res of filePath) {
+          const entity = new FabricUploadEntity()
+          entity.fileName = res.filename
+          entity.filePath = res.path
+          const fabEntity = new FabricSwatchEntity
+          fabEntity.fabricSwatchId = fabricSwatchId
+          entity.fabInfo = fabEntity
+          entities.push(entity);
+        }
+        const uploadDoc = await this.uploadRepo.save(entities);
+        if (!uploadDoc) {
+          flag = false;
+        }
+        if (flag) {
+          return new CommonResponseModel(true, 11, 'uploaded successfully', filePath);
+        }
+        else {
+          return new CommonResponseModel(false, 11, 'uploaded failed', filePath);
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
     }
+
+    // async updatePath(filePath: string,filename: string,fabricSwatchId: number): Promise<CommonResponseModel> {
+    //     try {
+    //       const filePathUpdate = await this.repo.update({ fabricSwatchId: fabricSwatchId },{ filePath: filePath, fileName: filename });
+    //     //   const result = await this.repo.findOne({where: { fabricSwatchId: fabricSwatchId } });
+    //       if (filePathUpdate.affected > 0) {
+    //         return new CommonResponseModel(true,11,'uploaded successfully',filePath);
+    //       } else {
+    //         return new CommonResponseModel(false, 11, 'uploaded failed', filePath);
+    //       }
+    //     } catch (error) {}
+    // }
 
     async getAllFabricSwatchData(req: DateReq):Promise<CommonResponseModel>{
       try{
@@ -262,4 +295,5 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
       throw(err)
     }
   }
+
 }

@@ -12,24 +12,25 @@ import { LocationEntity } from '../masters/location/entity/location.entity';
 import { SeasonEntity } from '../masters/season/entity/season.entity';
 import { UserEntity } from '../masters/users/entity/user.entity';
 import { SampleUpload } from '../masters/sample-upload/entity/sample-upload.entity';
-import { FabricSwatchEntity } from '../swatch-masters/fabric-swatch/fabric-swatch-entity';
 import { EmployeeEntity } from '../swatch-masters/employees/entity/employee.entity';
 import { DesignationEntity } from '../swatch-masters/designation/entity/designation.entity';
 import { DepartmentEntity } from '../swatch-masters/department/entity/department.entity';
 import { UnitEntity } from '../swatch-masters/unit/entity/unit.entity';
 import { ApprovalUserEntity } from '../swatch-masters/approval-users/entities/approval-user.entity';
 import { SectionsEntity } from '../swatch-masters/department/entity/section.entity';
+import { FabricSwatchEntity } from '../swatch-masters/fabric-swatch/entities/fabric-swatch-entity';
+import { FabricUploadEntity } from '../swatch-masters/fabric-swatch/entities/fabric-swatch-upload-entity';
 
 export const typeOrmConfig: DataSourceOptions = {
   type: 'mysql',
-  host: '172.20.50.169',
-  username: 'internal_apps',
-  password: 'Schemax@2023',
-  database: 'internal_apps',
-  // host: 'localhost',
-  // username: 'root',
-  // password: '',
-  // database: 'testing',
+  // host: '172.20.50.169',
+  // username: 'internal_apps',
+  // password: 'Schemax@2023',
+  // database: 'internal_apps',
+  host: 'localhost',
+  username: 'root',
+  password: '',
+  database: 'testing',
   entities: [
     BrandsEntity,
     CategoryEntity,
@@ -41,7 +42,8 @@ export const typeOrmConfig: DataSourceOptions = {
     DesignationEntity,
     DepartmentEntity,
     ApprovalUserEntity,
-    SectionsEntity
+    SectionsEntity,
+    FabricUploadEntity
   ],
 };
 
