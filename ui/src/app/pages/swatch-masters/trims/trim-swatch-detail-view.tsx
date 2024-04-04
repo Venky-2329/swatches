@@ -6,7 +6,7 @@ import { EmailService, TrimSwatchService } from "libs/shared-services"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import img from '../../../../../../upload-files/cotton-swatches-cobalt.webp'
+import img from '../../../../../../upload-files/pexels-orlando-s-18290475-6988.jpg'
 
 export const TrimSwatchDetailView = () => {
     
@@ -83,7 +83,8 @@ export const TrimSwatchDetailView = () => {
           const swatchDetails = new EmailModel();
           swatchDetails.swatchNo = data[0]?.trim_swatch_number
           swatchDetails.to = 'kushal.siddegowda@shahi.co.in'
-          // swatchDetails.to = data[0]?.createdUserMail
+          swatchDetails.to = data[0]?.createdUserMail
+          console.log(data[0]?.createdUserMail, '---------mail')
           swatchDetails.html = `
           <html>
           <head>

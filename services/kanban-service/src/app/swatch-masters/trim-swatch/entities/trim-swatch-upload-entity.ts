@@ -35,5 +35,5 @@ export class TrimUploadEntity{
     createdAt : string
 
     @ManyToOne(() => TrimSwatchEntity, trimEntity => trimEntity.uploadInfo , {nullable: false})
-    trimInfo : TrimSwatchEntity[]
+    trimInfo : TrimSwatchEntity
 }

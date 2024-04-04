@@ -3,7 +3,7 @@ import { TrimSwatchService } from './trim-swatch.service';
 import { TrimSwatchDto } from './dto/trim-swatch.dto';
 import { CommonResponseModel, DateReq, TrimSwatchStatus } from 'libs/shared-models';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { ApplicationExceptionHandler } from 'libs/backend-utils';
@@ -28,14 +28,12 @@ export class TrimSwatchController {
   }
 
   @Post('/photoUpload')
-  @ApiBody({type : TrimSwatchDto})
-  @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('file' , {
-    limits : {files:3},
+  @UseInterceptors(FilesInterceptor('file' , 10,{
+    // limits : {files:3},
     storage : diskStorage({
       destination: './upload-files',
       filename: (req , file , callback) => {
-        const name = file.originalname.split('.')[0];
+        const name = `Trim`+file.originalname.split('.')[0];
         const fileExtName = extname(file.originalname);
         const randomName = Array(4)
           .fill(null)
@@ -52,13 +50,11 @@ export class TrimSwatchController {
       callback(null,true)
     },
   }))
-
-
   @ApiBody({type : TrimSwatchDto})
-
   async photoUpload(@UploadedFile() file , @Body() uploadData: any): Promise<CommonResponseModel>{
     try {
-      return this.service.updatePath(file.path,file.filename,uploadData.id);
+      console.log(file ,'[[[[[[[[[[[[[[[[' ,uploadData ,'------controller')
+      return this.service.updatePath(file,uploadData.trimSwatchId);
     } catch (error) {
       console.log(error)
     }

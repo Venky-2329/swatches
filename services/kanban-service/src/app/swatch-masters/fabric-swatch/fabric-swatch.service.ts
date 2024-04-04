@@ -73,7 +73,7 @@ export class FabricSwatchService{
           const entity = new FabricUploadEntity()
           entity.fileName = res.filename
           entity.filePath = res.path
-          const fabEntity = new FabricSwatchEntity
+          const fabEntity = new FabricSwatchEntity()
           fabEntity.fabricSwatchId = fabricSwatchId
           entity.fabInfo = fabEntity
           entities.push(entity);
