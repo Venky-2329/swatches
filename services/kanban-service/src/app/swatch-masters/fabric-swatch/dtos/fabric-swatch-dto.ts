@@ -55,5 +55,7 @@ export class FabricSwatchDto{
     approverId: number
     @ApiProperty({type:[FabricUploadDto]})
     uploadInfo: FabricUploadDto[]
+    @ApiProperty()
+    remarks: string
 
 }

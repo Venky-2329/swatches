@@ -1,4 +1,4 @@
-import { StatusEnum } from "libs/shared-models";
+import { ReworkStatus, StatusEnum } from "libs/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn, OneToMany } from "typeorm";
 import { FabricUploadEntity } from "./fabric-swatch-upload-entity";
 
@@ -163,11 +163,35 @@ export class FabricSwatchEntity{
     })
     rejectionReason: string
 
+    @Column('varchar',{
+        name:'approval_remarks',
+        length:255
+    })
+    approvalRemarks: string
+
+    @Column('varchar',{
+        name:'rework_remarks',
+        length:255
+    })
+    reworkRemarks: string
+
     @Column('int',{
         name:'approver_id',
         nullable:false,
     })
     approverId: number
+
+    @Column('enum',{
+        name:'rework',
+        enum: ReworkStatus
+    })
+    rework: ReworkStatus
+
+    @Column('varchar',{
+        name:'remarks',
+        length: 255
+    })
+    remarks: string
 
     @OneToMany(()=>FabricUploadEntity, fabUpload=>fabUpload.fabInfo,{cascade: true})
     uploadInfo: FabricUploadEntity[]

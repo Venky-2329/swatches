@@ -28,6 +28,14 @@ export class FabricSwatchService extends CommonAxiosServicePms{
         return this.axiosPostCall(this.URL+ '/updateRejectedStatus',req);
     }
 
+    async updateReworkStatus(req?:SwatchStatus): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL+ '/updateReworkStatus',req);
+    }
+
+    async updateSentForApprovalStatus(req?:SwatchStatus): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL+ '/updateSentForApprovalStatus',req);
+    }
+
     async getDataById(req: SwatchStatus):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL+ '/getDataById',req)
     }

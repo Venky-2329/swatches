@@ -1,4 +1,4 @@
-import {Button,Card,Col,Form,Input,Row,Select,Upload,message,notification} from 'antd';
+import {Button,Card,Col,Form,Input,Modal,Row,Select,Spin,Upload,message,notification} from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useEffect, useState } from 'react';
 import {ApprovalUserService, BuyerService,EmailService,EmployeeService,FabricSwatchService,createSample,getBrandsData,getCategoryData,getLocationData,getSeasonData,uploadPhoto,} from 'libs/shared-services';
@@ -32,6 +32,11 @@ export default function FabricSwatchUpload() {
   const [uploading, setUploading] = useState(false);
   const mailService = new EmailService()
   const [ resData, setResData ] = useState<any[]>([])
+  const [previewImage, setPreviewImage] = useState("");
+  const [modal, setModal] = useState('')
+  const [imageUrl, setImageUrl] = useState('');
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [imageName, setImageName] = useState('');
 
 
 
@@ -89,11 +94,12 @@ export default function FabricSwatchUpload() {
   }
 
   const handleRemove = (file) => {
-    setFileList([]);
-    // Additional logic for removing file
+    const updatedFileList = fileList.filter(item => item.uid !== file.uid);
+    setFileList(updatedFileList);
   };
 
   const handleBeforeUpload = async (file) => {
+    setUploading(true)
     if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
       notification.info({ message: 'Only png, jpeg, jpg files are allowed!' });
       return true;
@@ -108,6 +114,7 @@ export default function FabricSwatchUpload() {
         });
         return true;
       } else {
+        setUploading(false)
         setFileList([...fileList, compressedImage]);
         return false;
       }
@@ -147,6 +154,83 @@ export default function FabricSwatchUpload() {
     },
     fileList: fileList,
   };
+  let mailerSent = false;
+  async function sendMailForApprovalUser() {
+      const swatchDetails = new EmailModel();
+      swatchDetails.swatchNo = form.getFieldValue('fabricSwatchNumber')
+      // swatchDetails.to = 'playstore2636@gmail.com'
+      swatchDetails.to = form.getFieldValue('approverMail')
+      swatchDetails.html = `
+      <html>
+      <head>
+        <meta charset="UTF-8" />
+        <style>
+          #acceptDcLink {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #28a745;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 5px;
+                margin-top: 10px;
+                transition: background-color 0.3s ease, color 0.3s ease;
+                cursor: pointer;
+            }
+    
+            #acceptDcLink.accepted {
+                background-color: #6c757d;
+                cursor: not-allowed;
+            }
+    
+            #acceptDcLink:hover {
+                background-color: #218838;
+                color: #fff;
+            }
+        </style>
+      </head>
+      <body>
+        <p>Dear team,</p>
+        <p>Please find the Fabric Swatch details below:</p>
+        <p>Fabric Swatch No: ${form.getFieldValue('fabricSwatchNumber')}</p>
+        <p>Buyer: ${form.getFieldValue('buyerName')}</p>
+        <p>Brand: ${form.getFieldValue('brandName')}</p>
+        <p>Style No: ${form.getFieldValue('styleNo')}</p>
+        <p>Item No: ${form.getFieldValue('itemNo')}</p>
+        <p>Please click the link below for details:</p>
+
+        <a
+          href="http://localhost:4200/#/fabric-swatch-detail-view/${form.getFieldValue('fabricSwatchId')}"
+          style="
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+          "
+          >View Details of ${form.getFieldValue('fabricSwatchNumber')}</a
+        >
+
+      </body>
+    </html>
+    `
+      swatchDetails.subject = "Fabric Swatch : " + form.getFieldValue('fabricSwatchNumber')
+      const res = await mailService.sendSwatchMail(swatchDetails)
+      console.log(res)
+      if (res.status == 201) {
+          if (res.data.status) {
+              message.success("Mail sent successfully")
+              mailerSent = true;
+          } else {
+              message.success("Mail sent successfully")
+          }
+      } else {
+          message.success("Notification Mail Sent to Approval User")
+      }
+  }
+  function gotoGrid() {
+    navigate('/fabric-swatch-approval');
+  }
 
   const onFinish = (values) => {
     if (fileList.length > 0) {
@@ -158,6 +242,7 @@ export default function FabricSwatchUpload() {
               formData.append('file', file);
             });
             formData.append('fabricSwatchId', `${res.data.fabricSwatchId}`);
+            console.log(formData,'llllllllllllllllllll')
             service.uploadPhoto(formData).then((fileres) => {
               if (res.status) {
                 form.setFieldsValue({fabricSwatchNumber: res?.data?.fabricSwatchNumber})
@@ -181,27 +266,39 @@ export default function FabricSwatchUpload() {
     }
   };
 
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as RcFile);
-        reader.onload = () => resolve(reader.result as string);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
-  };
+  // const onPreview = async (file: UploadFile) => {
+  //   let src = file.url as string;
+  //   if (!src) {
+  //     src = await new Promise((resolve) => {
+  //       const reader = new FileReader();
+  //       reader.readAsDataURL(file.originFileObj as RcFile);
+  //       reader.onload = () => resolve(reader.result as string);
+  //     });
+  //   }
+  //   const image = new Image();
+  //   image.src = src;
+  //   const imgWindow = window.open(src);
+  //   imgWindow?.document.write(image.outerHTML);
+  // };
 
-  function gotoGrid() {
-    navigate('/fabric-swatch-approval');
+  const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
+
+  const onPreview = (res) => {
+    setModal('fileUpload')
+    setPreviewVisible(true)
+    setImageName(res.name)
+    getBase64(res, imageUrl =>
+      setImageUrl(imageUrl)
+    );
   }
 
   const onUserChange =(value,option)=>{
-         form.setFieldsValue({approverName: option?.name})
+    form.setFieldsValue({approverName: option?.name})
+    form.setFieldsValue({approverMail: option?.mail})
   }
 
   const handleChange = (info) => {
@@ -220,82 +317,28 @@ export default function FabricSwatchUpload() {
     form.setFieldsValue({brandName: option?.name})
   }
 
-    let mailerSent = false;
-    async function sendMailForApprovalUser() {
-        const swatchDetails = new EmailModel();
-        swatchDetails.swatchNo = form.getFieldValue('fabricSwatchNumber')
-        swatchDetails.to = form.getFieldValue('approverMail')
-        swatchDetails.html = `
-        <html>
-        <head>
-          <meta charset="UTF-8" />
-          <style>
-            #acceptDcLink {
-                  display: inline-block;
-                  padding: 10px 20px;
-                  background-color: #28a745;
-                  color: #fff;
-                  text-decoration: none;
-                  border-radius: 5px;
-                  margin-top: 10px;
-                  transition: background-color 0.3s ease, color 0.3s ease;
-                  cursor: pointer;
-              }
-      
-              #acceptDcLink.accepted {
-                  background-color: #6c757d;
-                  cursor: not-allowed;
-              }
-      
-              #acceptDcLink:hover {
-                  background-color: #218838;
-                  color: #fff;
-              }
-          </style>
-        </head>
-        <body>
-          <p>Dear team,</p>
-          <p>Please find the Fabric Swatch details below:</p>
-          <p>Fabric Swatch No: ${form.getFieldValue('fabricSwatchNumber')}</p>
-          <p>Buyer: ${form.getFieldValue('buyerName')}</p>
-          <p>Brand: ${form.getFieldValue('brandName')}</p>
-          <p>Style No: ${form.getFieldValue('styleNo')}</p>
-          <p>Item No: ${form.getFieldValue('itemNo')}</p>
-          <p>Please click the link below for details:</p>
-
-          <a
-            href="http://localhost:4200/#/fabric-swatch-detail-view/${form.getFieldValue('fabricSwatchId')}"
-            style="
-              display: inline-block;
-              padding: 10px 20px;
-              background-color: #007bff;
-              color: #fff;
-              text-decoration: none;
-              border-radius: 5px;
-            "
-            >View Details of ${form.getFieldValue('fabricSwatchNumber')}</a
-          >
-
-        </body>
-      </html>
-      `
-        swatchDetails.subject = "Fabric Swatch : " + form.getFieldValue('fabricSwatchNumber')
-        const res = await mailService.sendSwatchMail(swatchDetails)
-        console.log(res)
-        if (res.status == 201) {
-            if (res.data.status) {
-                message.success("Mail sent successfully")
-                mailerSent = true;
-            } else {
-                message.success("Mail sent successfully")
-            }
-        } else {
-            message.success("Mail also sent successfully")
-        }
-    }
   
   return (
     <>
+    {/* {uploading && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(255, 255, 255, 0.7)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000, // Adjust the z-index as needed
+            }}
+          >
+            <Spin size="large" />
+            <div style={{ marginLeft: 10 }}> Uploading...</div>
+          </div>
+        )} */}
       <Card
             title={<span style={{ color: "white" }}>Fabric Swatch</span>}
             extra={
@@ -321,7 +364,7 @@ export default function FabricSwatchUpload() {
                 name={'buyerId'}
                 rules={[
                   {
-                    required: false,
+                    required: true,
                     message: 'Buyer is required',
                   },
                 ]}
@@ -540,13 +583,14 @@ export default function FabricSwatchUpload() {
                 >
                   {employeeData.map((item) => {
                     return (
-                      <Option key={item.approvedId} value={item.approvedId} name={item.approvedUserName}>
+                      <Option key={item.approvedId} value={item.approvedId} name={item.approvedUserName} mail={item.emailId}>
                         {item.emailId}
                         </Option>
                     );
                   })}
                 </Select>
               </Form.Item>
+              <Form.Item hidden name={'approverMail'}></Form.Item>
             </Col>
             <Col xs={24} sm={12} md={8} lg={6} xl={4}>
               <Form.Item
@@ -555,21 +599,6 @@ export default function FabricSwatchUpload() {
                 rules={[{ required: false, message: 'Approver is required' }]}
               >
                 <Input disabled placeholder='Approver'/>
-                {/* <Select
-                  allowClear
-                  showSearch
-                  optionFilterProp="children"
-                  placeholder="Select Approver"
-                  onChange={onUserChange}
-                >
-                  {employeeData.map((item) => {
-                    return (
-                      <Option key={item.approvedId} value={item.approvedId} name={item.emailId}>
-                        {item.approvedUserName}
-                        </Option>
-                    );
-                  })}
-                </Select> */}
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 18 }} lg={{ span: 15 }} xl={{ span: 15 }}>
@@ -603,8 +632,29 @@ export default function FabricSwatchUpload() {
               </Button>
             </Col>
           </Row>
-        </Form>
+        </Form> 
       </Card>
+      <Modal
+          visible={previewVisible}
+          title={imageName}
+          footer={null}
+          onCancel={() => setPreviewVisible(false)}
+        >
+          {modal == 'fileUpload' ? <>
+            <Card style={{ height: '250px' }}>
+              <Form.Item>
+                <img
+                  src={imageUrl}
+                  alt="Preview"
+                  height={'200px'}
+                  width={'500px'}
+                  style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                />
+              </Form.Item>
+            </Card>
+          </> : <img alt="example" style={{ width: "100%" }} src={previewImage} />}
+
+        </Modal>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, DateReq, StatusEnum, SwatchStatus } from "libs/shared-models";
+import { CommonResponseModel, DateReq, ReworkStatus, StatusEnum, SwatchStatus } from "libs/shared-models";
 import { FabricSwatchDto } from "./dtos/fabric-swatch-dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
@@ -55,6 +55,8 @@ export class FabricSwatchService{
             entityData.approverId = req.approverId
             entityData.createdUser = req.createdUser
             entityData.createdUserMail = req.createdUserMail
+            entityData.rework = ReworkStatus.NO
+            entityData.remarks = req.remarks
             const saveData = await this.repo.save(entityData)
             return new CommonResponseModel(true,1,`${saveData.fabricSwatchNumber} created successfully`,saveData)
         }catch(err){
@@ -115,7 +117,7 @@ export class FabricSwatchService{
         fs.category_id AS categoryId,scm.category_name AS categoryName,
         fs.season_id AS seasonId,ssm.season_name AS seasonName,
         fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fs.file_name as fileName,
-        fs.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,fs.created_user_mail as createdUserMail
+        fs.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,fs.created_user_mail as createdUserMail,fs.rework
         FROM fabric_swatch fs
         LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
         LEFT JOIN swatch_brands sbm ON sbm.brand_id = fs.brand_id
@@ -131,6 +133,9 @@ export class FabricSwatchService{
           }
           if(req.tabName == 'REJECTED'){
               query= query+' and fs.status IN("REJECTED")'
+          }
+          if(req.tabName == 'REWORK'){
+              query= query+' and fs.status IN("REWORK")'
           }
         }
         if(fromDate){
@@ -166,7 +171,8 @@ export class FabricSwatchService{
           let query = `SELECT
           COALESCE(SUM(CASE WHEN STATUS = 'sent_for_approval' THEN 1 ELSE 0 END),0) AS waitingCount,
           COALESCE(SUM(CASE WHEN STATUS = 'approved' THEN 1 ELSE 0 END),0) AS approvedCount,
-          COALESCE(SUM(CASE WHEN STATUS = 'rejected' THEN 1 ELSE 0 END),0) AS rejectedCount
+          COALESCE(SUM(CASE WHEN STATUS = 'rejected' THEN 1 ELSE 0 END),0) AS rejectedCount,
+          COALESCE(SUM(CASE WHEN STATUS = 'rework' THEN 1 ELSE 0 END),0) AS reworkCount
           FROM fabric_swatch`
           const result = await this.dataSource.query(query)
           if (result.length) {
@@ -190,6 +196,7 @@ export class FabricSwatchService{
 
         checkInData.status = StatusEnum.APPROVED;
         checkInData.fabricSwatchNumber = req.fabricSwatchNumber;
+        checkInData.approvalRemarks = req.approvalRemarks
         await this.repo.save(checkInData);
         return new CommonResponseModel(true, 1, 'Approved successfully', checkInData);
     } catch (err) {
@@ -214,6 +221,40 @@ async updateRejectedStatus(req: SwatchStatus): Promise<CommonResponseModel> {
     }
 }
 
+async updateReworkStatus(req: SwatchStatus): Promise<CommonResponseModel> {
+    try {
+        const reworkData = await this.repo.findOne({ where: { fabricSwatchId : req.fabricSwatchId } });
+
+        if (!reworkData) {
+            throw new Error('Swatch data not found');
+        }
+
+        reworkData.status = StatusEnum.REWORK;
+        reworkData.rework = ReworkStatus.YES
+        reworkData.reworkRemarks = req.reworkRemarks;
+        await this.repo.save(reworkData);
+        return new CommonResponseModel(true, 1, 'Sent for Rework', reworkData);
+    } catch (err) {
+        throw err;
+    }
+}
+
+async updateSentForApprovalStatus(req: SwatchStatus): Promise<CommonResponseModel> {
+    try {
+      console.log(req,'------------')
+        const mainData = await this.repo.findOne({ where: { fabricSwatchId : req.fabricSwatchId } });
+
+        if (!mainData) {
+            throw new Error('Swatch data not found');
+        }
+        mainData.status = StatusEnum.SENT_FOR_APPROVAL;
+        await this.repo.save(mainData);
+        return new CommonResponseModel(true, 1, 'Sent for Approval', mainData);
+    } catch (err) {
+        throw err;
+    }
+}
+
 async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
   try{
     let query = `SELECT fs.fabric_swatch_id AS fabricSwatchId,fs.fabric_swatch_number AS fabricSwatchNo, fs.style_no styleNo,fs.item_no AS itemNo,fs.category_type AS categoryType,fs.color,fs.po_number AS poNumber,
@@ -222,7 +263,9 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     fs.brand_id AS brandId,sbm.brand_name AS brandName,
     fs.category_id AS categoryId,scm.category_name AS categoryName,
     fs.season_id AS seasonId,ssm.season_name AS seasonName,
-    fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fs.file_name as fileName, fs.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,fs.created_user_mail as createdUserMail
+    fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fs.file_name as fileName, 
+    fs.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,
+    fs.created_user_mail as createdUserMail,fs.rework
     FROM fabric_swatch fs
     LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
     LEFT JOIN swatch_brands sbm ON sbm.brand_id = fs.brand_id

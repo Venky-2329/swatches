@@ -180,4 +180,25 @@ export class FabricSwatchController{
     }
   }
 
+  @Post('/updateReworkStatus')
+  @ApiBody({type: SwatchStatus})
+  async updateReworkStatus(@Body() req: any): Promise<CommonResponseModel>{
+      try{
+          return await this.service.updateReworkStatus(req)
+      }catch(err){
+          return this.appHandler.returnException(CommonResponseModel,err)
+      }
+  }
+
+  @Post('/updateSentForApprovalStatus')
+  @ApiBody({type: SwatchStatus})
+  async updateSentForApprovalStatus(@Body() req: any): Promise<CommonResponseModel>{
+      try{
+        console.log(req,'ppppppppppppppppp')
+          return await this.service.updateSentForApprovalStatus(req)
+      }catch(err){
+          return this.appHandler.returnException(CommonResponseModel,err)
+      }
+  }
+
 }

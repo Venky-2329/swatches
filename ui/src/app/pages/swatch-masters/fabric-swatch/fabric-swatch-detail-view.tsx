@@ -324,6 +324,12 @@ export const FabricSwatchDetailView = () => {
               </Popconfirm>
               <Divider type='vertical'/>
               <Button type='primary' danger onClick={() => handelReject(data[0])}>REJECT</Button>
+              {data[0]?.rework === 'YES' ? (
+                <>
+                  <Divider type='vertical' />
+                  <Button style={{ backgroundColor: 'orange', color: 'white' }} onClick={() => handelReject(data[0])}>REWORK</Button>
+                </>
+              ) : null}
             </div>
           </>
         )}

@@ -11,3 +11,8 @@ export const StatusDisplayEnum = [
     {name:"SENT_FOR_APPROVAL", displayVal:'SENT FOR APPROVAL' },
     {name:"REWORK", displayVal:'REWORK' }
 ]
+
+export enum ReworkStatus{
+    YES = 'YES',
+    NO = 'NO'
+}
