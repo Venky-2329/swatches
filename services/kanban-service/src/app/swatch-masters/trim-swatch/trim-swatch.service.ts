@@ -3,7 +3,7 @@ import { TrimSwatchDto } from './dto/trim-swatch.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TrimSwatchEntity } from './entities/trim-swatch.entity';
 import { DataSource, Repository } from 'typeorm';
-import { CommonResponseModel, DateReq, StatusEnum, TrimSwatchStatus } from 'libs/shared-models';
+import { CommonResponseModel, DateReq, ReworkStatus, StatusEnum, TrimSwatchStatus } from 'libs/shared-models';
 import { TrimUploadEntity } from './entities/trim-swatch-upload-entity';
 
 @Injectable()
@@ -12,7 +12,9 @@ export class TrimSwatchService {
   constructor(
     @InjectRepository(TrimSwatchEntity)
     private readonly repo : Repository<TrimSwatchEntity>,
-    private readonly dataSource : DataSource
+    private readonly dataSource : DataSource,
+    @InjectRepository(TrimUploadEntity)
+    private readonly updateRepo : Repository<TrimUploadEntity>
   ){}
   async getMaxId(): Promise<any> {
     const id = await this.repo
@@ -35,7 +37,7 @@ export class TrimSwatchService {
       if(getId !== undefined){
         entityData.trimSwatchNumber = "TSW" + '-' + Number(getId.trimSwatchId + 1).toString().padStart(6,'0');
       }
-
+      console.log("TSW" + '-' + Number(getId.trimSwatchId + 1).toString().padStart(6,'0'),'===========================================================')
       entityData.buyerId = req.buyerId
       entityData.supplierId = req.supplierId
       entityData.poNumber = req.poNumber
@@ -49,6 +51,8 @@ export class TrimSwatchService {
       entityData.approverId = req.approverId
       entityData.createdUser = req.createdUser
       entityData.createdUserMail = req.createdUserMail
+      entityData.remarks = req.remarks
+      entityData.rework = ReworkStatus.NO
       const saveData = await this.repo.save(entityData)
       return new CommonResponseModel(true , 1 , `${saveData.trimSwatchNumber} created successfully` ,saveData)
 
@@ -59,10 +63,11 @@ export class TrimSwatchService {
 
   async updatePath(filePath: any, trimSwatchId: number): Promise<CommonResponseModel> {
     try {
-      console.log(filePath)
+      console.log(filePath,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
       let flag = true;
       const entities=[]
       for (const res of filePath) {
+        console.log('looppppppppp')
         const entity = new TrimUploadEntity()
         entity.fileName = res.filename
         entity.filePath = res.path
@@ -71,14 +76,16 @@ export class TrimSwatchService {
         entity.trimInfo = trimEntity
         entities.push(entity);
       }
-      const uploadDoc = await this.repo.save(entities);
+      const uploadDoc = await this.updateRepo.save(entities);
       if (!uploadDoc) {
         flag = false;
       }
       if (flag) {
+        console.log('successsssssssssssssssssssssss')
         return new CommonResponseModel(true, 11, 'uploaded successfully', filePath);
       }
       else {
+        console.log('failedddddddddddddddddddddddd')
         return new CommonResponseModel(false, 11, 'uploaded failed', filePath);
       }
     }
@@ -106,7 +113,7 @@ export class TrimSwatchService {
       const toDate = req.toDate;
       let query = `SELECT ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
-      ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt ,ts.rejection_reason,ts.created_user as createdUser,ts.created_user_mail as createdUserMail
+      ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt ,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason,ts.created_user as createdUser,ts.created_user_mail as createdUserMail,ts.remarks
       FROM trim_swatch ts
       LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
       LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
@@ -222,7 +229,7 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
     console.log(req,'.........')
     let query = `SELECT ts.trim_swatch_id , ts.trim_swatch_number ,ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
-      ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt,ts.rejection_reason , ts.created_user as createdUser,ts.created_user_mail as createdUserMail
+      ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason, ts.created_user as createdUser,ts.created_user_mail as createdUserMail
       FROM trim_swatch ts
       LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
       LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
@@ -317,10 +324,25 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
   
         if (!reworkedData) {
             throw new Error('Trim data not found');
-        }
-  
+        } 
         reworkedData.status = StatusEnum.REWORK;
         reworkedData.reworkReason = req.reworkReason;
+        reworkedData.rework = ReworkStatus.YES
+        await this.repo.save(reworkedData);
+        return new CommonResponseModel(true, 1, 'Rework done successfully', reworkedData);
+    } catch (err) {
+        throw err;
+    }
+  }
+
+  async reworkSentForApproval(req: TrimSwatchStatus): Promise<CommonResponseModel> {
+    try {
+        const reworkedData = await this.repo.findOne({ where: { trimSwatchId : req.trimSwatchId } });
+  
+        if (!reworkedData) {
+            throw new Error('Trim data not found');
+        } 
+        reworkedData.status = StatusEnum.SENT_FOR_APPROVAL;
         await this.repo.save(reworkedData);
         return new CommonResponseModel(true, 1, 'Rework done successfully', reworkedData);
     } catch (err) {

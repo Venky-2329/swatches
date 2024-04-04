@@ -66,6 +66,7 @@
     "@swc/helpers": "~0.5.2",
     "antd": "^5.11.2",
     "antd-img-crop": "^4.18.0",
+    "antd-table-saveas-excel": "^2.2.1",
     "axios": "^1.0.0",
     "browser-image-compression": "^2.0.2",
     "class-transformer": "^0.5.1",

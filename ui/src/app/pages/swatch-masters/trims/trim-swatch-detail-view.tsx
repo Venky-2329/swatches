@@ -7,6 +7,7 @@ import moment from "moment"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import img from '../../../../../../upload-files/pexels-orlando-s-18290475-6988.jpg'
+import TrimSwatchApproval from "./trim-approval"
 
 export const TrimSwatchDetailView = () => {
     
@@ -22,6 +23,7 @@ export const TrimSwatchDetailView = () => {
     const department = createUser.departmentId
     const userRole = createUser.role
     const userName = createUser.userName
+    const [action, setAction ] =useState('')
   
 
     useEffect(() => {
@@ -41,7 +43,7 @@ export const TrimSwatchDetailView = () => {
 
     const TrimAccepted = (value)=>{
         console.log(value,',,,,,,,,,,,,,,,,,,,,')
-        const req = new TrimSwatchStatus(value?.trim_swatch_id,value?.trim_swatch_number,undefined)
+        const req = new TrimSwatchStatus(value?.trim_swatch_id,value?.trim_swatch_number,undefined,undefined,form.getFieldValue('reason'))
         service.updateApprovedStatus(req).then((res)=>{
             if(res.status){
                 message.success(res.internalMessage,2)
@@ -53,14 +55,11 @@ export const TrimSwatchDetailView = () => {
         })
       }
 
-      const handelReject = (value)=>{
-        setFormData(value?.trim_swatch_id)
-        setModal(true)
-      }
+
     
       const TrimRejected =(value)=>{
         console.log(value,'.......................')
-        const req = new TrimSwatchStatus(value,undefined,form.getFieldValue('rejectionReason'))
+        const req = new TrimSwatchStatus(value,undefined,form.getFieldValue('reason'))
         service.updateRejectedStatus(req).then((res)=>{
             if(res.status){
                 message.success(res.internalMessage,2)
@@ -73,6 +72,57 @@ export const TrimSwatchDetailView = () => {
             }
         })
       }
+
+      const TrimRework =(value)=>{
+        console.log(value,'.......................')
+        const req = new TrimSwatchStatus(value,undefined,undefined,form.getFieldValue('reason'))
+        service.updateReworkStatus(req).then((res)=>{
+            if(res.status){
+                message.success(res.internalMessage,2)
+                navigate('/trims-swatch-approval',{ state: { tab: 'REJECTED' } })
+                sendMailForApprovalUser('Rework 🔁 ')
+                setModal(false)
+                onReset()
+            }else{
+                message.error(res.internalMessage,2)
+            }
+        })
+      }
+
+      const handelAccept = (value)=>{
+        setAction('approve')
+        setFormData(value?.trim_swatch_id)
+        setModal(true)
+      }
+
+      const handelReject = (value)=>{
+        setAction('reject')
+        setFormData(value?.trim_swatch_id)
+        setModal(true)
+      }
+
+      const handelRemove = (value)=>{
+        setAction('rework')
+        setFormData(value?.trim_swatch_id)
+        setModal(true)
+      }
+
+          
+      const handleFormSubmit = () => {
+        if(action === 'approve'){
+          TrimAccepted(formData)
+        }else if(action === 'reject'){
+          TrimRejected(formData);
+        }else if(action === 'rework'){
+        TrimRework(formData);
+        }
+      };
+
+      const onModalCancel = () => {
+        onReset()
+        setModal(false);
+      };
+    
     
       const onReset = () => {
         form.resetFields();
@@ -154,16 +204,7 @@ export const TrimSwatchDetailView = () => {
           }
       }
   
-    
-      const handleFormSubmit = () => {
-        TrimRejected(formData);
-      };
 
-      const onModalCancel = () => {
-        onReset()
-        setModal(false);
-      };
-    
       return (
         <div>
           <Card
@@ -248,16 +289,11 @@ export const TrimSwatchDetailView = () => {
           <>
           <Divider type='horizontal'/>
             <div style={{ textAlign: 'center' }}>
-                <Popconfirm
-                  title="Are you sure to accept?"
-                  onConfirm={() => TrimAccepted(data[0])}
-                  okText="Yes"
-                  cancelText="No"
-                >
-                <Button  style={{backgroundColor:'green', color:'white'}}>APPROVE</Button>
-                </Popconfirm>
+                <Button  style={{backgroundColor:'green', color:'white'}} onClick={()=>handelAccept(data[0])}>APPROVE</Button>
                 <Divider type='vertical'/>
                 <Button type='primary' danger onClick={() => handelReject(data[0])}>REJECT</Button>
+                <Divider type='vertical'/>
+                <Button  style={{backgroundColor:'orange', color:'white'}} onClick={() => handelRemove(data[0])}>REWORK</Button>
             </div>
             </>
             )}
@@ -270,7 +306,7 @@ export const TrimSwatchDetailView = () => {
             destroyOnClose
             >
               <Card
-                title={'Reject'}
+                title={action === 'approve' ? 'Approve' : action === 'reject' ? 'Reject' : action === 'rework' ? 'Rework' : '-'}
                 size='small'
                 headStyle={{ backgroundColor: '#25529a', color: 'white' }}
                 >
@@ -279,7 +315,7 @@ export const TrimSwatchDetailView = () => {
                 >
                     <Row gutter={16}>
                     <Col xl={12} lg={12} xs={10}>
-                        <Form.Item name='rejectionReason' label='Reason' rules={[{ required: true, message: 'Reason is required' }]}>
+                        <Form.Item name='reason' label='Reason' rules={[{ required: true, message: 'Reason is required' }]}>
                         <TextArea rows={2} placeholder='Enter Reason' />
                         </Form.Item>
                     </Col>

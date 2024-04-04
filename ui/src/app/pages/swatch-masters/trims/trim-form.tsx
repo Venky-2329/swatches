@@ -31,6 +31,7 @@ import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { EmailModel } from 'libs/shared-models';
 import dayjs from 'dayjs'
+import TextArea from 'antd/es/input/TextArea';
 
 export default function TrimSwatchUpload() {
   const {Option} = Select;
@@ -606,6 +607,21 @@ export default function TrimSwatchUpload() {
         <Form.Item  name={'approverMail'} hidden>
         </Form.Item>
     </Col>
+    <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 6 }}
+              lg={{ span: 6 }}
+              xl={{ span: 4 }}
+            >
+              <Form.Item
+                label="Remarks"
+                name={'remarks'}
+                rules={[{ required: false, message: 'Please input Remarks' }]}
+              >
+                <TextArea placeholder="Enter Remarks" />
+              </Form.Item>
+            </Col>
           </Row>
           <Row gutter={24}>
             <Col

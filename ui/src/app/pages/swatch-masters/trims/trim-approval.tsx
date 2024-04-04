@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {Alert,Button,Card,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Table,Tabs,Tag,Tooltip,message} from 'antd';
+import {Alert,Button,Card,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Spin,Table,Tabs,Tag,Tooltip,Upload,message, notification} from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {SearchOutlined,UndoOutlined,FileImageOutlined, BarcodeOutlined, EyeOutlined} from '@ant-design/icons';
+import {EditOutlined, EyeOutlined,SyncOutlined} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import Highlighter from 'react-highlight-words';
-import { DateReq, StatusEnum, SwatchStatus } from 'libs/shared-models';
+import { DateReq, StatusEnum, SwatchStatus, TrimSwatchStatus } from 'libs/shared-models';
 import { FabricSwatchService, TrimSwatchService } from 'libs/shared-services';
 import TextArea from 'antd/es/input/TextArea';
+import imageCompression from 'browser-image-compression';
 
 
 const TrimSwatchApproval = () => {
@@ -26,9 +27,16 @@ const TrimSwatchApproval = () => {
   const [imagePath, setImagePath] = useState('');
   const [action, setAction] = useState(null);
   const location = useLocation();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [selectedData, setSelectedData] = useState<any>(undefined);
+  const [fileList, setFileList] = useState<any[]>([]);
+  const [ resData, setResData ] = useState<any[]>([])
   const createUser = JSON.parse(localStorage.getItem('auth'));
+  const [uploading, setUploading] = useState(false);
+  const [reason , setReason ] = useState('')
   const userRole = createUser.role;
   const department = createUser.departmentId
+
 
 
 
@@ -48,6 +56,72 @@ const TrimSwatchApproval = () => {
   //     getData(tabKey);
   //   }
   // }, [location.state]);
+  const handleRemove = (file) => {
+    const updatedFileList = fileList.filter(item => item.uid !== file.uid);
+    setFileList(updatedFileList);
+  };
+
+  const compressImage = async (file) => {
+    try {
+      const options = {
+        maxSizeMB: 5, // Adjust the maximum size as needed
+        // maxWidthOrHeight: 1920, // Adjust the maximum width or height as needed
+        useWebWorker: true,
+      };
+      const compressedBlob = await imageCompression(file, options);
+      const compressedFile = new File([compressedBlob], file.name, {
+        type: compressedBlob.type,
+      });
+      return compressedFile;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handleBeforeUpload = async (file) => {
+    setUploading(true)
+    if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
+      notification.info({ message: 'Only png, jpeg, jpg files are allowed!' });
+      return true;
+    }
+
+    try {
+      const compressedImage = await compressImage(file);
+
+      if (fileList.length == 3) {
+        notification.info({
+          message: 'You Cannot Upload More Than Three File At A Time',
+        });
+        return true;
+      } else {
+        setUploading(false)
+        setFileList([...fileList, compressedImage]);
+        return false;
+      }
+    } catch (error) {
+      return true; // Returning true to prevent uploading if an error occurs
+    }
+  };
+
+  const uploadFieldProps = {
+    multiple: true,
+    onRemove: handleRemove,
+    beforeUpload: handleBeforeUpload,
+    progress: {
+      strokeColor: {
+        '0%': '#108ee9',
+        '100%': '#87d068',
+      },
+      strokeWidth: 3,
+      format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
+    },
+    fileList: fileList,
+  };
+
+  const openFormWithData=(viewData)=>{
+    setDrawerVisible(true);
+    setSelectedData(viewData);
+  }
 
   const getData = (value: any) => {
     const req = new DateReq(value, undefined, undefined);
@@ -81,6 +155,63 @@ const TrimSwatchApproval = () => {
     setTabName(value);
     getData(value);
   };
+
+  const closeDrawer=() =>{
+    setDrawerVisible(false)
+  }
+
+  function onFinish(values) {
+    createUpload(values);
+  }
+
+
+
+  function createUpload(values) {
+    if (fileList.length > 0) {
+      console.log(values,'...................')
+      const req = new TrimSwatchStatus(selectedData.trim_swatch_id)
+      console.log(req.trimSwatchId , '=========id')
+      service.reworkSentForApproval(req).then((res) => {
+        console.log(res.data)
+        if (res.status) {
+          if (fileList.length > 0) {
+            const formData = new FormData();
+            fileList.forEach((file: any) => {
+              formData.append('file', file);
+            });
+            formData.append('trimSwatchId', `${res.data.trimSwatchId}`);
+            // console.log(res.data.trimSwatchId,'-------id')
+            service.photoUpload(formData).then((fileres) => {
+              if (res.status) {
+                form.setFieldsValue({trimSwatchNumber: res?.data?.trimSwatchNumber})
+                form.setFieldsValue({trimSwatchId: res?.data?.trimSwatchId})
+                setResData(res.data)
+                res.data.filePath = fileres.data;
+                // sendMailForApprovalUser()
+                message.success(res.internalMessage,2)
+                onReset();
+                setDrawerVisible(false)
+                setFileList([])
+                getCount()
+                getData(tabName)
+              } else {
+                message.error(res.internalMessage,2)
+              }
+            });
+          }
+        } else {
+          notification.info({
+            message: res.internalMessage,
+            placement: 'top',
+            duration: 1,
+          });
+        }
+      });
+    } else {
+      return notification.info({ message: 'Please upload sample' });
+    }
+  }
+
 
   const columns: any = [
     {
@@ -150,6 +281,13 @@ const TrimSwatchApproval = () => {
     //   dataIndex: 'status',
     // },
     {
+      title:'Remarks',
+      dataIndex:`${tabName === 'REWORK'? 'reworkReason' : tabName === 'REJECTED' ? 'rejected_reason' : tabName === 'APPROVED' ? 'approvalReason': tabName === 'SENT_FOR_APPROVAL' ? 'remarks' : '-'}`,
+      render:(text)=>{
+        return text || '-'
+      }
+    },
+    {
       title: <div style={{textAlign:"center"}}>Action</div>,
       dataIndex: 'action',
       align:'center',
@@ -170,18 +308,28 @@ const TrimSwatchApproval = () => {
     },
     },
     {
-      title:'Rejection Reason',
-      dataIndex: 'rejection_reason'
+      title: <div style={{textAlign:"center"}}>Action</div>,
+      dataIndex: 'edit',
+      align:'center',
+      render: (text, rowData) => {
+        return(
+          <span>
+                    <Tooltip placement="top" title="Edit">
+                    <EditOutlined  className={'editSampleTypeIcon'}  type="edit" 
+                        onClick={() => openFormWithData(rowData)}
+                        style={{ color: '#1890ff', fontSize: '14px' }}
+                      />
+                    </Tooltip>
+          </span>
+        )
     },
-    {
-      title:'Rework Reason',
-      dataIndex: 'rework_reason'
-    }
+  }
+
   ]
 
   const onReset = () => {
     form.resetFields();
-    // getData(tabName);
+    setFileList([])
   };
 
   const columnColor = (record: any) => {
@@ -197,6 +345,26 @@ const TrimSwatchApproval = () => {
   }
 
   return (
+    <>
+     {uploading && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(255, 255, 255, 0.7)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000, // Adjust the z-index as needed
+            }}
+          >
+            <Spin size="large" />
+            <div style={{ marginLeft: 10 }}> Uploading...</div>
+          </div>
+        )}
     <Card
       title={<span>Trims Approval</span>}
       style={{ textAlign: 'center' }}
@@ -225,7 +393,7 @@ const TrimSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-                (o) => !['rework_reason','rejection_reason','po_number','grn_number','grn_date','item_description','style_no'].includes(o.dataIndex)
+                (o) => !['reason','po_number','grn_number','grn_date','item_description','style_no','edit'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
@@ -253,7 +421,7 @@ const TrimSwatchApproval = () => {
             rowClassName={columnColor}
             scroll={{ x: 'max-content' }}
             columns={columns.filter(
-                (o) => !['rejection_reason','action' ,'rework_reason'].includes(o.dataIndex)
+                (o) => !['rejection_reason','action' ,'rework_reason','edit'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
@@ -279,7 +447,7 @@ const TrimSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-              (o) => !['action','rework_reason'].includes(o.dataIndex)
+              (o) => !['action','rework_reason','edit'].includes(o.dataIndex)
             )}
             dataSource={data}
             size="small"
@@ -302,7 +470,7 @@ const TrimSwatchApproval = () => {
               onChange(current) { setPage(current) },
             }}
             scroll={{ x: true }}
-            columns = {columns.filter((o) => !['rejection_reason'].includes(o.dataIndex))}
+            columns = {columns.filter((o) => !['rejection_reason','action'].includes(o.dataIndex))}
             dataSource = {data}
             size = 'small'
             bordered
@@ -315,50 +483,42 @@ const TrimSwatchApproval = () => {
             )}
         </TabPane>
       </Tabs>
-      {/* <Modal
-        visible={modal}
-        onCancel={onModalCancel}
-        footer={null}
-        style={{ maxWidth: '90%' }}
-        destroyOnClose
-        >
-          {action === 'image' ? (
-            <img src={imagePath} alt="Trim Image" style={{ maxWidth: '100%' }} />
-          ):null}
-
-        {action === 'reject' ? (<Card
-            title={'Reject'}
-            size='small'
-            headStyle={{ backgroundColor: '#7d33a2', color: 'white',textAlign:'center' }}
-            >
-            <Form form={form} layout='vertical' 
-            onFinish={handleFormSubmit}
-            >
-                <Row gutter={16}>
-                <Col xl={12} lg={12} xs={10}>
-                    <Form.Item name='rejectionReason' label='Reason' rules={[{ required: true, message: 'Reason is required' }]}>
-                    <TextArea rows={2} placeholder='Enter Reason' />
-                    </Form.Item>
+      <Drawer bodyStyle={{ paddingBottom: 80 }} title={selectedData?.trim_swatch_number} width={window.innerWidth > 768 ? '50%' : '85%'}
+        onClose={closeDrawer} visible={drawerVisible} closable={true}>
+        <Card>
+              <Form form={form} layout="vertical" onFinish={onFinish}>
+                <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 18 }} lg={{ span: 15 }} xl={{ span: 15 }}>
+                  <Form.Item label={'Trim Image'} required={true}>
+                    <Upload
+                    {...uploadFieldProps}
+                    listType="picture-card"
+                    fileList={fileList}
+                    // onPreview={onPreview}
+                    style={{ width: '200px', height: '200px' }}
+                    accept=".png,.jpeg,.PNG,.jpg,.JPG"
+                    // onChange={handleChange}
+                    >
+                      {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
+                    </Upload>
+                  </Form.Item>
                 </Col>
-                </Row>
-            <Row>
-              <Col span={24} style={{ textAlign: 'right' }}>
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
-                <Button
-                  htmlType="button"
-                  style={{ margin: '0 14px' }}
-                  onClick={onReset}
-                >
-                  Reset
-                </Button>
-              </Col>
-            </Row>
-            </Form>
-        </Card>): null}
-        </Modal> */}
+                <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+              <Button
+                htmlType="button"
+                style={{ margin: '0 14px' }}
+                onClick={onReset}
+              >
+                Reset
+              </Button>
+            </Col>
+              </Form>
+        </Card>
+        </Drawer>
     </Card>
+    </>
   );
 };
 

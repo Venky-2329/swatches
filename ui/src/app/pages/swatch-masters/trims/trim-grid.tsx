@@ -3,12 +3,15 @@ import { TrimSwatchService } from 'libs/shared-services';
 import { title } from 'process';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaDownload } from "react-icons/fa6";
+import { Excel } from 'antd-table-saveas-excel';
 
 export const TrimSwatchGrid = () => {
   const Option = Select;
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [countData, setCountData] = useState<any[]>([]);
   const service = new TrimSwatchService();
 
   useEffect(() => {
@@ -96,6 +99,35 @@ export const TrimSwatchGrid = () => {
     // },
   ];
 
+  const exportExcel = (value) => {
+    const excel = new Excel();
+  
+    excel
+      .addSheet(`WAITING FOR APPROVAL (${countData[0]?.openCount})`)
+      .addColumns(
+        columns.filter(
+          (o) => !['rework_reason','rejection_reason','po_number','grn_number','grn_date','item_description','style_no'].includes(o.dataIndex)
+          )
+      )
+      .addDataSource(value.filter((item) => item.status === 'OPEN'), { str2num: true });
+  
+    excel
+      .addSheet(`ACCEPTED (${countData[0]?.acceptedCount})`)
+      .addColumns(columns.filter((o) => !['rejection_reason','rework_reason'].includes(o.dataIndex)))
+      .addDataSource(value.filter((item) => item.status === 'ACCEPTED'), { str2num: true,  });
+  
+    excel
+      .addSheet(`REJECTED (${countData[0]?.rejectedCount})`)
+      .addColumns(
+        columns.filter(
+          (o) => !['rework_reason'].includes(o.dataIndex)))
+      .addDataSource(value.filter((item) => item.status === 'REJECTED'), { str2num: true });
+
+    
+  
+    excel.saveAs('Trim-Report.xlsx');
+  };
+
   function gotoGrid() {
     navigate('/trims-swatch-upload');
   }
@@ -106,8 +138,8 @@ export const TrimSwatchGrid = () => {
         title="Trim Swatch"
         headStyle={{ backgroundColor: '#25529a', color: 'white' }}
         extra={
-          <span style={{ color: 'white' }}>
-            <Button onClick={gotoGrid}>Create</Button>{' '}
+          <span style={{ color: 'Green' }} >
+          <Button onClick={gotoGrid} icon={<FaDownload />}>Excel</Button>{' '}
           </span>
         }
       >

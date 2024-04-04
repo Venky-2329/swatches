@@ -79,7 +79,7 @@ const FabricSwatchApproval = () => {
 
       if (fileList.length == 3) {
         notification.info({
-          message: 'You Cannot Upload More Than One File At A Time',
+          message: 'You Cannot Upload More Than Three File At A Time',
         });
         return true;
       } else {
