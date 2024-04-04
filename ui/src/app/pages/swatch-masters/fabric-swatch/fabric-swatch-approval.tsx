@@ -36,6 +36,8 @@ const FabricSwatchApproval = () => {
   const [selectedData, setSelectedData] = useState<any>(undefined);
   const [fileList, setFileList] = useState<any[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [pageSize, setPageSize] = useState<number>(null);
+
 
 
 
@@ -43,13 +45,6 @@ const FabricSwatchApproval = () => {
     setActiveKey(tabName);
   }, [tabName]);
 
-  // useEffect(() => {
-  //   const tabKey = location.state?.tab;
-  //   if (tabKey) {
-  //     setActiveKey(tabKey);
-  //     getData(tabKey);
-  //   }
-  // }, [location.state]);
   const handleRemove = (file) => {
     const updatedFileList = fileList.filter(item => item.uid !== file.uid);
     setFileList(updatedFileList);
@@ -305,7 +300,7 @@ const FabricSwatchApproval = () => {
   const columns: any = [
     {
       title: 'S.No',
-      render: (text, object, index) => (page - 1) * 10 + (index + 1)
+      render: (text, object, index) => (page - 1) * pageSize + index + 1
     },
     {
       title:<div style={{textAlign:'center'}}>Swatch Number</div>,
@@ -415,8 +410,8 @@ const FabricSwatchApproval = () => {
       }
     },
     {
-      title:<div style={{textAlign:'center'}}>Reason</div>,
-      dataIndex: 'rejectionReason',
+      title:<div style={{textAlign:'center'}}>Remarks</div>,
+      dataIndex: `${tabName === 'REWORK' ? 'reworkRemarks' : tabName === 'APPROVED' ? 'approvalRemarks' : tabName === 'REJECTED' ? 'rejectionReason':tabName === 'SENT_FOR_APPROVAL'? 'remarks': '-'}`,
       ...getColumnSearchProps('rejectionReason'),
       render: (text) => {
         return text || '-';
@@ -466,47 +461,12 @@ const FabricSwatchApproval = () => {
     setFileList([])
   };
 
-  const columnColor = (record: any) => {
-    return record.check_out_status === 'OPEN' ? 'open' : '';
-  };
-
-  const onModalCancel = () => {
-    onReset()
-    setBarcodeModal(null)
-    setModal(false);
-  };
-
   const tabData = [
     { key: StatusEnum.SENT_FOR_APPROVAL, label: "WAITING FOR APPROVAL", color: "#d4b417", countKey: "waitingCount", excludeColumns: ['rejectionReason', 'poNumber', 'grnNumber', 'grnDate', 'itemDescription', 'mill','edit'] },
     { key: StatusEnum.APPROVED, label: "APPROVED", color: "green", countKey: "approvedCount", excludeColumns: ['rejectionReason', 'poNumber', 'grnNumber', 'grnDate', 'itemDescription', 'mill','edit'] },
     { key: StatusEnum.REJECTED, label: "REJECTED", color: "red", countKey: "rejectedCount", excludeColumns: ['poNumber', 'grnNumber', 'grnDate', 'itemDescription', 'mill','edit'] },
     { key: StatusEnum.REWORK, label: "REWORK", color: "orange", countKey: "reworkCount", excludeColumns: ['action'] }
   ];  
-
-  // const onFinish=()=>{
-  //   console.log(selectedData.fabricSwatchId,'llllllllllllllllllll')
-  //   if (fileList.length > 0) {
-  //     const formData = new FormData();
-  //     fileList.forEach((file: any) => {
-  //       formData.append('file', file);
-  //     });
-  //     formData.append('fabricSwatchId', `${selectedData.fabricSwatchId}`);
-  //     console.log(formData,'llllllllllllllllllll')
-  //     service.uploadPhoto(formData).then((fileres) => {
-  //       if (fileres.status) {
-  //         message.success(fileres.internalMessage, 2);
-  //         onReset()
-  //         setDrawerVisible(false)
-  //         setFileList([])
-  //       } else {
-  //         message.error(fileres.internalMessage, 2);
-  //         setFileList([])
-  //       }
-  //     });
-  //   }else {
-  //     return notification.info({ message: 'Please upload Swatch' });
-  //   }
-  // }
 
   return (
     <Card
@@ -528,7 +488,13 @@ const FabricSwatchApproval = () => {
           <TabPane key={tab.key} tab={<span style={{ color: tab.color }}>{tab.label}: {countData[0]?.[tab.countKey]}</span>}>
             {data.length > 0 ? (
               <Table
-                pagination={{ onChange: setPage }}
+              pagination={{
+                pageSize: 20, 
+                onChange(current, pageSize) {
+                    setPage(current);
+                    setPageSize(pageSize);
+                }
+              }}
                 scroll={{ x: 'max-content' }}
                 columns={columns.filter(o => !tab.excludeColumns.includes(o.dataIndex))}
                 dataSource={data}
@@ -541,7 +507,7 @@ const FabricSwatchApproval = () => {
           </TabPane>
         ))}
       </Tabs>
-      <Drawer bodyStyle={{ paddingBottom: 80 }} title={selectedData.fabricSwatchNo} width={window.innerWidth > 768 ? '50%' : '85%'}
+      <Drawer bodyStyle={{ paddingBottom: 80 }} title={selectedData?.fabricSwatchNo} width={window.innerWidth > 768 ? '50%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card>
               <Form form={form} layout="vertical" onFinish={onFinish}>

@@ -27,6 +27,7 @@ export const FabricSwatchDetailView = () => {
   const department = createUser.departmentId
   const userRole = createUser.role
   const userName = createUser.userName
+  const [action, setAction] = useState(null);
 
 
   const location = useLocation();
@@ -46,7 +47,7 @@ export const FabricSwatchDetailView = () => {
   };
 
   const fabricAccepted = (value)=>{
-    const req = new SwatchStatus(value?.fabricSwatchId,value?.fabricSwatchNo)
+    const req = new SwatchStatus(value?.fabricSwatchId,value?.fabricSwatchNo,undefined,undefined,form.getFieldValue('remarks'))
     service.updateApprovedStatus(req).then((res)=>{
         if(res.status){
             message.success(res.internalMessage,2)
@@ -58,15 +59,8 @@ export const FabricSwatchDetailView = () => {
     })
   }
 
-  
-  const handelReject = (value)=>{
-    setFormData(value?.fabricSwatchId)
-    setModal(true)
-  }
-
-
   const fabricRejected =(value)=>{
-    const req = new SwatchStatus(value,undefined,form.getFieldValue('rejectionReason'))
+    const req = new SwatchStatus(value,undefined,form.getFieldValue('remarks'))
     service.updateRejectedStatus(req).then((res)=>{
         if(res.status){
             message.success(res.internalMessage,2)
@@ -79,6 +73,51 @@ export const FabricSwatchDetailView = () => {
         }
     })
   }
+
+  const fabricRework =(value)=>{
+    const req = new SwatchStatus(value,undefined,undefined,form.getFieldValue('remarks'))
+    service.updateReworkStatus(req).then((res)=>{
+        if(res.status){
+            message.success(res.internalMessage,2)
+            navigate('/fabric-swatch-approval',{state:{tab:'REJECTED'}})
+            sendMailForApprovalUser('Rework 🔁')
+            setModal(false)
+            onReset()
+        }else{
+            message.error(res.internalMessage,2)
+        }
+    })
+  }
+
+  
+  const handleApprove =(value)=>{
+    setAction('approve')
+    setFormData(value.fabricSwatchId)
+    setModal(true)
+  }
+
+  
+  const handelReject = (value)=>{
+    setAction('reject')
+    setFormData(value?.fabricSwatchId)
+    setModal(true)
+  }
+
+  const handelRework = (value)=>{
+    setAction('rework')
+    setFormData(value?.fabricSwatchId)
+    setModal(true)
+  }
+
+  const handleFormSubmit = () => {
+    if (action === 'approve') {
+      fabricAccepted(formData);
+    } else if (action === 'reject') {
+      fabricRejected(formData);
+    } else if(action === 'rework'){
+      fabricRework(formData)
+    }
+  };
 
   let mailerSent = false;
     async function sendMailForApprovalUser(value) {
@@ -161,10 +200,6 @@ export const FabricSwatchDetailView = () => {
   const onModalCancel = () => {
     onReset()
     setModal(false);
-  };
-
-  const handleFormSubmit = () => {
-    fabricRejected(formData);
   };
 
   return (
@@ -314,20 +349,13 @@ export const FabricSwatchDetailView = () => {
           <>
             <Divider type='horizontal'/>
             <div style={{ textAlign: 'center' }}>
-              <Popconfirm
-                title="Are you sure to accept?"
-                onConfirm={() => fabricAccepted(data[0])}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button style={{ backgroundColor: 'green', color: 'white' }}>APPROVE</Button>
-              </Popconfirm>
+                <Button style={{ backgroundColor: 'green', color: 'white' }} onClick={() => handleApprove(data[0])}>APPROVE</Button>
               <Divider type='vertical'/>
               <Button type='primary' danger onClick={() => handelReject(data[0])}>REJECT</Button>
-              {data[0]?.rework === 'YES' ? (
+              {data[0]?.rework === 'NO' ? (
                 <>
                   <Divider type='vertical' />
-                  <Button style={{ backgroundColor: 'orange', color: 'white' }} onClick={() => handelReject(data[0])}>REWORK</Button>
+                  <Button style={{ backgroundColor: 'orange', color: 'white' }} onClick={() => handelRework(data[0])}>REWORK</Button>
                 </>
               ) : null}
             </div>
@@ -342,7 +370,7 @@ export const FabricSwatchDetailView = () => {
         destroyOnClose
         >
           <Card
-            title={'Reject'}
+            title={action === 'approve' ? 'Approve' : action === 'reject' ? 'Reject' : action === 'rework' ? 'Rework' : '-'}
             size='small'
             headStyle={{ backgroundColor: '#25529a', color: 'white' }}
             >
@@ -351,7 +379,7 @@ export const FabricSwatchDetailView = () => {
             >
                 <Row gutter={16}>
                 <Col xl={12} lg={12} xs={10}>
-                    <Form.Item name='rejectionReason' label='Reason' rules={[{ required: true, message: 'Reason is required' }]}>
+                    <Form.Item name='remarks' label='Reason' rules={[{ required: true, message: 'Reason is required' }]}>
                     <TextArea rows={2} placeholder='Enter Reason' />
                     </Form.Item>
                 </Col>

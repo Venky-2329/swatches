@@ -10,6 +10,7 @@ import { SyncOutlined } from '@ant-design/icons'
 import { EmailModel } from 'libs/shared-models';
 import dayjs from 'dayjs';
 import AlertMessages from 'ui/src/app/common/notifications/notifications';
+import TextArea from 'antd/es/input/TextArea';
 
 export default function FabricSwatchUpload() {
   const {Option} = Select;
@@ -599,6 +600,11 @@ export default function FabricSwatchUpload() {
                 rules={[{ required: false, message: 'Approver is required' }]}
               >
                 <Input disabled placeholder='Approver'/>
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12} md={8} lg={6} xl={4}>
+              <Form.Item label={'Remarks'} name={'remarks'}>
+                <TextArea rows={2} placeholder='Enter Remarks'/>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 18 }} lg={{ span: 15 }} xl={{ span: 15 }}>

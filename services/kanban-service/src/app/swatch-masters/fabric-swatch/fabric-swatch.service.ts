@@ -117,7 +117,8 @@ export class FabricSwatchService{
         fs.category_id AS categoryId,scm.category_name AS categoryName,
         fs.season_id AS seasonId,ssm.season_name AS seasonName,
         fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fs.file_name as fileName,
-        fs.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,fs.created_user_mail as createdUserMail,fs.rework
+        fs.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,
+        fs.created_user_mail as createdUserMail,fs.rework,fs.rework_remarks as reworkRemarks,fs.approval_remarks as approvalRemarks,fs.remarks
         FROM fabric_swatch fs
         LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
         LEFT JOIN swatch_brands sbm ON sbm.brand_id = fs.brand_id
@@ -265,7 +266,7 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     fs.season_id AS seasonId,ssm.season_name AS seasonName,
     fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fs.file_name as fileName, 
     fs.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,
-    fs.created_user_mail as createdUserMail,fs.rework
+    fs.created_user_mail as createdUserMail,fs.rework,fs.rework,fs.rework_remarks as reworkRemarks,fs.approval_remarks as approvalRemarks,fs.remarks
     FROM fabric_swatch fs
     LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
     LEFT JOIN swatch_brands sbm ON sbm.brand_id = fs.brand_id
