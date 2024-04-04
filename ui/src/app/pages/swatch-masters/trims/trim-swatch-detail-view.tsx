@@ -132,7 +132,7 @@ export const TrimSwatchDetailView = () => {
       async function sendMailForApprovalUser(value) {
           const swatchDetails = new EmailModel();
           swatchDetails.swatchNo = data[0]?.trim_swatch_number
-          swatchDetails.to = 'kushal.siddegowda@shahi.co.in'
+          // swatchDetails.to = 'kushal.siddegowda@shahi.co.in'
           swatchDetails.to = data[0]?.createdUserMail
           console.log(data[0]?.createdUserMail, '---------mail')
           swatchDetails.html = `

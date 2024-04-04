@@ -4,8 +4,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {EditOutlined, EyeOutlined,SyncOutlined} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import Highlighter from 'react-highlight-words';
-import { DateReq, StatusEnum, SwatchStatus, TrimSwatchStatus } from 'libs/shared-models';
-import { FabricSwatchService, TrimSwatchService } from 'libs/shared-services';
+import { DateReq, EmailModel, StatusEnum, SwatchStatus, TrimSwatchStatus } from 'libs/shared-models';
+import { EmailService, FabricSwatchService, TrimSwatchService } from 'libs/shared-services';
 import TextArea from 'antd/es/input/TextArea';
 import imageCompression from 'browser-image-compression';
 
@@ -34,6 +34,7 @@ const TrimSwatchApproval = () => {
   const createUser = JSON.parse(localStorage.getItem('auth'));
   const [uploading, setUploading] = useState(false);
   const [reason , setReason ] = useState('')
+  const mailService = new EmailService()
   const userRole = createUser.role;
   const department = createUser.departmentId
 
@@ -162,7 +163,84 @@ const TrimSwatchApproval = () => {
 
   function onFinish(values) {
     createUpload(values);
+    sendMailForApprovalUser(values);
   }
+
+  let mailerSent = false;
+  async function sendMailForApprovalUser(value) {
+    const swatchDetails = new EmailModel();
+    swatchDetails.swatchNo = data[0]?.trim_swatch_number
+    // swatchDetails.to = 'kushal.siddegowda@shahi.co.in';
+    swatchDetails.to = data[0]?.emailId 
+    // TODO:
+    swatchDetails.html = `
+    <html>
+    <head>
+      <meta charset="UTF-8" />
+      <style>
+        #acceptDcLink {
+              display: inline-block;
+              padding: 10px 20px;
+              background-color: #28a745;
+              color: #fff;
+              text-decoration: none;
+              border-radius: 5px;
+              margin-top: 10px;
+              transition: background-color 0.3s ease, color 0.3s ease;
+              cursor: pointer;
+          }
+  
+          #acceptDcLink.accepted {
+              background-color: #6c757d;
+              cursor: not-allowed;
+          }
+  
+          #acceptDcLink:hover {
+              background-color: #218838;
+              color: #fff;
+          }
+      </style>
+    </head>
+    <body>
+    <p>Dear team,</p>
+    <p>Please find the Reworked 🔂 ${value} Trim Swatch details below:</p>
+    <p>Trim Swatch No: ${data[0]?.trim_swatch_number}</p>
+    <p>Buyer: ${data[0]?.buyerName}</p>
+    <p>Supplier: ${data[0]?.supplier_name }</p>
+    <p>Style No: ${data[0]?.style_no }</p>
+    <p>Item No: ${data[0]?.item_no}</p>
+    <p>Please click the link below for details:</p>
+
+    <a
+      href="http://localhost:4200/#/trims-swatch-detail-view/${data[0]?.trim_swatch_id}"
+      style="
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+      "
+      >View Details of ${data[0]?.trim_swatch_number}</a
+    >
+
+  </body>
+  </html>
+  `
+    swatchDetails.subject = "Trim Swatch : " +  data[0]?.trim_swatch_number
+    const res = await mailService.sendSwatchMail(swatchDetails)
+    console.log(res)
+    if (res.status == 201) {
+        if (res.data.status) {
+            message.success("Mail sent successfully")
+            mailerSent = true;
+        } else {
+            message.success("Mail sent successfully")
+        }
+    } else {
+        message.success("Notification Mail Sent to Approval User")
+    }
+}
 
 
 
