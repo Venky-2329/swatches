@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { TrimSwatchEntity } from "./trim-swatch.entity";
 
 @Entity('trim_upload_entity')
@@ -29,11 +29,12 @@ export class TrimUploadEntity{
     })
     createdUser : string | null
 
-    @Column('varchar',{
-        name: 'created_at',
+    @CreateDateColumn({
+        name: 'created_at'
     })
-    createdAt : string
+    createdAt: string;
 
     @ManyToOne(() => TrimSwatchEntity, trimEntity => trimEntity.uploadInfo , {nullable: false})
+    @JoinColumn({name:'trim_swatch_id'})
     trimInfo : TrimSwatchEntity
 }

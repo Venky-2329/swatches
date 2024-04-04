@@ -71,16 +71,21 @@ export class TrimSwatchStatus{
     trimSwatchNumber?:string;
     rejectionReason?: string;
     reworkReason?: string;
+    approvalRemarks?: string
+
 
     constructor(
         trimSwatchId:number,
         trimSwatchNumber?:string,
         rejectionReason?: string,
-        reworkReason?: string
+        reworkReason?: string,
+        approvalRemarks?: string
+
     ){
         this.trimSwatchId = trimSwatchId
         this.trimSwatchNumber = trimSwatchNumber
         this.rejectionReason = rejectionReason
         this.reworkReason = reworkReason
+        this.approvalRemarks = approvalRemarks
     }
 }

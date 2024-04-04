@@ -56,6 +56,10 @@ export class TrimSwatchService extends CommonAxiosServicePms{
     }
 
     async updateReworkStatus(req?:TrimSwatchStatus): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL+ '/updateRejectedStatus',req);
+        return this.axiosPostCall(this.URL+ '/updateReworkStatus',req);
+    }
+
+    async reworkSentForApproval(req?:TrimSwatchStatus): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL+ '/reworkSentForApproval',req);
     }
 }

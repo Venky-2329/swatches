@@ -67,6 +67,7 @@ export class FabricSwatchService{
     
     async updatePath(filePath: any, fabricSwatchId: number): Promise<CommonResponseModel> {
       try {
+        console.log(filePath,'zxcvbnm,jhgfdghiop')
         let flag = true;
         const entities=[]
         for (const res of filePath) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
 import { TrimSwatchService } from './trim-swatch.service';
 import { TrimSwatchDto } from './dto/trim-swatch.dto';
 import { CommonResponseModel, DateReq, TrimSwatchStatus } from 'libs/shared-models';
@@ -28,37 +28,34 @@ export class TrimSwatchController {
   }
 
   @Post('/photoUpload')
-  @UseInterceptors(FilesInterceptor('file' , 10,{
-    // limits : {files:3},
-    storage : diskStorage({
-      destination: './upload-files',
-      filename: (req , file , callback) => {
-        const name = `Trim`+file.originalname.split('.')[0];
-        const fileExtName = extname(file.originalname);
-        const randomName = Array(4)
-          .fill(null)
-          .map(() => Math.round(Math.random() * 16).toString(16))
-          .join('')
-        callback(null,`${name}-${randomName}${fileExtName}`);
-
-      },
-    }),
-    fileFilter: (req , file , callback) => {
-      if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG)$/)){
-        return callback(new Error ('Only png,jpeg,PNG,jpg,JPG files are allowed!'),false);
-      }
-      callback(null,true)
+  @UseInterceptors(FilesInterceptor('file', 10, {
+  storage: diskStorage({
+    destination:'./upload-files',
+    filename: (req, file, callback) => {
+      const name = `Trim-`+file.originalname.split('.')[0];
+      const fileExtName = extname(file.originalname);
+      const randomName = Array(4)
+        .fill(null)
+        .map(() => Math.round(Math.random() * 16).toString(16))
+        .join('');
+      callback(null, `${name}-${randomName}${fileExtName}`);
     },
-  }))
-  @ApiBody({type : TrimSwatchDto})
-  async photoUpload(@UploadedFile() file , @Body() uploadData: any): Promise<CommonResponseModel>{
-    try {
-      console.log(file ,'[[[[[[[[[[[[[[[[' ,uploadData ,'------controller')
-      return this.service.updatePath(file,uploadData.trimSwatchId);
-    } catch (error) {
-      console.log(error)
+  }),
+  fileFilter: (req, file, callback) => {
+    if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
+      return callback(new Error('Only png,jpeg,PNG,jpg,JPG files are allowed!'), false);
     }
+    callback(null, true);
+  },
+}))
+async photoUpload(@UploadedFiles() file: File[], @Body() uploadData: any): Promise<CommonResponseModel> {
+  try {
+    console.log(file,'-=-=====-=-=-=-=-=-=-')
+    return await this.service.updatePath(file, uploadData.trimSwatchId)
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel, error);
   }
+}
 
 
   @ApiBody({type:DateReq})
@@ -175,6 +172,15 @@ async updateReworkStatus(@Body() req: any): Promise<CommonResponseModel>{
     }catch(err){
         return this.appHandler.returnException(CommonResponseModel,err)
     }
+}
+
+@Post('/reworkSentForApproval')
+async reworkSentForApproval(@Body() req: any):Promise<CommonResponseModel>{
+  try {
+    return await this.service.reworkSentForApproval(req);
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
 }
 
 }

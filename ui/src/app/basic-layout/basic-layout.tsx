@@ -23,6 +23,7 @@ import {
   HomeOutlined,
 } from '@ant-design/icons';
 import { LogoIcon } from '../icons/logo-icon';
+import { MdOutlineCloudDownload } from "react-icons/md";
 
 const { useToken } = theme;
 /* eslint-disable-next-line */
@@ -147,6 +148,28 @@ export function BasicLayout(props: BasicLayoutProps) {
       path: 'trim-swatch-cards',
       icon: <RobotOutlined />,
       filepath: '../',
+    },
+    {
+      label: 'Report ',
+      path: '/swatch-view',
+      icon: <MdOutlineCloudDownload />,
+      filepath: '../',
+      children: [
+        {
+          label: 'Fabric',
+          key: 'fabric-swatch-view',
+          path: '/fabric-swatch-view',
+          icon: <UploadOutlined />,
+          filepath: '../',
+        },
+        {
+          label: 'Trims',
+          key: 'trims-swatch-view',
+          path: '/trims-swatch-view',
+          icon: <UploadOutlined />,
+          filepath: '../',
+        },
+      ],
     },
   ];
 

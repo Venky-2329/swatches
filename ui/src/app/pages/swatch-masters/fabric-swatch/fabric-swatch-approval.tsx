@@ -84,7 +84,7 @@ const FabricSwatchApproval = () => {
 
       if (fileList.length == 3) {
         notification.info({
-          message: 'You Cannot Upload More Than One File At A Time',
+          message: 'You Cannot Upload More Than Three File At A Time',
         });
         return true;
       } else {
@@ -541,7 +541,7 @@ const FabricSwatchApproval = () => {
           </TabPane>
         ))}
       </Tabs>
-      <Drawer bodyStyle={{ paddingBottom: 80 }} title={selectedData.fabricSwatchNo} width={window.innerWidth > 768 ? '50%' : '85%'}
+      <Drawer bodyStyle={{ paddingBottom: 80 }} title={selectedData?.fabricSwatchNo} width={window.innerWidth > 768 ? '50%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card>
               <Form form={form} layout="vertical" onFinish={onFinish}>

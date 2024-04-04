@@ -1,4 +1,4 @@
-import { StatusEnum } from "libs/shared-models";
+import { ReworkStatus, StatusEnum } from "libs/shared-models";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { TrimUploadEntity } from "./trim-swatch-upload-entity";
 
@@ -138,9 +138,32 @@ export class TrimSwatchEntity {
 
     @Column('varchar',{
         name:'rework_reason',
+        nullable:true,
         length: 255
     })
     reworkReason: string
+
+    @Column('varchar',{
+        name:'approval_reason',
+        nullable:true,
+        length: 255
+    })
+    approvalReason: string
+
+    @Column('varchar',{
+        name:'remarks',
+        nullable:true,
+        length: 255
+    })
+    remarks: string
+
+    @Column('enum',{
+        name:'rework',
+        enum:ReworkStatus
+    })
+    rework:ReworkStatus
+
+
 
     @OneToMany(() => TrimUploadEntity , trimUpload => trimUpload.trimInfo , {cascade: true})
     uploadInfo : TrimUploadEntity[]
