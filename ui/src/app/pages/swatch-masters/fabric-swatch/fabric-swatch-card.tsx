@@ -7,7 +7,7 @@ import moment from "moment";
 import { CSSProperties, useEffect, useState } from "react";
 import image from '../../../../../../upload-files/AOB_SwatchBookPT4.webp'
 import { useNavigate } from "react-router-dom";
-import { DateReq, TrimCardReq } from "libs/shared-models";
+import { DateReq, StatusDisplayEnum, TrimCardReq } from "libs/shared-models";
 
 export default function FabricSwatch() {
    const [data, setData] = useState([]);
@@ -192,9 +192,9 @@ export default function FabricSwatch() {
         </Row>
         </Form>
         <br/>
-        <Row gutter={[24,24]} >
+        <Row gutter={[16,16]} >
             {data.map((i,index) => {
-                const {buyerName , brandName , styleNo , itemNo  , createdAt , trim_swatch_id } = i
+                const {buyerName , brandName , styleNo , itemNo  , createdAt , status } = i
                 const date = moment(createdAt).format('YYYY-MM-DD')
                 const cardStyle : CSSProperties = {
                     background: backgroundColors[index % backgroundColors.length],
@@ -226,6 +226,7 @@ export default function FabricSwatch() {
                       <div>Created On: <b>{date}</b></div>
                       <div>Style No: <b>{styleNo}</b></div>
                       <div>Item No: <b>{itemNo}</b></div>
+                      <div>Status: <b>{StatusDisplayEnum.find((item) => item.name === status)?.displayVal || status}</b></div>
                     </div>
                   }
                 />

@@ -236,47 +236,47 @@ export const FabricSwatchDetailView = () => {
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Style No</span>}>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.styleNo}
+                {data[0]?.styleNo || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item No</span>}>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.itemNo}
+                {data[0]?.itemNo || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Category Type</span> }>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.categoryType}
+                {data[0]?.categoryType || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Color</span> }>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.color}
+                {data[0]?.color || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>PO No</span>}>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.poNumber}
+                {data[0]?.poNumber || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN No</span> }>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.grnNumber}
+                {data[0]?.grnNumber || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>GRN Date</span> }>
               <span style={{fontSize:'16px'}}>
-              {data[0]?.grnDate ? moment(data[0]?.createdDate).format('YYYY-MM-DD') : '-'}
+              {data[0]?.grnDate ? moment(data[0]?.createdDate).format('YYYY-MM-DD') : '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item Description</span> }>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.itemDescription}
+                {data[0]?.itemDescription || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Mill/Vendor</span> }>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.mill}
+                {data[0]?.mill || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Brand</span> }>
@@ -314,12 +314,20 @@ export const FabricSwatchDetailView = () => {
                 {StatusDisplayEnum.find(item => item.name === data[0]?.status)?.displayVal || data[0]?.status}
               </span>
             </DescriptionsItem>
-            {data[0]?.status === 'REJECTED' ?(
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Rejection Reason</span>}>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Reworked</span>}>
               <span style={{fontSize:'16px'}}>
-                {data[0]?.rejectionReason || "--"}
+              {data[0]?.rework}
               </span>
-            </DescriptionsItem>):[]}
+            </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Remarks</span>}>
+              <span style={{fontSize:'16px'}}>
+              {data[0]?.status === 'REJECTED' && data[0]?.rejectionReason ||
+              data[0]?.status === 'APPROVED' && data[0]?.approvalRemarks ||
+              data[0]?.status === 'SENT_FOR_APPROVAL' && data[0]?.remarks ||
+              data[0]?.status === 'REWORK' && data[0]?.reworkRemarks ||
+              "--"}
+              </span>
+            </DescriptionsItem>
           </Descriptions>
         </Card>
         </Col>

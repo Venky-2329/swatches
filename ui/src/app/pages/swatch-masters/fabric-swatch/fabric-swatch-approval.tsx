@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {Alert,Button,Card,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Table,Tabs,Tag,Tooltip,Upload,UploadFile,message, notification} from 'antd';
+import {Alert,Button,Card,Checkbox,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Table,Tabs,Tag,Tooltip,Upload,UploadFile,message, notification} from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {SearchOutlined,SyncOutlined,EditOutlined, BarcodeOutlined, EyeOutlined} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
@@ -487,6 +487,40 @@ const FabricSwatchApproval = () => {
       }
     },
     {
+      title:<div style={{textAlign:'center'}}>Reworked</div>,
+      dataIndex: 'rework',
+      render: (text) => {
+        return text || '-';
+      },
+      onFilter: (value, record) => {
+        return record.rework.includes(value);
+      },
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          <Checkbox
+            checked={selectedKeys.includes('YES')}
+            onChange={() => setSelectedKeys(selectedKeys.includes('YES') ? [] : ['YES'])}
+          >
+            <span style={{ color: 'green' }}>YES</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes('NO')}
+            onChange={() => setSelectedKeys(selectedKeys.includes('NO') ? [] : ['NO'])}
+          >
+            <span style={{ color: 'red' }}>NO</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns">
+            <Button onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          </div>
+        </div>
+      ),
+    },
+    {
       title:<div style={{textAlign:'center'}}>Remarks</div>,
       dataIndex: `${tabName === 'REWORK' ? 'reworkRemarks' : tabName === 'APPROVED' ? 'approvalRemarks' : tabName === 'REJECTED' ? 'rejectionReason':tabName === 'SENT_FOR_APPROVAL'? 'remarks': '-'}`,
       ...getColumnSearchProps('rejectionReason'),
@@ -501,15 +535,14 @@ const FabricSwatchApproval = () => {
       render: (text, rowData) => {
         return(
           <span>
-                    <Tooltip placement="top" title="Detail View">
-                        <EyeOutlined
-                            onClick={() => {
-                                navigate(`/fabric-swatch-detail-view/${rowData.fabricSwatchId}`)
-                            }}
-                            style={{ color: "blue", fontSize: 20 }}
-                        />
-                        {/* <Divider type='vertical' /> */}
-                    </Tooltip>
+            <Tooltip placement="top" title="Detail View">
+              <EyeOutlined
+               onClick={() => {
+                navigate(`/fabric-swatch-detail-view/${rowData.fabricSwatchId}`)
+              }}
+              style={{ color: "blue", fontSize: 20 }}
+              />
+            </Tooltip>
           </span>
         )
     },
