@@ -324,7 +324,7 @@ export default function TrimSwatchUpload() {
                 message.success("Mail sent successfully")
             }
         } else {
-            message.success("Notification Mail Sent to Approval User")
+            message.success(`Alert Mail Sent to ${form.getFieldValue('approverMail')}`)
         }
     }
 

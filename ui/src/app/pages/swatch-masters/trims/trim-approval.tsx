@@ -57,6 +57,7 @@ const TrimSwatchApproval = () => {
   //     getData(tabKey);
   //   }
   // }, [location.state]);
+  
   const handleRemove = (file) => {
     const updatedFileList = fileList.filter(item => item.uid !== file.uid);
     setFileList(updatedFileList);
@@ -163,15 +164,15 @@ const TrimSwatchApproval = () => {
 
   function onFinish(values) {
     createUpload(values);
-    sendMailForApprovalUser(values);
+    sendMailForApprovalUser();
   }
 
   let mailerSent = false;
-  async function sendMailForApprovalUser(value) {
+  async function sendMailForApprovalUser() {
     const swatchDetails = new EmailModel();
-    swatchDetails.swatchNo = data[0]?.trim_swatch_number
+    swatchDetails.swatchNo = selectedData.trim_swatch_number
     // swatchDetails.to = 'kushal.siddegowda@shahi.co.in';
-    swatchDetails.to = data[0]?.emailId 
+    swatchDetails.to = selectedData.emailId 
     // TODO:
     swatchDetails.html = `
     <html>
@@ -203,16 +204,16 @@ const TrimSwatchApproval = () => {
     </head>
     <body>
     <p>Dear team,</p>
-    <p>Please find the Reworked 🔂 ${value} Trim Swatch details below:</p>
-    <p>Trim Swatch No: ${data[0]?.trim_swatch_number}</p>
-    <p>Buyer: ${data[0]?.buyerName}</p>
-    <p>Supplier: ${data[0]?.supplier_name }</p>
-    <p>Style No: ${data[0]?.style_no }</p>
-    <p>Item No: ${data[0]?.item_no}</p>
+    <p>Please find the Reworked 🔂 Trim Swatch details below:</p>
+    <p>Trim Swatch No: ${selectedData.trim_swatch_number}</p>
+    <p>Buyer: ${selectedData.buyerName}</p>
+    <p>Supplier: ${selectedData.supplier_name }</p>
+    <p>Style No: ${selectedData.style_no }</p>
+    <p>Item No: ${selectedData.item_no}</p>
     <p>Please click the link below for details:</p>
 
     <a
-      href="http://localhost:4200/#/trims-swatch-detail-view/${data[0]?.trim_swatch_id}"
+      href="http://localhost:4200/#/trims-swatch-detail-view/${selectedData.trim_swatch_id}"
       style="
         display: inline-block;
         padding: 10px 20px;
@@ -221,13 +222,13 @@ const TrimSwatchApproval = () => {
         text-decoration: none;
         border-radius: 5px;
       "
-      >View Details of ${data[0]?.trim_swatch_number}</a
+      >View Details of ${selectedData.trim_swatch_number}</a
     >
 
   </body>
   </html>
   `
-    swatchDetails.subject = "Trim Swatch : " +  data[0]?.trim_swatch_number
+    swatchDetails.subject = "Trim Swatch : " +  selectedData.trim_swatch_number
     const res = await mailService.sendSwatchMail(swatchDetails)
     console.log(res)
     if (res.status == 201) {
@@ -238,7 +239,7 @@ const TrimSwatchApproval = () => {
             message.success("Mail sent successfully")
         }
     } else {
-        message.success("Notification Mail Sent to Approval User")
+        message.success(`Alert Mail Sent to ${selectedData.emailId} `)
     }
 }
 
@@ -265,7 +266,7 @@ const TrimSwatchApproval = () => {
                 form.setFieldsValue({trimSwatchId: res?.data?.trimSwatchId})
                 setResData(res.data)
                 res.data.filePath = fileres.data;
-                // sendMailForApprovalUser()
+                sendMailForApprovalUser()
                 message.success(res.internalMessage,2)
                 onReset();
                 setDrawerVisible(false)

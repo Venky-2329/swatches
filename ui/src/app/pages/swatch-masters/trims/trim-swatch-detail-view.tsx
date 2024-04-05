@@ -200,7 +200,7 @@ export const TrimSwatchDetailView = () => {
                   message.success("Mail sent successfully")
               }
           } else {
-              message.success(`Alert mail sent to the ${data[0]?.createdUser}` )
+              message.success(`Alert mail sent to the ${data[0]?.createdUserMail}` )
           }
       }
   
@@ -253,12 +253,14 @@ export const TrimSwatchDetailView = () => {
                   </span>
                 </DescriptionsItem>
                 <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Status</span> }><span style={{fontSize:'16px'}}> {StatusDisplayEnum.find(item => item.name === data[0]?.status)?.displayVal || data[0]?.status}</span></DescriptionsItem>
-                {data[0]?.status === 'REJECTED' ?(
-              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Rejection Reason</span>}>
+
+                {/* {data[0]?.status === 'REJECTED' ?( */}
+              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Remarks</span>}>
                 <span style={{fontSize:'16px'}}>
-                  {data[0]?.rejection_reason || "--"}
+                  {data[0]?.status === 'REJECTED' ? data[0]?.rejected_reason : data[0]?.status === 'APPROVED' ? data[0]?.approvalReason :  data[0]?.status === 'REWORK' ? data[0]?.reworkReason  : '--'}
                 </span>   
-              </DescriptionsItem>):[]}
+              </DescriptionsItem>
+              {/*  ):[]} */}
               </Descriptions>
             </Card>
             </Col>
@@ -292,8 +294,12 @@ export const TrimSwatchDetailView = () => {
                 <Button  style={{backgroundColor:'green', color:'white'}} onClick={()=>handelAccept(data[0])}>APPROVE</Button>
                 <Divider type='vertical'/>
                 <Button type='primary' danger onClick={() => handelReject(data[0])}>REJECT</Button>
+                {data[0]?.rework === 'NO' ? (
+                  <>
                 <Divider type='vertical'/>
                 <Button  style={{backgroundColor:'orange', color:'white'}} onClick={() => handelRemove(data[0])}>REWORK</Button>
+                </>
+                ):(<></>)}
             </div>
             </>
             )}
@@ -305,6 +311,7 @@ export const TrimSwatchDetailView = () => {
             style={{ maxWidth: '90%' }}
             destroyOnClose
             >
+
               <Card
                 title={action === 'approve' ? 'Approve' : action === 'reject' ? 'Reject' : action === 'rework' ? 'Rework' : '-'}
                 size='small'

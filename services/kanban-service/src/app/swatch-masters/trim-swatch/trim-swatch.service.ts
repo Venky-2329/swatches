@@ -160,6 +160,7 @@ export class TrimSwatchService {
       if(req.approverId != undefined ){
         query = query + ` and ts.approver_id = ${req.approverId}`
       }
+      query = query + `ORDER BY ts.trim_swatch_number DESC`
 
       const data = await this.repo.query(query)
       if (data.length>0){
