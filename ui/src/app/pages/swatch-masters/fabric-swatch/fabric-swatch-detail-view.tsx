@@ -189,7 +189,7 @@ export const FabricSwatchDetailView = () => {
                 message.success("Mail sent successfully")
             }
         } else {
-            message.success(`Alert mail sent to the ${data[0]?.createdUser}`)
+            message.success(`Alert mail sent to the ${data[0]?.createdUserMail}`)
         }
     }
 

@@ -226,7 +226,7 @@ export default function FabricSwatchUpload() {
               message.success("Mail sent successfully")
           }
       } else {
-          message.success("Notification Mail Sent to Approval User")
+          message.success(`Alert Mail Sent to ${form.getFieldValue('approverMail')}`)
       }
   }
   function gotoGrid() {
@@ -249,9 +249,9 @@ export default function FabricSwatchUpload() {
                 form.setFieldsValue({fabricSwatchNumber: res?.data?.fabricSwatchNumber})
                 form.setFieldsValue({fabricSwatchId: res?.data?.fabricSwatchId})
                 res.data.filePath = fileres.data;
-                // sendMailForApprovalUser()
+                sendMailForApprovalUser()
                 message.success(res.internalMessage, 2);
-                onReset();
+                // onReset();
                 gotoGrid();
               } else {
                 message.error(res.internalMessage, 2);
@@ -266,21 +266,6 @@ export default function FabricSwatchUpload() {
       return notification.info({ message: 'Please upload Swatch' });
     }
   };
-
-  // const onPreview = async (file: UploadFile) => {
-  //   let src = file.url as string;
-  //   if (!src) {
-  //     src = await new Promise((resolve) => {
-  //       const reader = new FileReader();
-  //       reader.readAsDataURL(file.originFileObj as RcFile);
-  //       reader.onload = () => resolve(reader.result as string);
-  //     });
-  //   }
-  //   const image = new Image();
-  //   image.src = src;
-  //   const imgWindow = window.open(src);
-  //   imgWindow?.document.write(image.outerHTML);
-  // };
 
   const getBase64 = (img, callback) => {
     const reader = new FileReader();

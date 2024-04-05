@@ -112,7 +112,7 @@ export class FabricSwatchService{
         const fromDate = req.fromDate;
         const toDate = req.toDate;
         let query = `SELECT fs.fabric_swatch_id AS fabricSwatchId,fs.fabric_swatch_number AS fabricSwatchNo, fs.style_no styleNo,fs.item_no AS itemNo,fs.category_type AS categoryType,fs.color,fs.po_number AS poNumber,
-        fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.mill, fs.status,
+        fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.mill, fs.status,fs.approver_id AS approverId,spu.email_id AS approverMail,
         fs.buyer_id AS buyerId,b.buyer_name AS buyerName,
         fs.brand_id AS brandId,sbm.brand_name AS brandName,
         fs.category_id AS categoryId,scm.category_name AS categoryName,
@@ -125,6 +125,7 @@ export class FabricSwatchService{
         LEFT JOIN swatch_brands sbm ON sbm.brand_id = fs.brand_id
         LEFT JOIN swatch_category scm ON scm.category_id = fs.category_id
         LEFT JOIN swatch_seasons ssm ON ssm.season_id = fs.season_id
+        LEFT JOIN swatch_approval_users spu ON spu.approved_id = fs.approver_id
         WHERE 1=1`
         if(req.tabName != undefined){
           if(req.tabName == 'SENT_FOR_APPROVAL'){
@@ -155,6 +156,7 @@ export class FabricSwatchService{
         if(req.createdBy != undefined){
           query = query + ` and fs.created_user = ${req.createdBy}`
         }
+        query = query + ` ORDER BY fs.fabric_swatch_number DESC`
 
         const data = await this.dataSource.query(query)
 
@@ -260,7 +262,7 @@ async updateSentForApprovalStatus(req: SwatchStatus): Promise<CommonResponseMode
 async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
   try{
     let query = `SELECT fs.fabric_swatch_id AS fabricSwatchId,fs.fabric_swatch_number AS fabricSwatchNo, fs.style_no styleNo,fs.item_no AS itemNo,fs.category_type AS categoryType,fs.color,fs.po_number AS poNumber,
-    fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.mill, fs.status,
+    fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.mill, fs.status,fs.approver_id AS approverId,spu.email_id AS approverMail,
     fs.buyer_id AS buyerId,b.buyer_name AS buyerName,
     fs.brand_id AS brandId,sbm.brand_name AS brandName,
     fs.category_id AS categoryId,scm.category_name AS categoryName,
@@ -273,6 +275,7 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     LEFT JOIN swatch_brands sbm ON sbm.brand_id = fs.brand_id
     LEFT JOIN swatch_category scm ON scm.category_id = fs.category_id
     LEFT JOIN swatch_seasons ssm ON ssm.season_id = fs.season_id
+    LEFT JOIN swatch_approval_users spu ON spu.approved_id = fs.approver_id
     WHERE 1=1`
     if(req.fabricSwatchId){
         query = query +` and fs.fabric_swatch_id = ${req.fabricSwatchId}`;

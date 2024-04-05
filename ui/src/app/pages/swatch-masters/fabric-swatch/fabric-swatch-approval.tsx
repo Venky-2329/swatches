@@ -4,8 +4,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {SearchOutlined,SyncOutlined,EditOutlined, BarcodeOutlined, EyeOutlined} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import Highlighter from 'react-highlight-words';
-import { DateReq, StatusEnum, SwatchStatus, } from 'libs/shared-models';
-import { FabricSwatchService } from 'libs/shared-services';
+import { DateReq, EmailModel, StatusEnum, SwatchStatus, } from 'libs/shared-models';
+import { EmailService, FabricSwatchService } from 'libs/shared-services';
 import imageCompression from 'browser-image-compression';
 import { RcFile } from 'antd/es/upload';
 
@@ -37,6 +37,7 @@ const FabricSwatchApproval = () => {
   const [fileList, setFileList] = useState<any[]>([]);
   const [uploading, setUploading] = useState(false);
   const [pageSize, setPageSize] = useState<number>(null);
+  const mailService = new EmailService()
 
 
 
@@ -171,6 +172,7 @@ const FabricSwatchApproval = () => {
                 res.data.filePath = fileres.data;
                 // sendMailForApprovalUser()
                 message.success(res.internalMessage, 2);
+                sendMailForApprovalUser()
                 onReset();
                 setDrawerVisible(false)
                 setFileList([])
@@ -190,6 +192,80 @@ const FabricSwatchApproval = () => {
     }
   };
 
+  let mailerSent = false;
+    async function sendMailForApprovalUser() {
+        const swatchDetails = new EmailModel();
+        swatchDetails.swatchNo = data[0]?.fabricSwatchNo
+        swatchDetails.to = data[0]?.approverMail
+        swatchDetails.html = `
+        <html>
+        <head>
+          <meta charset="UTF-8" />
+          <style>
+            #acceptDcLink {
+                  display: inline-block;
+                  padding: 10px 20px;
+                  background-color: #28a745;
+                  color: #fff;
+                  text-decoration: none;
+                  border-radius: 5px;
+                  margin-top: 10px;
+                  transition: background-color 0.3s ease, color 0.3s ease;
+                  cursor: pointer;
+              }
+      
+              #acceptDcLink.accepted {
+                  background-color: #6c757d;
+                  cursor: not-allowed;
+              }
+      
+              #acceptDcLink:hover {
+                  background-color: #218838;
+                  color: #fff;
+              }
+          </style>
+        </head>
+        <body>
+          <p>Dear team,</p>
+          <p>Please find the Reworked 🔁 Fabric Swatch details below:</p>
+          <p>Fabric Swatch No: ${selectedData?.fabricSwatchNo}</p>
+          <p>Buyer: ${selectedData?.buyerName}</p>
+          <p>Brand: ${selectedData?.brandName}</p>
+          <p>Style No: ${selectedData?.styleNo}</p>
+          <p>Item No: ${selectedData?.itemNo}</p>
+          <p>Please click the link below for details:</p>
+
+          <a
+            href="http://localhost:4200/#/fabric-swatch-detail-view/${selectedData?.fabricSwatchId}"
+            style="
+              display: inline-block;
+              padding: 10px 20px;
+              background-color: #007bff;
+              color: #fff;
+              text-decoration: none;
+              border-radius: 5px;
+            "
+            >View Details of ${selectedData?.fabricSwatchNo}</a
+          >
+
+        </body>
+      </html>
+      `
+        swatchDetails.subject = "Fabric Swatch : " + selectedData?.fabricSwatchNo
+        const res = await mailService.sendSwatchMail(swatchDetails)
+        console.log(res)
+        if (res.status == 201) {
+            if (res.data.status) {
+                message.success("Mail sent successfully")
+                mailerSent = true;
+            } else {
+                message.success("Mail sent successfully")
+            }
+        } else {
+            message.success(`Alert mail sent to the ${selectedData?.approverMail}`)
+        }
+    }
+
   const getCount = () => {
     fabricService.statusCount().then((res) => {
       if (res.status) {
@@ -202,6 +278,7 @@ const FabricSwatchApproval = () => {
     setSelectedTabKey(value);
     setTabName(value);
     getData(value);
+    setPage(1);
   };
 
   const getColumnSearchProps = (dataIndex: string) => ({
