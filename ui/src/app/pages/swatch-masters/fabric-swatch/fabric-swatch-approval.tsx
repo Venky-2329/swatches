@@ -8,6 +8,7 @@ import { DateReq, EmailModel, StatusEnum, SwatchStatus, } from 'libs/shared-mode
 import { EmailService, FabricSwatchService } from 'libs/shared-services';
 import imageCompression from 'browser-image-compression';
 import { RcFile } from 'antd/es/upload';
+import TextArea from 'antd/es/input/TextArea';
 
 
 const FabricSwatchApproval = () => {
@@ -158,7 +159,9 @@ const FabricSwatchApproval = () => {
 
   const onFinish = () => {
     if (fileList.length > 0) {
-      const req = new SwatchStatus(selectedData.fabricSwatchId,undefined,undefined)
+      console.log(form.getFieldValue('remarks'))
+      const req = new SwatchStatus(selectedData.fabricSwatchId,undefined,undefined,undefined,undefined,form.getFieldValue('remarks'))
+      console.log(req,'pppppppppppppppppppppp')
       service.updateSentForApprovalStatus(req).then((res) => {
         if (res.status) {
           if (fileList.length > 0) {
@@ -173,7 +176,7 @@ const FabricSwatchApproval = () => {
                 // sendMailForApprovalUser()
                 message.success(res.internalMessage, 2);
                 sendMailForApprovalUser()
-                onReset();
+                // onReset();
                 setDrawerVisible(false)
                 setFileList([])
                 getData(tabName)
@@ -358,14 +361,14 @@ const FabricSwatchApproval = () => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   }
-
+  
   function handleReset(clearFilters) {
     clearFilters();
     setSearchText('');
   }
 
   const openFormWithData=(viewData)=>{
-    console.log(viewData,'oooooooooooooooooooooooooooooo')
+    // console.log(viewData,'oooooooooooooooooooooooooooooo')
     setDrawerVisible(true);
     setSelectedData(viewData);
   }
@@ -523,7 +526,7 @@ const FabricSwatchApproval = () => {
     {
       title:<div style={{textAlign:'center'}}>Remarks</div>,
       dataIndex: `${tabName === 'REWORK' ? 'reworkRemarks' : tabName === 'APPROVED' ? 'approvalRemarks' : tabName === 'REJECTED' ? 'rejectionReason':tabName === 'SENT_FOR_APPROVAL'? 'remarks': '-'}`,
-      ...getColumnSearchProps('rejectionReason'),
+      ...getColumnSearchProps( `${tabName === 'REWORK' ? 'reworkRemarks' : tabName === 'APPROVED' ? 'approvalRemarks' : tabName === 'REJECTED' ? 'rejectionReason':tabName === 'SENT_FOR_APPROVAL'? 'remarks': '-'}`),
       render: (text) => {
         return text || '-';
       }
@@ -621,7 +624,8 @@ const FabricSwatchApproval = () => {
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card>
               <Form form={form} layout="vertical" onFinish={onFinish}>
-                <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 18 }} lg={{ span: 15 }} xl={{ span: 15 }}>
+                <Row gutter={16}>
+                <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 18 }} lg={{ span: 15 }} xl={{ span: 4 }}>
                   <Form.Item label={'Fabric Image'} required={true}>
                     <Upload
                     {...uploadFieldProps}
@@ -636,6 +640,17 @@ const FabricSwatchApproval = () => {
                     </Upload>
                   </Form.Item>
                 </Col>
+                <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}>
+                <Form.Item
+                      label="Remarks"
+                      name={'remarks'}
+                      rules={[{ required: true, message: 'Please input Remarks' }]}
+                    >
+                      <TextArea rows={4} placeholder="Enter Remarks" />
+                    </Form.Item>
+                </Col>
+                </Row>
+
                 <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit">
                 Submit

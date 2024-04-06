@@ -252,6 +252,7 @@ async updateSentForApprovalStatus(req: SwatchStatus): Promise<CommonResponseMode
             throw new Error('Swatch data not found');
         }
         mainData.status = StatusEnum.SENT_FOR_APPROVAL;
+        mainData.remarks = req.remarks;
         await this.repo.save(mainData);
         return new CommonResponseModel(true, 1, 'Sent for Approval', mainData);
     } catch (err) {

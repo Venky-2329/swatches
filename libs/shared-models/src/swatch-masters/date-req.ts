@@ -48,21 +48,24 @@ export class SwatchStatus{
     fabricSwatchId:number;
     fabricSwatchNumber?:string;
     rejectionReason?: string;
-    reworkRemarks?: string
-    approvalRemarks?: string
+    reworkRemarks?: string;
+    approvalRemarks?: string;
+    remarks ?: string;
 
     constructor(
         fabricSwatchId:number,
         fabricSwatchNumber?:string,
         rejectionReason?: string,
         reworkRemarks?: string,
-        approvalRemarks?: string
+        approvalRemarks?: string,
+        remarks ?: string
     ){
         this.fabricSwatchId = fabricSwatchId
         this.fabricSwatchNumber = fabricSwatchNumber
         this.rejectionReason = rejectionReason
         this.approvalRemarks = approvalRemarks
         this.reworkRemarks = reworkRemarks
+        this.remarks = remarks
     }
 }
 
@@ -72,14 +75,15 @@ export class TrimSwatchStatus{
     rejectionReason?: string;
     reworkReason?: string;
     approvalRemarks?: string
-
+    remarks?: string
 
     constructor(
         trimSwatchId:number,
         trimSwatchNumber?:string,
         rejectionReason?: string,
         reworkReason?: string,
-        approvalRemarks?: string
+        approvalRemarks?: string,
+        remarks?: string
 
     ){
         this.trimSwatchId = trimSwatchId
@@ -87,5 +91,6 @@ export class TrimSwatchStatus{
         this.rejectionReason = rejectionReason
         this.reworkReason = reworkReason
         this.approvalRemarks = approvalRemarks
+        this.remarks = remarks
     }
 }

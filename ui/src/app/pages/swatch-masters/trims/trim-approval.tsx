@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {Alert,Button,Card,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Spin,Table,Tabs,Tag,Tooltip,Upload,message, notification} from 'antd';
+import {Alert,Button,Card,Checkbox,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Spin,Table,Tabs,Tag,Tooltip,Upload,message, notification} from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {EditOutlined, EyeOutlined,SyncOutlined} from '@ant-design/icons';
+import {EditOutlined, EyeOutlined,SyncOutlined,SearchOutlined} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import Highlighter from 'react-highlight-words';
 import { DateReq, EmailModel, StatusEnum, SwatchStatus, TrimSwatchStatus } from 'libs/shared-models';
@@ -35,6 +35,8 @@ const TrimSwatchApproval = () => {
   const [uploading, setUploading] = useState(false);
   const [reason , setReason ] = useState('')
   const mailService = new EmailService()
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const [searchText, setSearchText] = useState('');
   const userRole = createUser.role;
   const department = createUser.departmentId
 
@@ -164,7 +166,7 @@ const TrimSwatchApproval = () => {
 
   function onFinish(values) {
     createUpload(values);
-    sendMailForApprovalUser();
+    // sendMailForApprovalUser();
   }
 
   let mailerSent = false;
@@ -244,11 +246,95 @@ const TrimSwatchApproval = () => {
 }
 
 
+const getColumnSearchProps = (dataIndex: string) => ({
+  filterDropdown: ({
+    setSelectedKeys,
+    selectedKeys,
+    confirm,
+    clearFilters,
+  }) => (
+    <div style={{ padding: 8 }}>
+      <Input
+        ref={searchInput}
+        placeholder={`Search ${dataIndex}`}
+        value={selectedKeys[0]}
+        onChange={(e) =>
+          setSelectedKeys(e.target.value ? [e.target.value] : [])
+        }
+        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        style={{ width: 188, marginBottom: 8, display: 'block' }}
+      />
+      <Button
+        type="primary"
+        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        icon={<SearchOutlined />}
+        size="small"
+        style={{ width: 90, marginRight: 8 }}
+      >
+        Search
+      </Button>
+      <Button
+        size="small"
+        style={{ width: 90 }}
+        onClick={() => {
+          handleReset(clearFilters);
+          setSearchedColumn(dataIndex);
+          confirm({ closeDropdown: true });
+        }}
+      >
+        Reset
+      </Button>
+    </div>
+  ),
+  filterIcon: (filtered) => (
+    <SearchOutlined
+      type="search"
+      style={{ color: filtered ? '#1890ff' : undefined }}
+    />
+  ),
+  onFilter: (value, record) =>
+    record[dataIndex]
+      ? record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
+      : false,
+  onFilterDropdownVisibleChange: (visible) => {
+    if (visible) {
+      setTimeout(() => searchInput.current.select());
+    }
+  },
+  render: (text) =>
+    text ? (
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#faf8f5', padding: 0 }}
+          // '#e8e4df'
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      )
+    ) : null,
+});
+function handleSearch(selectedKeys, confirm, dataIndex) {
+  confirm();
+  setSearchText(selectedKeys[0]);
+  setSearchedColumn(dataIndex);
+}
+
+function handleReset(clearFilters) {
+  clearFilters();
+  setSearchText('');
+}
+
 
   function createUpload(values) {
     if (fileList.length > 0) {
-      console.log(values,'...................')
-      const req = new TrimSwatchStatus(selectedData.trim_swatch_id)
+      // console.log(form.getFieldValue('remarks'),'...................')
+      const req = new TrimSwatchStatus(selectedData.trim_swatch_id,undefined,undefined,undefined,undefined,form.getFieldValue('remarks'))
       console.log(req.trimSwatchId , '=========id')
       service.reworkSentForApproval(req).then((res) => {
         console.log(res.data)
@@ -296,14 +382,18 @@ const TrimSwatchApproval = () => {
     {
       title: 'S.No',
       render: (val, record, index) => index + 1,
+      
     },
     {
       title: 'Trim Number',
       dataIndex: 'trim_swatch_number',
+      ...getColumnSearchProps('trim_swatch_number'),
+
     },
     {
       title: 'Created At',
       dataIndex: 'createdAt',
+      ...getColumnSearchProps('createdAt'),
       render: (createdAt) => {
         const date = new Date(createdAt);
         const year = date.getFullYear();
@@ -315,6 +405,8 @@ const TrimSwatchApproval = () => {
     {
       title: 'GRN Number',
       dataIndex: 'grn_number',
+      ...getColumnSearchProps('grn_number'),
+
     },
     {
       title: 'GRN Date',
@@ -330,30 +422,43 @@ const TrimSwatchApproval = () => {
     {
       title: 'Buyer',
       dataIndex: 'buyerName',
+      ...getColumnSearchProps('buyerName'),
+
     },
     {
       title: 'Supplier',
       dataIndex: 'supplier_name',
+      ...getColumnSearchProps('supplier_name'),
+
     },
     {
       title: 'Po No',
       dataIndex: 'po_number',
+      ...getColumnSearchProps('po_number'),
     },
     {
       title: 'Style No',
       dataIndex: 'style_no',
+      ...getColumnSearchProps('style_no'),
+
     },
     {
       title: 'Item No',
       dataIndex: 'item_no',
+      ...getColumnSearchProps('item_no'),
+
     },
     {
       title: 'Item Descrpition',
       dataIndex: 'item_description',
+      ...getColumnSearchProps('item_description'),
+
     },
     {
       title: 'Invoice No',
       dataIndex: 'invoice_no',
+      ...getColumnSearchProps('invoice_no'),
+
     },
     // {
     //   title: 'Status',
@@ -361,10 +466,48 @@ const TrimSwatchApproval = () => {
     // },
     {
       title:'Remarks',
-      dataIndex:`${tabName === 'REWORK'? 'reworkReason' : tabName === 'REJECTED' ? 'rejected_reason' : tabName === 'APPROVED' ? 'approvalReason': tabName === 'SENT_FOR_APPROVAL' ? 'remarks' : '-'}`,
+      dataIndex:`${tabName === 'REWORK'? 'reworkReason' : tabName === 'REJECTED' ? 'rejection_reason' : tabName === 'APPROVED' ? 'approvalReason': tabName === 'SENT_FOR_APPROVAL' ? 'remarks' : '-'}`,
+      ...getColumnSearchProps(`${tabName === 'REWORK'? 'reworkReason' : tabName === 'REJECTED' ? 'rejection_reason' : tabName === 'APPROVED' ? 'approvalReason': tabName === 'SENT_FOR_APPROVAL' ? 'remarks' : '-'}`),
       render:(text)=>{
         return text || '-'
       }
+    },
+    {
+      title: 'Reworked',
+      dataIndex: 'rework',
+      render:(text)=>{
+        return text || '-'
+      },
+      onFilter: (value, record) => {
+        return record.rework.includes(value);
+      },
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          <Checkbox
+            checked={selectedKeys.includes('YES')}
+            onChange={() => setSelectedKeys(selectedKeys.includes('YES') ? [] : ['YES'])}
+          >
+            <span style={{ color: 'green' }}>YES</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes('NO')}
+            onChange={() => setSelectedKeys(selectedKeys.includes('NO') ? [] : ['NO'])}
+          >
+            <span style={{ color: 'red' }}>NO</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns">
+            <Button onClick={() => {
+              handleReset(clearFilters);
+              confirm({ closeDropdown: true });
+            }} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          </div>
+        </div>
+      ),
     },
     {
       title: <div style={{textAlign:"center"}}>Action</div>,
@@ -500,7 +643,7 @@ const TrimSwatchApproval = () => {
             rowClassName={columnColor}
             scroll={{ x: 'max-content' }}
             columns={columns.filter(
-                (o) => !['rejection_reason','action' ,'rework_reason','edit'].includes(o.dataIndex)
+                (o) => !['rejection_reason' ,'rework_reason','edit'].includes(o.dataIndex)
               )}
             dataSource={data}
             size="small"
@@ -526,7 +669,7 @@ const TrimSwatchApproval = () => {
             }}
             scroll={{ x: true }}
             columns={columns.filter(
-              (o) => !['action','rework_reason','edit'].includes(o.dataIndex)
+              (o) => !['rework_reason','edit'].includes(o.dataIndex)
             )}
             dataSource={data}
             size="small"
@@ -549,7 +692,7 @@ const TrimSwatchApproval = () => {
               onChange(current) { setPage(current) },
             }}
             scroll={{ x: true }}
-            columns = {columns.filter((o) => !['rejection_reason','action'].includes(o.dataIndex))}
+            columns = {columns.filter((o) => !['rejection_reason',].includes(o.dataIndex))}
             dataSource = {data}
             size = 'small'
             bordered
@@ -566,21 +709,46 @@ const TrimSwatchApproval = () => {
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card>
               <Form form={form} layout="vertical" onFinish={onFinish}>
-                <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 18 }} lg={{ span: 15 }} xl={{ span: 15 }}>
+                <Row gutter={16}>
+                <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 18 }} lg={{ span: 15 }} xl={{ span: 4 }}>
                   <Form.Item label={'Trim Image'} required={true}>
                     <Upload
                     {...uploadFieldProps}
                     listType="picture-card"
                     fileList={fileList}
-                    // onPreview={onPreview}
                     style={{ width: '200px', height: '200px' }}
                     accept=".png,.jpeg,.PNG,.jpg,.JPG"
-                    // onChange={handleChange}
                     >
                       {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
                     </Upload>
                   </Form.Item>
                 </Col>
+                <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}>
+                <Form.Item
+                      label="Remarks"
+                      name={'remarks'}
+                      rules={[{ required: true, message: 'Please input Remarks' }]}
+                    >
+                      <TextArea rows={4} placeholder="Enter Remarks" />
+                    </Form.Item>
+                </Col>
+                </Row>
+
+                  {/* <Col
+                    xs={{ span: 24 }}
+                    sm={{ span: 24 }}
+                    md={{ span: 6 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 5 }}
+                  >
+                    <Form.Item
+                      label="Remarks"
+                      name={'remarks'}
+                      rules={[{ required: false, message: 'Please input Remarks' }]}
+                    >
+                      <TextArea placeholder="Enter Remarks" />
+                    </Form.Item>
+                  </Col> */}
                 <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" htmlType="submit">
                 Submit

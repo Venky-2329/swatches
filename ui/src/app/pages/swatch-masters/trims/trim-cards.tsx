@@ -296,7 +296,7 @@ export default function TrimCards() {
                         style={cardStyle}
                         cover={
                             <img
-                            style={{ height: '100%', objectFit: 'cover' }}
+                            style={{ height: '200px', objectFit: 'cover' }}
                               alt="example"
                             //   src={'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/'+ i.fileName}
                             src={image}

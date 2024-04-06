@@ -91,7 +91,7 @@ export const TrimSwatchDetailView = () => {
 
       const handelAccept = (value)=>{
         setAction('approve')
-        setFormData(value?.trim_swatch_id)
+        setFormData(value)
         setModal(true)
       }
 
@@ -257,11 +257,20 @@ export const TrimSwatchDetailView = () => {
                 {/* {data[0]?.status === 'REJECTED' ?( */}
               <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Remarks</span>}>
                 <span style={{fontSize:'16px'}}>
-                  {data[0]?.status === 'REJECTED' ? data[0]?.rejected_reason : data[0]?.status === 'APPROVED' ? data[0]?.approvalReason :  data[0]?.status === 'REWORK' ? data[0]?.reworkReason  : '--'}
+                  {data[0]?.status === 'REJECTED' && data[0]?.rejected_reason ||
+                  data[0]?.status === 'APPROVED' && data[0]?.approvalReason ||
+                  data[0]?.status === 'REWORK' && data[0]?.reworkReason  ||
+                  data[0]?.status === 'SENT_FOR_APPROVAL' && data[0]?.remarks  || '--'}
                 </span>   
               </DescriptionsItem>
               {/*  ):[]} */}
+              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Reworked</span> }>
+                  <span style={{fontSize:'16px'}}>
+                    {data[0]?.rework}
+                  </span>
+                </DescriptionsItem>
               </Descriptions>
+             
             </Card>
             </Col>
             <Col
@@ -299,7 +308,7 @@ export const TrimSwatchDetailView = () => {
                 <Divider type='vertical'/>
                 <Button  style={{backgroundColor:'orange', color:'white'}} onClick={() => handelRemove(data[0])}>REWORK</Button>
                 </>
-                ):(<></>)}
+                ):null}
             </div>
             </>
             )}

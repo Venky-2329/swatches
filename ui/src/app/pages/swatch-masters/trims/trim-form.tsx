@@ -197,7 +197,7 @@ export default function TrimSwatchUpload() {
                 res.data.filePath = fileres.data;
                 sendMailForApprovalUser()
                 message.success(res.internalMessage,2)
-                onReset();
+                // onReset();
                 gotoGrid();
               } else {
                 message.error(res.internalMessage,2)

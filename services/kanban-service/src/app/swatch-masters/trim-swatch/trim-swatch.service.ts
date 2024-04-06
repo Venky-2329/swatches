@@ -114,7 +114,7 @@ export class TrimSwatchService {
       let query = `SELECT ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
       ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt ,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason,ts.created_user as createdUser,ts.created_user_mail as createdUserMail,ts.remarks,
-      ts.approver_id AS approvedId , sau.email_id AS emailId
+      ts.approver_id AS approvedId , sau.email_id AS emailId,ts.rework
       FROM trim_swatch ts
       LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
       LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
@@ -203,6 +203,7 @@ async updateApprovedStatus(req: TrimSwatchStatus): Promise<CommonResponseModel> 
 
       checkInData.status = StatusEnum.APPROVED;
       checkInData.trimSwatchNumber = req.trimSwatchNumber;
+      checkInData.approvalReason = req.approvalRemarks;
       await this.repo.save(checkInData);
       return new CommonResponseModel(true, 1, 'Approved successfully', checkInData);
   } catch (err) {
@@ -232,7 +233,7 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
     console.log(req,'.........')
     let query = `SELECT ts.trim_swatch_id , ts.trim_swatch_number ,ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
-      ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason, ts.created_user as createdUser,ts.created_user_mail as createdUserMail
+      ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason, ts.created_user as createdUser,ts.created_user_mail as createdUserMail,ts.rework,ts.remarks
       FROM trim_swatch ts
       LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
       LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
@@ -332,7 +333,7 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
         reworkedData.reworkReason = req.reworkReason;
         reworkedData.rework = ReworkStatus.YES
         await this.repo.save(reworkedData);
-        return new CommonResponseModel(true, 1, 'Rework done successfully', reworkedData);
+        return new CommonResponseModel(true, 1, ' Sent for Rework ', reworkedData);
     } catch (err) {
         throw err;
     }
@@ -340,14 +341,16 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
 
   async reworkSentForApproval(req: TrimSwatchStatus): Promise<CommonResponseModel> {
     try {
+      console.log(req,'service')
         const reworkedData = await this.repo.findOne({ where: { trimSwatchId : req.trimSwatchId } });
   
         if (!reworkedData) {
             throw new Error('Trim data not found');
         } 
         reworkedData.status = StatusEnum.SENT_FOR_APPROVAL;
+        reworkedData.remarks = req.remarks
         await this.repo.save(reworkedData);
-        return new CommonResponseModel(true, 1, 'Rework done successfully', reworkedData);
+        return new CommonResponseModel(true, 1, 'Sent for Approval', reworkedData);
     } catch (err) {
         throw err;
     }

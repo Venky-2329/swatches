@@ -20,6 +20,7 @@ import { ApprovalUserEntity } from '../swatch-masters/approval-users/entities/ap
 import { SectionsEntity } from '../swatch-masters/department/entity/section.entity';
 import { FabricSwatchEntity } from '../swatch-masters/fabric-swatch/entities/fabric-swatch-entity';
 import { FabricUploadEntity } from '../swatch-masters/fabric-swatch/entities/fabric-swatch-upload-entity';
+import { TrimUploadEntity } from '../swatch-masters/trim-swatch/entities/trim-swatch-upload-entity';
 
 export const typeOrmConfig: DataSourceOptions = {
   type: 'mysql',
@@ -43,7 +44,8 @@ export const typeOrmConfig: DataSourceOptions = {
     DepartmentEntity,
     ApprovalUserEntity,
     SectionsEntity,
-    FabricUploadEntity
+    FabricUploadEntity,
+    TrimUploadEntity
   ],
 };
 
