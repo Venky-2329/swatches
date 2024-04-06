@@ -213,8 +213,7 @@ export default function FabricSwatch() {
                             <img
                             style={{ height: '200px', objectFit: 'cover' }}
                               alt="example"
-                            //   src={'http://172.20.50.169/design_room/dist/services/kanban-service/upload-files/'+ i.fileName}
-                            src={image}
+                              src={'http://dsw7.shahi.co.in/services/kanban-service/upload-files'+data[0]?.fileName}
                               onClick={() => ViewDetails(i)}
                             />
                           }

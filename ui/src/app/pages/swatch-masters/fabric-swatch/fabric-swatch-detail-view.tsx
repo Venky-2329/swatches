@@ -340,7 +340,7 @@ export const FabricSwatchDetailView = () => {
         >
         <Card style={{ height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Image
-            src={img}
+            src={'http://dsw7.shahi.co.in/services/kanban-service/upload-files'+data[0]?.fileName}
             alt="Preview"
             height={'300px'}
             width={'500px'}
