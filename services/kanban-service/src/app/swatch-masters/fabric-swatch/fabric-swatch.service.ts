@@ -274,8 +274,8 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     fs.brand_id AS brandId,sbm.brand_name AS brandName,
     fs.category_id AS categoryId,scm.category_name AS categoryName,
     fs.season_id AS seasonId,ssm.season_name AS seasonName,
-    fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fs.file_name as fileName, 
-    fs.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,
+    fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fue.file_name as fileName, 
+    fue.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,
     fs.created_user_mail as createdUserMail,fs.rework,fs.rework,fs.rework_remarks as reworkRemarks,fs.approval_remarks as approvalRemarks,fs.remarks
     FROM fabric_swatch fs
     LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
@@ -284,6 +284,7 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     LEFT JOIN swatch_category scm ON scm.category_id = fs.category_id
     LEFT JOIN swatch_seasons ssm ON ssm.season_id = fs.season_id
     LEFT JOIN swatch_approval_users spu ON spu.approved_id = fs.approver_id
+    LEFT JOIN fabric_upload_entity fue ON fue.fabric_swatch_id = fs.fabric_swatch_id
     WHERE 1=1`
     if(req.fabricSwatchId){
         query = query +` and fs.fabric_swatch_id = ${req.fabricSwatchId}`;

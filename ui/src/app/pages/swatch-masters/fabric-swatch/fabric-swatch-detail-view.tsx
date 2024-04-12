@@ -202,6 +202,9 @@ export const FabricSwatchDetailView = () => {
     onReset()
     setModal(false);
   };
+  console.log(data)
+
+  const imageUrls = data.map(item => `http://dsw7.shahi.co.in/services/kanban-service/upload-files/${item?.fileName}`);
 
   return (
     <div>
@@ -340,8 +343,9 @@ export const FabricSwatchDetailView = () => {
         xl={{ span: 10 }}
         >
         <Card style={{ height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Image.PreviewGroup items={imageUrls}>
           <Image
-            src={'http://dsw7.shahi.co.in/services/kanban-service/upload-files'+data[0]?.fileName}
+            src={`http://dsw7.shahi.co.in/services/kanban-service/upload-files/${data[0]?.fileName}`}
             alt="Preview"
             height={'300px'}
             width={'500px'}
@@ -351,6 +355,7 @@ export const FabricSwatchDetailView = () => {
               marginRight: '100px',
             }}
           />
+        </Image.PreviewGroup>
         </Card>
         </Col>
         </Row>

@@ -128,6 +128,9 @@ export const TrimSwatchDetailView = () => {
         form.resetFields();
       };
 
+      const imageUrls = data.map(item => `http://dsw7.shahi.co.in/services/kanban-service/upload-files/${item?.fileName}`);
+
+
       let mailerSent = false;
       async function sendMailForApprovalUser(value) {
           const swatchDetails = new EmailModel();
@@ -281,17 +284,20 @@ export const TrimSwatchDetailView = () => {
             xl={{ span: 10 }}
             >
             <Card style={{ height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Image
-                src={'http://dsw7.shahi.co.in/services/kanban-service/upload-files'+ data[0]?.file_name}
-                alt="Preview"
-                height={'300px'}
-                width={'500px'}
-                style={{
-                  width: '100%',
-                  objectFit: 'contain',
-                  marginRight: '100px',
-                }}
-              />
+
+            <Image.PreviewGroup items={imageUrls}>
+          <Image
+            src={`http://dsw7.shahi.co.in/services/kanban-service/upload-files/${data[0]?.fileName}`}
+            alt="Preview"
+            height={'300px'}
+            width={'500px'}
+            style={{
+              width: '100%',
+              objectFit: 'contain',
+              marginRight: '100px',
+            }}
+          />
+        </Image.PreviewGroup>
             </Card>
           
             </Col>
