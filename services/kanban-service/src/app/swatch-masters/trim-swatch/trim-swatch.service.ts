@@ -240,7 +240,7 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
       LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
       LEFT JOIN swatch_approval_users sau ON sau.approved_id = ts.approver_id
       LEFT JOIN swatch_employees se ON se.employee_id = sau.user_id
-      LEFT JOIN trim_upload_entity tue ON tue.trim_swatch_id = = ts.trim_swatch_id      `
+      LEFT JOIN trim_upload_entity tue ON tue.trim_swatch_id = ts.trim_swatch_id      `
     if(req.trimSwatchId){
         query = query +`WHERE ts.trim_swatch_id = ${req.trimSwatchId}`;
     }

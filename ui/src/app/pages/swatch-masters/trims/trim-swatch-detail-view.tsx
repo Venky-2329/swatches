@@ -128,7 +128,7 @@ export const TrimSwatchDetailView = () => {
         form.resetFields();
       };
 
-      const imageUrls = data.map(item => `http://dsw7.shahi.co.in/services/kanban-service/upload-files/${item?.fileName}`);
+      const imageUrls = data.map(item => `http://dsw7.shahi.co.in/services/kanban-service/upload-files/${item?.file_name}`);
 
 
       let mailerSent = false;
