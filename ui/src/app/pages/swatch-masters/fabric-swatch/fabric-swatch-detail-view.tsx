@@ -164,7 +164,7 @@ export const FabricSwatchDetailView = () => {
           <p>Please click the link below for details:</p>
 
           <a
-            href="http://localhost:4200/#/fabric-swatch-detail-view/${data[0]?.fabricSwatchId}"
+            href="http://dsw7.shahi.co.in/#/fabric-swatch-detail-view/${data[0]?.fabricSwatchId}"
             style="
               display: inline-block;
               padding: 10px 20px;
