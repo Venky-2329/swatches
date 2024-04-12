@@ -3,7 +3,7 @@ import { TrimSwatchDto } from './dto/trim-swatch.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TrimSwatchEntity } from './entities/trim-swatch.entity';
 import { DataSource, Repository } from 'typeorm';
-import { CommonResponseModel, DateReq, ReworkStatus, StatusEnum, TrimSwatchStatus } from 'libs/shared-models';
+import { CommonResponseModel, DateReq, ReportReq, ReworkStatus, StatusEnum, TrimSwatchStatus } from 'libs/shared-models';
 import { TrimUploadEntity } from './entities/trim-swatch-upload-entity';
 
 @Injectable()
@@ -114,11 +114,12 @@ export class TrimSwatchService {
       let query = `SELECT ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
       ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt ,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason,ts.created_user as createdUser,ts.created_user_mail as createdUserMail,ts.remarks,
-      ts.approver_id AS approvedId , sau.email_id AS emailId,ts.rework
+      ts.approver_id AS approvedId , sau.email_id AS emailId,ts.rework, se.employee_id AS employeeId , se.employee_name AS employeeName,ts.updated_at AS updatedAt
       FROM trim_swatch ts
       LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
       LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
       LEFT JOIN swatch_approval_users sau ON sau.approved_id = ts.approver_id
+      LEFT JOIN swatch_employees se ON se.employee_id = sau.user_id
       WHERE 1=1 `
       if(req.tabName != undefined){
         if(req.tabName == 'SENT_FOR_APPROVAL'){
@@ -135,7 +136,7 @@ export class TrimSwatchService {
         }
       }
       if(fromDate){
-          query = query +` and DATE(createdAt) BETWEEN '${fromDate}' AND '${toDate}'`;
+          query = query +` and DATE(ts.created_at) BETWEEN '${fromDate}' AND '${toDate}'`;
       }
 
       if (req.swatchNo !== undefined){
@@ -233,10 +234,12 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
     console.log(req,'.........')
     let query = `SELECT ts.trim_swatch_id , ts.trim_swatch_number ,ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
-      ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason, ts.created_user as createdUser,ts.created_user_mail as createdUserMail,ts.rework,ts.remarks
+      ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason, ts.created_user as createdUser,ts.created_user_mail as createdUserMail,ts.rework,ts.remarks, se.employee_id AS employeeId , se.employee_name AS employeeName , ts.updated_at AS updatedAt
       FROM trim_swatch ts
       LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
       LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
+      LEFT JOIN swatch_approval_users sau ON sau.approved_id = ts.approver_id
+      LEFT JOIN swatch_employees se ON se.employee_id = sau.user_id
       `
     if(req.trimSwatchId){
         query = query +`WHERE ts.trim_swatch_id = ${req.trimSwatchId}`;
@@ -314,7 +317,6 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
     GROUP BY trim_swatch_number`
     const data = await this.dataSource.query(query)
 
-
     if(data.length>0){
       return new CommonResponseModel(true , 1 ,'Data retrieved',data)
     }else{
@@ -355,6 +357,107 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
         throw err;
     }
   }
+  
+  async getApprovedBy():Promise<CommonResponseModel>{
+    let query = `SELECT se.employee_name AS employeeName,sau.approved_id as approvedId
+    FROM trim_swatch ts
+    LEFT JOIN swatch_approval_users sau ON sau.approved_id = ts.approver_id
+    LEFT JOIN swatch_employees se ON se.employee_id = sau.user_id
+    GROUP BY employee_name 
+    ORDER BY employee_name ASC`
+    const data = await this.dataSource.query(query)
 
+
+    if(data.length>0){
+      return new CommonResponseModel(true , 1 ,'Data retrieved',data)
+    }else{
+      return new CommonResponseModel(false ,0 , 'No Data',[])
+    }
+  }
+
+  async getCreatedBy():Promise<CommonResponseModel>{
+    let query = `SELECT created_user AS createdUser
+    FROM trim_swatch ts
+    GROUP BY created_user`
+    const data = await this.dataSource.query(query)
+
+
+    if(data.length>0){
+      return new CommonResponseModel(true , 1 ,'Data retrieved',data)
+    }else{
+      return new CommonResponseModel(false ,0 , 'No Data',[])
+    }
+  }
+
+
+  async getStatus():Promise<CommonResponseModel>{
+    let query = `SELECT STATUS 
+    FROM trim_swatch ts
+    GROUP BY STATUS`
+    const data = await this.dataSource.query(query)
+
+
+    if(data.length>0){
+      return new CommonResponseModel(true , 1 ,'Data retrieved',data)
+    }else{
+      return new CommonResponseModel(false ,0 , 'No Data',[])
+    }
+  }
+
+  // async getTrimNumber():Promise<CommonResponseModel>{
+  //   let query = ` SELECT trim_swatch_number AS trimSwatchNumber 
+  //   FROM trim_swatch
+  //   GROUP BY trim_swatch_number`
+  //   const data = await this.dataSource.query(query)
+
+
+  //   if(data.length>0){
+  //     return new CommonResponseModel(true , 1 ,'Data retrieved',data)
+  //   }else{
+  //     return new CommonResponseModel(false ,0 , 'No Data',[])
+  //   }
+  // }
+
+  async getReport(req:ReportReq):Promise<CommonResponseModel>{
+    try{
+      let query = `SELECT ts.trim_swatch_id , ts.trim_swatch_number ,ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
+        ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason, ts.created_user as createdUser,ts.created_user_mail as createdUserMail,ts.rework,ts.remarks, se.employee_id AS employeeId , se.employee_name AS employeeName , ts.updated_at AS updatedAt
+        FROM trim_swatch ts
+        LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
+        LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
+        LEFT JOIN swatch_approval_users sau ON sau.approved_id = ts.approver_id
+        LEFT JOIN swatch_employees se ON se.employee_id = sau.user_id
+        WHERE 1=1
+        `
+       
+        if (Array.isArray(req.swatchNumber)) {
+          query += ` AND ts.trim_swatch_number IN ('${req.swatchNumber.join("','")}')`;
+      }
+      
+      
+      if(req.fromDate){
+        query = query +` and DATE(ts.created_at) BETWEEN '${req.fromDate}' AND '${req.toDate}'`;
+    }
+      if(req.approverId){
+          query = query +` and ts.approver_id = ${req.approverId}`;
+      }
+      if(req.createdUser){
+          query = query +` and ts.created_user = '${req.createdUser}'`;
+      }
+      if(req.status){
+          query = query +` and ts.status = '${req.status}'`;
+      }
+  
+      const data = await this.repo.query(query)
+  
+      if(data.length>0){
+        return new CommonResponseModel(true,1,'Data retrieved successfully',data)
+      }else{
+        return new CommonResponseModel(false,0,'No data found',[])
+      }
+    }catch(err){
+      throw(err)
+    }
+  }
 
 }

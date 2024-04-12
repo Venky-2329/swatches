@@ -692,7 +692,7 @@ function handleReset(clearFilters) {
               onChange(current) { setPage(current) },
             }}
             scroll={{ x: true }}
-            columns = {columns.filter((o) => !['rejection_reason',].includes(o.dataIndex))}
+            columns = {columns.filter((o) => !['',].includes(o.dataIndex))}
             dataSource = {data}
             size = 'small'
             bordered

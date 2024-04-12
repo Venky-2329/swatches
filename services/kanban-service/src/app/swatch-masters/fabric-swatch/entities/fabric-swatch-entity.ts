@@ -23,6 +23,11 @@ export class FabricSwatchEntity{
     buyerId: number
 
     @Column('int',{
+        name:'supplier_id'
+    })
+    supplierId: number
+
+    @Column('int',{
         name:'brand_id',
         nullable:false
     })
@@ -66,12 +71,6 @@ export class FabricSwatchEntity{
         nullable: true
     })
     seasonId: number
-
-    @Column('varchar',{
-        name:'mill',
-        nullable: true
-    })
-    mill: string
 
     @Column('varchar',{
         name:'color',

@@ -157,6 +157,7 @@ export const FabricSwatchDetailView = () => {
           <p>Please find the ${value} Fabric Swatch details below:</p>
           <p>Fabric Swatch No: ${data[0]?.fabricSwatchNo}</p>
           <p>Buyer: ${data[0]?.buyerName}</p>
+          <p>Supplier: ${data[0]?.supplierName}</p>
           <p>Brand: ${data[0]?.brandName}</p>
           <p>Style No: ${data[0]?.styleNo}</p>
           <p>Item No: ${data[0]?.itemNo}</p>
@@ -234,6 +235,11 @@ export const FabricSwatchDetailView = () => {
                 {data[0]?.buyerName || '--'}
               </span>
             </DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Supplier</span>}>
+              <span style={{fontSize:'16px'}}>
+                {data[0]?.supplierName || '--'}
+              </span>
+            </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Style No</span>}>
               <span style={{fontSize:'16px'}}>
                 {data[0]?.styleNo || '--'}
@@ -272,11 +278,6 @@ export const FabricSwatchDetailView = () => {
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Item Description</span> }>
               <span style={{fontSize:'16px'}}>
                 {data[0]?.itemDescription || '--'}
-              </span>
-            </DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Mill/Vendor</span> }>
-              <span style={{fontSize:'16px'}}>
-                {data[0]?.mill || '--'}
               </span>
             </DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack', fontSize:'16px' }}>Brand</span> }>

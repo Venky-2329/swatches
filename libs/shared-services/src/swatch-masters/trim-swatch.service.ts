@@ -1,4 +1,4 @@
-import { CommonResponseModel, DateReq,  TrimSwatchDto, TrimSwatchStatus } from "libs/shared-models";
+import { CommonResponseModel, DateReq,  ReportReq,  TrimSwatchDto, TrimSwatchStatus } from "libs/shared-models";
 import { CommonAxiosServicePms } from "../common-axios-service-prs";
 import { Console } from "console";
 
@@ -61,5 +61,25 @@ export class TrimSwatchService extends CommonAxiosServicePms{
 
     async reworkSentForApproval(req?:TrimSwatchStatus): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL+ '/reworkSentForApproval',req);
+    }
+
+    async getApprovedBy(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL+ '/getApprovedBy');
+    }
+
+    async getCreatedBy(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL+ '/getCreatedBy');
+    }
+
+    async getStatus(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL+ '/getStatus');
+    }
+
+    async getTrimNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL+ '/getTrimNumber');
+    }
+
+    async getReport(req ?: ReportReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL+ '/getReport' , req);
     }
 }

@@ -183,4 +183,49 @@ async reworkSentForApproval(@Body() req: any):Promise<CommonResponseModel>{
   }
 }
 
+@Post('/getApprovedBy')
+async getApprovedBy():Promise<CommonResponseModel>{
+  try {
+    return await this.service.getApprovedBy();
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
+
+@Post('/getCreatedBy')
+async getCreatedBy():Promise<CommonResponseModel>{
+  try {
+    return await this.service.getCreatedBy();
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
+
+@Post('/getStatus')
+async getStatus():Promise<CommonResponseModel>{
+  try {
+    return await this.service.getStatus();
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
+
+// @Post('/getTrimNumber')
+// async getTrimNumber():Promise<CommonResponseModel>{
+//   try {
+//     return await this.service.getTrimNumber();
+//   } catch (error) {
+//     return this.appHandler.returnException(CommonResponseModel,error)
+//   }
+// }
+
+@Post('/getReport')
+async getReport(@Body() req:any):Promise<CommonResponseModel>{
+  try {
+    return await this.service.getReport(req);
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
+
 }

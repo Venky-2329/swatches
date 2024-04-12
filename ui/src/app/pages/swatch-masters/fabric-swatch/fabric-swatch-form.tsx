@@ -1,7 +1,8 @@
 import {Button,Card,Col,Form,Input,Modal,Row,Select,Spin,Upload,message,notification} from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useEffect, useState } from 'react';
-import {ApprovalUserService, BuyerService,EmailService,EmployeeService,FabricSwatchService,createSample,getBrandsData,getCategoryData,getLocationData,getSeasonData,uploadPhoto,} from 'libs/shared-services';
+import {ApprovalUserService, BuyerService,EmailService,EmployeeService,FabricSwatchService,createSample,getBrandsData,getCategoryData,getLocationData,getSeasonData,  SupplierService,
+} from 'libs/shared-services';
 import imageCompression from 'browser-image-compression';
 import { Link, useNavigate } from 'react-router-dom';
 import moment from 'moment';
@@ -20,6 +21,7 @@ export default function FabricSwatchUpload() {
   const [brands, setBrands] = useState([]);
   const [category, setCategory] = useState([]);
   const [buyerData, setBuyerData] = useState<any[]>([]);
+  const [supplier, setSupplier] = useState([]);
   const [seasons, setSeasons] = useState([]);
   const users: any = JSON.parse(localStorage.getItem('auth'));
   const createdUser = users.userName;
@@ -27,6 +29,7 @@ export default function FabricSwatchUpload() {
   const [selectedType, setSelectedType] = useState('Garment');
   const typesWithCommonFields = ['Garment', 'Trim'];
   const buyerService = new BuyerService();
+  const supplierService = new SupplierService();
   const service = new FabricSwatchService();
   const employeeService = new ApprovalUserService()
   const [ employeeData, setEmployeeData ] = useState<any[]>([])
@@ -46,7 +49,9 @@ export default function FabricSwatchUpload() {
     getCategories();
     getSeason();
     getBuyers();
-    getEmployeeData()
+    getEmployeeData();
+    getSupplier()
+
   }, []);
 
   const getBuyers = () => {
@@ -77,6 +82,14 @@ export default function FabricSwatchUpload() {
     getSeasonData().then((res) => {
       if (res.data) {
         setSeasons(res.data);
+      }
+    });
+  }
+
+  function getSupplier() {
+    supplierService.getAllSuppliers().then((res) => {
+      if (res.data) {
+        setSupplier(res.data);
       }
     });
   }
@@ -163,7 +176,7 @@ export default function FabricSwatchUpload() {
       swatchDetails.to = form.getFieldValue('approverMail')
       swatchDetails.html = `
       <html>
-      <head>
+      <head> 
         <meta charset="UTF-8" />
         <style>
           #acceptDcLink {
@@ -194,6 +207,7 @@ export default function FabricSwatchUpload() {
         <p>Please find the Fabric Swatch details below:</p>
         <p>Fabric Swatch No: ${form.getFieldValue('fabricSwatchNumber')}</p>
         <p>Buyer: ${form.getFieldValue('buyerName')}</p>
+        <p>Supplier: ${form.getFieldValue('supplierName')}</p>
         <p>Brand: ${form.getFieldValue('brandName')}</p>
         <p>Style No: ${form.getFieldValue('styleNo')}</p>
         <p>Item No: ${form.getFieldValue('itemNo')}</p>
@@ -303,6 +317,11 @@ export default function FabricSwatchUpload() {
     form.setFieldsValue({brandName: option?.name})
   }
 
+  const onSupplierChange=(value,option)=>{
+    form.setFieldsValue({supplierName:option?.name})
+    console.log(form.setFieldsValue({supplierName:option?.name}))
+  }
+
   
   return (
     <>
@@ -373,6 +392,34 @@ export default function FabricSwatchUpload() {
               </Form.Item>
             </Col>
             <Form.Item hidden name={'buyerName'}></Form.Item>
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 6 }}
+              lg={{ span: 6 }}
+              xl={{ span: 4 }}
+            >
+              <Form.Item
+                label="Supplier"
+                name={'supplierId'}
+                rules={[{ required: true, message: 'Please input Supplier' }]}
+
+              >
+                <Select
+                  showSearch
+                  optionFilterProp="children"
+                  placeholder="Select Supplier"
+                  onChange={onSupplierChange}
+                >
+                  {supplier.map((item) => {
+                    return (
+                      <Option value={item.supplierId} name={item.supplierName} >{item.supplierName}</Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Form.Item hidden name={'supplierName'}></Form.Item>
             <Col
               xs={24} sm={12} md={8} lg={6} xl={4}
             >
@@ -489,17 +536,6 @@ export default function FabricSwatchUpload() {
                     );
                   })}
                 </Select>
-              </Form.Item>
-            </Col>
-            <Col
-              xs={24} sm={12} md={8} lg={6} xl={4}
-            >
-              <Form.Item
-                label="Mill/Vendor"
-                name={'mill'}
-                rules={[{ required: false, message: 'Please input Mill' }]}
-              >
-                <Input placeholder="Enter Mill" />
               </Form.Item>
             </Col>
             <Col

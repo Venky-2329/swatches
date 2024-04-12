@@ -46,7 +46,6 @@ export class FabricSwatchService{
             entityData.categoryType = req.categoryType
             entityData.categoryId = req.categoryId
             entityData.seasonId = req.seasonId
-            entityData.mill = req.mill
             entityData.color = req.color
             entityData.poNumber = req.poNumber
             entityData.grnNumber = req.grnNumber
@@ -57,6 +56,7 @@ export class FabricSwatchService{
             entityData.createdUserMail = req.createdUserMail
             entityData.rework = ReworkStatus.NO
             entityData.remarks = req.remarks
+            entityData.supplierId = req.supplierId
             const saveData = await this.repo.save(entityData)
             return new CommonResponseModel(true,1,`${saveData.fabricSwatchNumber} created successfully`,saveData)
         }catch(err){
@@ -112,8 +112,9 @@ export class FabricSwatchService{
         const fromDate = req.fromDate;
         const toDate = req.toDate;
         let query = `SELECT fs.fabric_swatch_id AS fabricSwatchId,fs.fabric_swatch_number AS fabricSwatchNo, fs.style_no styleNo,fs.item_no AS itemNo,fs.category_type AS categoryType,fs.color,fs.po_number AS poNumber,
-        fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.mill, fs.status,fs.approver_id AS approverId,spu.email_id AS approverMail,
+        fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.status,fs.approver_id AS approverId,spu.email_id AS approverMail,
         fs.buyer_id AS buyerId,b.buyer_name AS buyerName,
+        fs.supplier_id AS supplierId , s.supplier_name AS supplierName,
         fs.brand_id AS brandId,sbm.brand_name AS brandName,
         fs.category_id AS categoryId,scm.category_name AS categoryName,
         fs.season_id AS seasonId,ssm.season_name AS seasonName,
@@ -122,6 +123,7 @@ export class FabricSwatchService{
         fs.created_user_mail as createdUserMail,fs.rework,fs.rework_remarks as reworkRemarks,fs.approval_remarks as approvalRemarks,fs.remarks
         FROM fabric_swatch fs
         LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
+        LEFT JOIN swatch_supplier s ON s.supplier_id = fs.supplier_id
         LEFT JOIN swatch_brands sbm ON sbm.brand_id = fs.brand_id
         LEFT JOIN swatch_category scm ON scm.category_id = fs.category_id
         LEFT JOIN swatch_seasons ssm ON ssm.season_id = fs.season_id
@@ -146,6 +148,9 @@ export class FabricSwatchService{
         }
         if(req.buyerId != undefined){
           query = query + ` and fs.buyer_id = ${req.buyerId}`
+        }
+        if(req.supplierId != undefined){
+          query = query + ` and fs.supplier_id = ${req.supplierId}`
         }
         if(req.brandId != undefined){
           query = query + ` and fs.brand_id = ${req.brandId}`
@@ -263,8 +268,9 @@ async updateSentForApprovalStatus(req: SwatchStatus): Promise<CommonResponseMode
 async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
   try{
     let query = `SELECT fs.fabric_swatch_id AS fabricSwatchId,fs.fabric_swatch_number AS fabricSwatchNo, fs.style_no styleNo,fs.item_no AS itemNo,fs.category_type AS categoryType,fs.color,fs.po_number AS poNumber,
-    fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.mill, fs.status,fs.approver_id AS approverId,spu.email_id AS approverMail,
+    fs.grn_number AS grnNumber,fs.item_description AS itemDescription,fs.status,fs.approver_id AS approverId,spu.email_id AS approverMail,
     fs.buyer_id AS buyerId,b.buyer_name AS buyerName,
+    fs.supplier_id AS supplierId , s.supplier_name AS supplierName,
     fs.brand_id AS brandId,sbm.brand_name AS brandName,
     fs.category_id AS categoryId,scm.category_name AS categoryName,
     fs.season_id AS seasonId,ssm.season_name AS seasonName,
@@ -273,6 +279,7 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     fs.created_user_mail as createdUserMail,fs.rework,fs.rework,fs.rework_remarks as reworkRemarks,fs.approval_remarks as approvalRemarks,fs.remarks
     FROM fabric_swatch fs
     LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
+    LEFT JOIN swatch_supplier s ON s.supplier_id = fs.supplier_id
     LEFT JOIN swatch_brands sbm ON sbm.brand_id = fs.brand_id
     LEFT JOIN swatch_category scm ON scm.category_id = fs.category_id
     LEFT JOIN swatch_seasons ssm ON ssm.season_id = fs.season_id

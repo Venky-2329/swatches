@@ -10,6 +10,8 @@ export class FabricSwatchDto{
     @ApiProperty()
     buyerId: number
     @ApiProperty()
+    supplierId : number
+    @ApiProperty()
     brandId: number
     @ApiProperty()
     styleNo: string
@@ -23,8 +25,6 @@ export class FabricSwatchDto{
     categoryId: number
     @ApiProperty()
     seasonId: number
-    @ApiProperty()
-    mill: string
     @ApiProperty()
     color: string
     @ApiProperty()

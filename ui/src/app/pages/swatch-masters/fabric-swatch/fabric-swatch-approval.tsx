@@ -407,6 +407,14 @@ const FabricSwatchApproval = () => {
       }
     },
     {
+      title:<div style={{textAlign:'center'}}>Supplier</div>,
+      dataIndex: 'supplierName',
+      ...getColumnSearchProps('supplierName'),
+      render: (text) => {
+        return text || '-';
+      }
+    },
+    {
       title:<div style={{textAlign:'center'}}>Category</div>,
       dataIndex: 'categoryName',
       ...getColumnSearchProps('categoryName'),
@@ -477,14 +485,6 @@ const FabricSwatchApproval = () => {
       title:<div style={{textAlign:'center'}}>Item Description</div>,
       dataIndex: 'itemDescription',
       ...getColumnSearchProps('itemDescription'),
-      render: (text) => {
-        return text || '-';
-      }
-    },
-    {
-      title:<div style={{textAlign:'center'}}>Mill/Vendor</div>,
-      dataIndex: 'mill',
-      ...getColumnSearchProps('mill'),
       render: (text) => {
         return text || '-';
       }
@@ -575,10 +575,10 @@ const FabricSwatchApproval = () => {
   };
 
   const tabData = [
-    { key: StatusEnum.SENT_FOR_APPROVAL, label: "WAITING FOR APPROVAL", color: "#d4b417", countKey: "waitingCount", excludeColumns: ['rejectionReason', 'poNumber', 'grnNumber', 'grnDate', 'itemDescription', 'mill','edit'] },
-    { key: StatusEnum.APPROVED, label: "APPROVED", color: "green", countKey: "approvedCount", excludeColumns: ['rejectionReason', 'poNumber', 'grnNumber', 'grnDate', 'itemDescription', 'mill','edit'] },
-    { key: StatusEnum.REJECTED, label: "REJECTED", color: "red", countKey: "rejectedCount", excludeColumns: ['poNumber', 'grnNumber', 'grnDate', 'itemDescription', 'mill','edit'] },
-    { key: StatusEnum.REWORK, label: "REWORK", color: "orange", countKey: "reworkCount", excludeColumns: ['action'] }
+    { key: StatusEnum.SENT_FOR_APPROVAL, label: "WAITING FOR APPROVAL", color: "#d4b417", countKey: "waitingCount", excludeColumns: ['rejectionReason', 'poNumber', 'grnNumber', 'grnDate', 'itemDescription', 'edit'] },
+    { key: StatusEnum.APPROVED, label: "APPROVED", color: "green", countKey: "approvedCount", excludeColumns: ['rejectionReason', 'poNumber', 'grnNumber', 'grnDate', 'itemDescription','edit'] },
+    { key: StatusEnum.REJECTED, label: "REJECTED", color: "red", countKey: "rejectedCount", excludeColumns: ['poNumber', 'grnNumber', 'grnDate', 'itemDescription','edit'] },
+    { key: StatusEnum.REWORK, label: "REWORK", color: "orange", countKey: "reworkCount", excludeColumns: [''] }
   ];  
 
   return (
