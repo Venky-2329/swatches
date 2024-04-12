@@ -207,15 +207,15 @@ const TrimSwatchApproval = () => {
     <body>
     <p>Dear team,</p>
     <p>Please find the Reworked 🔂 Trim Swatch details below:</p>
-    <p>Trim Swatch No: ${selectedData.trim_swatch_number}</p>
-    <p>Buyer: ${selectedData.buyerName}</p>
-    <p>Supplier: ${selectedData.supplier_name }</p>
-    <p>Style No: ${selectedData.style_no }</p>
-    <p>Item No: ${selectedData.item_no}</p>
+    <p>Trim Swatch No: ${selectedData?.trim_swatch_number}</p>
+    <p>Buyer: ${selectedData?.buyerName}</p>
+    <p>Supplier: ${selectedData?.supplier_name }</p>
+    <p>Style No: ${selectedData?.style_no }</p>
+    <p>Item No: ${selectedData?.item_no}</p>
     <p>Please click the link below for details:</p>
 
     <a
-      href="http://localhost:4200/#/trims-swatch-detail-view/${selectedData.trim_swatch_id}"
+      href="http://dsw7.shahi.co.in/#/trims-swatch-detail-view/${selectedData?.trim_swatch_id}"
       style="
         display: inline-block;
         padding: 10px 20px;
@@ -224,13 +224,13 @@ const TrimSwatchApproval = () => {
         text-decoration: none;
         border-radius: 5px;
       "
-      >View Details of ${selectedData.trim_swatch_number}</a
+      >View Details of ${selectedData?.trim_swatch_number}</a
     >
 
   </body>
   </html>
   `
-    swatchDetails.subject = "Trim Swatch : " +  selectedData.trim_swatch_number
+    swatchDetails.subject = "Trim Swatch : " +  selectedData?.trim_swatch_number
     const res = await mailService.sendSwatchMail(swatchDetails)
     console.log(res)
     if (res.status == 201) {

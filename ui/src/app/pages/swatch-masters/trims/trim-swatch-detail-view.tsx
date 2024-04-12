@@ -174,7 +174,7 @@ export const TrimSwatchDetailView = () => {
             <p>Please click the link below for details:</p>
   
             <a
-              href="http://localhost:4200/#/trims-swatch-detail-view/${data[0]?.trim_swatch_id}"
+              href="http://dsw7.shahi.co.in/#/trims-swatch-detail-view/${data[0]?.trim_swatch_id}"
               style="
                 display: inline-block;
                 padding: 10px 20px;

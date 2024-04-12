@@ -298,7 +298,7 @@ export default function TrimSwatchUpload() {
           <input type="hidden" id="dcId" value=${form.getFieldValue('dcId')} />
       
           <a
-          href="http://localhost:4200/#/trims-swatch-detail-view/${form.getFieldValue('trimSwatchId')}"
+          href="http://dsw7.shahi.co.in/#/trims-swatch-detail-view/${form.getFieldValue('trimSwatchId')}"
           style="
               display: inline-block;
               padding: 10px 20px;
