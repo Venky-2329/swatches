@@ -214,7 +214,7 @@ export default function FabricSwatchUpload() {
         <p>Please click the link below for details:</p>
 
         <a
-          href="http://localhost:4200/#/fabric-swatch-detail-view/${form.getFieldValue('fabricSwatchId')}"
+          href="http://dsw7.shahi.co.in/#/fabric-swatch-detail-view/${form.getFieldValue('fabricSwatchId')}"
           style="
             display: inline-block;
             padding: 10px 20px;
