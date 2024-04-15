@@ -74,7 +74,7 @@ export default function UserForm() {
         headStyle={{ backgroundColor: '#25529a', color: 'white' }}
       >
         <Form form={form} layout="vertical" onFinish={onFinish} style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <Card>
+          <Card >
             <Row gutter={24}>
               <Col span={12}>
                 <Form.Item label="User Name" name={'userName'} rules={[{ required: true }]}>
@@ -90,7 +90,7 @@ export default function UserForm() {
             <Row gutter={24}>
               <Col span={12}>
                 <Form.Item label="Employee" name={'employeeId'} rules={[{ required: true }]}>
-                  <Select placeholder='Select Employee' onChange={onEmployee}>
+                  <Select placeholder='Select Employee' onChange={onEmployee} showSearch allowClear>
                     {employeeData?.map((item) => (
                       <Option key={item.employeeId} value={item.employeeId} name={item.emailId} department={item.department}>
                         {item.employeeName}

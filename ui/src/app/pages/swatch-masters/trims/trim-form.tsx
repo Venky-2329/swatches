@@ -188,10 +188,14 @@ export default function TrimSwatchUpload() {
         if (res.status) {
           if (fileList.length > 0) {
             const formData = new FormData();
-            fileList.forEach((file: any) => {
-              console.log(file,'999999999999')
-              formData.append('file', file);
-            });
+            // fileList.forEach((file: any) => {
+            //   console.log(file,'999999999999')
+            //   formData.append('file', file);
+            // });
+            for(const file of fileList){
+              formData.append('file', file.originFileObj);
+              console.log(formData)
+            }
             formData.append('trimSwatchId', `${res.data.trimSwatchId}`);
             mainService.photoUpload(formData).then((fileres) => {
               if (res.status) {

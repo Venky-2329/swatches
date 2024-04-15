@@ -349,9 +349,13 @@ function handleReset(clearFilters) {
         if (res.status) {
           if (fileList.length > 0) {
             const formData = new FormData();
-            fileList.forEach((file: any) => {
-              formData.append('file', file);
-            });
+            // fileList.forEach((file: any) => {
+            //   formData.append('file', file);
+            // });
+            for(const file of fileList){
+              formData.append('file', file.originFileObj);
+              console.log(formData)
+            }
             formData.append('trimSwatchId', `${res.data.trimSwatchId}`);
             // console.log(res.data.trimSwatchId,'-------id')
             service.photoUpload(formData).then((fileres) => {
@@ -392,7 +396,7 @@ function handleReset(clearFilters) {
     service.deleteImage(req).then((res)=>{
       if(res.status){
         message.success(res.internalMessage,2)
-        // getSwatchDetails(value.fabricSwatchId)
+        setDataById(prevData => prevData.filter(item => item.uploadId !== value.uploadId));
       }else{
         message.error(res.internalMessage,2)
       }

@@ -168,6 +168,7 @@ export default function FabricSwatchUpload() {
     },
     fileList: fileList,
   };
+  
   let mailerSent = false;
   async function sendMailForApprovalUser() {
       const swatchDetails = new EmailModel();
@@ -253,11 +254,15 @@ export default function FabricSwatchUpload() {
         if (res.status) {
           if (fileList.length > 0) {
             const formData = new FormData();
-            fileList.forEach((file: any) => {
-              formData.append('file', file);
-            });
+            // fileList.forEach((file: any) => {
+            //   console.log(file)
+            //   formData.append('file', file);
+            // });
+            for(const file of fileList){
+              formData.append('file', file.originFileObj);
+              console.log(formData)
+            }
             formData.append('fabricSwatchId', `${res.data.fabricSwatchId}`);
-            console.log(formData,'llllllllllllllllllll')
             service.uploadPhoto(formData).then((fileres) => {
               if (res.status) {
                 form.setFieldsValue({fabricSwatchNumber: res?.data?.fabricSwatchNumber})
@@ -306,7 +311,6 @@ export default function FabricSwatchUpload() {
 
   const onSupplierChange=(value,option)=>{
     form.setFieldsValue({supplierName:option?.name})
-    console.log(form.setFieldsValue({supplierName:option?.name}))
   }
 
   const handlePreview = async file => {
