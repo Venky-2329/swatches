@@ -202,7 +202,6 @@ export const FabricSwatchDetailView = () => {
     onReset()
     setModal(false);
   };
-  console.log(data)
 
   const imageUrls = data.map(item => `http://dsw7.shahi.co.in/services/kanban-service/upload-files/${item?.fileName}`);
 
