@@ -287,7 +287,7 @@ export const TrimSwatchDetailView = () => {
 
             <Image.PreviewGroup items={imageUrls}>
           <Image
-            src={`http://dsw7.shahi.co.in/services/kanban-service/upload-files/${data[0]?.fileName}`}
+            src={`http://dsw7.shahi.co.in/services/kanban-service/upload-files/${data[0]?.file_name}`}
             alt="Preview"
             height={'300px'}
             width={'500px'}

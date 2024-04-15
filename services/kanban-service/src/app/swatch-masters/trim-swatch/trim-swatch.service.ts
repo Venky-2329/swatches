@@ -113,13 +113,14 @@ export class TrimSwatchService {
       const toDate = req.toDate;
       let query = `SELECT ts.buyer_id AS buyerId,b.buyer_name AS buyerName,
       ts.supplier_id AS supplierId,s.supplier_name , ts.trim_swatch_id , ts.trim_swatch_number , ts.po_number , ts.item_no , ts.item_description, 
-      ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , ts.file_name , ts.file_path ,ts.status,ts.created_at as createdAt ,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason,ts.created_user as createdUser,ts.created_user_mail as createdUserMail,ts.remarks,
+      ts.invoice_no , ts.style_no , ts.grn_number , ts.grn_date , tue.file_name , tue.file_path ,ts.status,ts.created_at as createdAt ,ts.rejection_reason ,ts.rework_reason as reworkReason , ts.approval_reason as approvalReason,ts.created_user as createdUser,ts.created_user_mail as createdUserMail,ts.remarks,
       ts.approver_id AS approvedId , sau.email_id AS emailId,ts.rework, se.employee_id AS employeeId , se.employee_name AS employeeName,ts.updated_at AS updatedAt
       FROM trim_swatch ts
       LEFT JOIN swatch_buyer b ON b.buyer_id = ts.buyer_id
       LEFT JOIN swatch_supplier s ON s.supplier_id = ts.supplier_id
       LEFT JOIN swatch_approval_users sau ON sau.approved_id = ts.approver_id
       LEFT JOIN swatch_employees se ON se.employee_id = sau.user_id
+      LEFT JOIN trim_upload_entity tue ON tue.trim_swatch_id = ts.trim_swatch_id
       WHERE 1=1 `
       if(req.tabName != undefined){
         if(req.tabName == 'SENT_FOR_APPROVAL'){
@@ -161,7 +162,7 @@ export class TrimSwatchService {
       if(req.approverId != undefined ){
         query = query + ` and ts.approver_id = ${req.approverId}`
       }
-      query = query + `ORDER BY ts.trim_swatch_number DESC`
+      query = query + ` GROUP BY ts.trim_swatch_number ORDER BY ts.trim_swatch_number DESC`
 
       const data = await this.repo.query(query)
       if (data.length>0){
