@@ -250,7 +250,6 @@ async updateReworkStatus(req: SwatchStatus): Promise<CommonResponseModel> {
 
 async updateSentForApprovalStatus(req: SwatchStatus): Promise<CommonResponseModel> {
     try {
-      console.log(req,'------------')
         const mainData = await this.repo.findOne({ where: { fabricSwatchId : req.fabricSwatchId } });
 
         if (!mainData) {
@@ -276,7 +275,7 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     fs.season_id AS seasonId,ssm.season_name AS seasonName,
     fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fue.file_name as fileName, 
     fue.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,
-    fs.created_user_mail as createdUserMail,fs.rework,fs.rework,fs.rework_remarks as reworkRemarks,fs.approval_remarks as approvalRemarks,fs.remarks
+    fs.created_user_mail as createdUserMail,fs.rework,fs.rework_remarks as reworkRemarks,fs.approval_remarks as approvalRemarks,fs.remarks
     FROM fabric_swatch fs
     LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
     LEFT JOIN swatch_supplier s ON s.supplier_id = fs.supplier_id
@@ -301,6 +300,7 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     throw(err)
   }
 }
+
 
   async getAllBuyers():Promise<CommonResponseModel>{
     try{
