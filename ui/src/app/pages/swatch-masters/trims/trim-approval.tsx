@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {Alert,Button,Card,Checkbox,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Spin,Table,Tabs,Tag,Tooltip,Upload,message, notification} from 'antd';
+import {Alert,Button,Card,Checkbox,Col,DatePicker,Divider,Drawer,Form,Image,Input,Modal,Popconfirm,Row,Segmented,Select,Spin,Table,Tabs,Tag,Tooltip,Upload,message, notification} from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {EditOutlined, EyeOutlined,SyncOutlined,SearchOutlined} from '@ant-design/icons';
+import {EditOutlined, EyeOutlined,SyncOutlined,SearchOutlined , DeleteOutlined} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import Highlighter from 'react-highlight-words';
 import { DateReq, EmailModel, StatusEnum, SwatchStatus, TrimSwatchStatus } from 'libs/shared-models';
@@ -39,6 +39,10 @@ const TrimSwatchApproval = () => {
   const [searchText, setSearchText] = useState('');
   const userRole = createUser.role;
   const department = createUser.departmentId
+  const [ dataById, setDataById ] = useState<any[]>([])
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+
 
 
 
@@ -125,6 +129,8 @@ const TrimSwatchApproval = () => {
   const openFormWithData=(viewData)=>{
     setDrawerVisible(true);
     setSelectedData(viewData);
+    getSwatchDetails(viewData)
+
   }
 
   const getData = (value: any) => {
@@ -162,6 +168,8 @@ const TrimSwatchApproval = () => {
 
   const closeDrawer=() =>{
     setDrawerVisible(false)
+    setFileList([])
+    form.resetFields()
   }
 
   function onFinish(values) {
@@ -359,6 +367,7 @@ function handleReset(clearFilters) {
                 setFileList([])
                 getCount()
                 getData(tabName)
+                setModal(false)
               } else {
                 message.error(res.internalMessage,2)
               }
@@ -376,6 +385,28 @@ function handleReset(clearFilters) {
       return notification.info({ message: 'Please upload sample' });
     }
   }
+
+  const handleDeleteImage = (value)=>{
+    console.log(value.uploadId,'-----------------')
+    const req = new TrimSwatchStatus(value.uploadId,undefined)
+    service.deleteImage(req).then((res)=>{
+      if(res.status){
+        message.success(res.internalMessage,2)
+        // getSwatchDetails(value.fabricSwatchId)
+      }else{
+        message.error(res.internalMessage,2)
+      }
+    })
+  }
+
+  const getSwatchDetails = (value) => {
+    const req = new TrimSwatchStatus(value.trim_swatch_id, undefined, undefined);
+    service.getDataById(req).then((res) => {
+      if (res.status) {
+        setDataById(res.data);
+      }
+    });
+  };
 
 
   const columns: any = [
@@ -566,6 +597,34 @@ function handleReset(clearFilters) {
     navigate('/trims-swatch-upload');
   }
 
+  const onSubmit = () =>{
+    if(fileList.length > 0 && form.getFieldValue('remarks') != undefined){
+    setModal(true)
+    }else{
+      notification.info({ message: 'Please upload at least one Image and Enter remarks' })
+    }
+  }
+
+  const handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    setPreviewImage(file.url || file.preview);
+    setPreviewVisible(true);
+  };
+
+  const handleChange = ({ fileList }) => setFileList(fileList);
+
+  const getBase64 = file => {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+    });
+  };
+
+
   return (
     <>
      {uploading && (
@@ -716,11 +775,27 @@ function handleReset(clearFilters) {
                     {...uploadFieldProps}
                     listType="picture-card"
                     fileList={fileList}
+                    onPreview={handlePreview}
+                    onChange={handleChange}
                     style={{ width: '200px', height: '200px' }}
                     accept=".png,.jpeg,.PNG,.jpg,.JPG"
                     >
                       {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
                     </Upload>
+                    <Image
+                        wrapperStyle={{ display: 'none' }}
+                        preview={{
+                          visible: previewVisible,
+                          onVisibleChange: (visible) => {
+                            setPreviewVisible(visible);
+                            if (!visible) {
+                              // Reset preview image when modal is closed
+                              setPreviewImage('');
+                            }
+                          },
+                        }}
+                        src={previewImage}
+                      />
                   </Form.Item>
                 </Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}>
@@ -733,24 +808,8 @@ function handleReset(clearFilters) {
                     </Form.Item>
                 </Col>
                 </Row>
-
-                  {/* <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 6 }}
-                    lg={{ span: 6 }}
-                    xl={{ span: 5 }}
-                  >
-                    <Form.Item
-                      label="Remarks"
-                      name={'remarks'}
-                      rules={[{ required: false, message: 'Please input Remarks' }]}
-                    >
-                      <TextArea placeholder="Enter Remarks" />
-                    </Form.Item>
-                  </Col> */}
                 <Col span={24} style={{ textAlign: 'right' }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary"  onClick={onSubmit}>
                 Submit
               </Button>
               <Button
@@ -763,6 +822,53 @@ function handleReset(clearFilters) {
             </Col>
               </Form>
         </Card>
+        <Modal
+          title="Previous Uploaded Images"
+          visible={modal}
+          onCancel={() => setModal(false)}
+          footer={[
+            // Submit button inside modal footer
+            <Button key="submit" type="primary" onClick={onFinish}>
+              Submit
+            </Button>
+            ]}
+        >
+        <Image.PreviewGroup>
+          {dataById.map((item, index) => (
+            <div key={index} style={{ position: 'relative', marginRight: '10px', display: 'inline-block' }}>
+              <div style={{ position: 'relative' }}>
+                <Image
+                  src={`http://dsw7.shahi.co.in/services/kanban-service/upload-files/${item?.file_name}`}
+                  alt={`Preview`}
+                  height={'100px'}
+                  width={'280px'}
+                  style={{
+                    width: '100%',
+                    objectFit: 'contain',
+                  }}
+                />
+                <Popconfirm
+              title="Are you sure to delete this image?"
+              onConfirm={() => handleDeleteImage(item)} // handleDeleteImage is your delete image handler function
+              okText="Yes"
+              cancelText="No"
+            >
+              <DeleteOutlined
+                style={{
+                  position: 'absolute',
+                  top: '5px',
+                  right: '5px',
+                  color: 'red',
+                  cursor: 'pointer',
+                  fontSize: '20px', // Increase the size of the delete icon
+                }}
+              />
+            </Popconfirm>
+              </div>
+            </div>
+          ))}
+        </Image.PreviewGroup>
+        </Modal>
         </Drawer>
     </Card>
     </>

@@ -680,10 +680,6 @@ export default function TrimSwatchUpload() {
   >
     {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
   </Upload>
-  {/* <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
-        <img alt="Preview" style={{ width: '100%' }} src={previewImage} />
-      </Modal> */}
-
 <Image
   wrapperStyle={{ display: 'none' }}
   preview={{

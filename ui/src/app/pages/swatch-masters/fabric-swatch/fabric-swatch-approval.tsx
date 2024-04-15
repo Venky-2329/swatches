@@ -40,6 +40,8 @@ const FabricSwatchApproval = () => {
   const [pageSize, setPageSize] = useState<number>(null);
   const mailService = new EmailService()
   const [ dataById, setDataById ] = useState<any[]>([])
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
 
 
 
@@ -110,28 +112,7 @@ const FabricSwatchApproval = () => {
     fileList: fileList,
   };
 
-  const onPreview = async (file: UploadFile) => {
-    // let src = file.url as string;
-    // if (!src) {
-    //   src = await new Promise((resolve) => {
-    //     const reader = new FileReader();
-    //     reader.readAsDataURL(file.originFileObj as RcFile);
-    //     reader.onload = () => resolve(reader.result as string);
-    //   });
-    // }
-    // const image = new Image();
-    // image.src = src;
-    // const imgWindow = window.open(src);
-    // imgWindow?.document.write(image.outerHTML);
-  };
 
-  const handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-      setUploading(true);
-    } else {
-      setUploading(false);
-    }
-  };
 
   useEffect(() => {
     getData(tabName);
@@ -188,6 +169,7 @@ const FabricSwatchApproval = () => {
                 sendMailForApprovalUser()
                 // onReset();
                 setDrawerVisible(false)
+                setModal(false)
                 setFileList([])
                 getData(tabName)
                 getCount()
@@ -387,7 +369,28 @@ const FabricSwatchApproval = () => {
   const closeDrawer=()=>{
     setDrawerVisible(false);
     setFileList([])
+    form.resetFields();
+
   }
+
+  const handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    setPreviewImage(file.url || file.preview);
+    setPreviewVisible(true);
+  };
+
+  const handleChange = ({ fileList }) => setFileList(fileList);
+
+  const getBase64 = file => {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+    });
+  };
 
   const columns: any = [
     {
@@ -583,7 +586,7 @@ const FabricSwatchApproval = () => {
 
   const onReset = () => {
     form.resetFields();
-    setFileList([])
+    setFileList([]);
   };
 
   const handleDeleteImage = (value)=>{
@@ -609,10 +612,10 @@ const FabricSwatchApproval = () => {
   // const imageUrls = dataById.map(item => `http://dsw7.shahi.co.in/services/kanban-service/upload-files/${item?.fileName}`);
 
   const onSubmit = () =>{
-    if(fileList.length > 0){
+    if(fileList.length > 0 && form.getFieldValue('remarks') != undefined){
     setModal(true)
     }else{
-      notification.info({ message: 'Please upload at least one Image' })
+      notification.info({ message: 'Please upload at least one Image and Enter remarks' })
     }
   }
 
@@ -666,13 +669,27 @@ const FabricSwatchApproval = () => {
                     {...uploadFieldProps}
                     listType="picture-card"
                     fileList={fileList}
-                    onPreview={onPreview}
+                    onPreview={handlePreview}
                     style={{ width: '200px', height: '200px' }}
                     accept=".png,.jpeg,.PNG,.jpg,.JPG"
                     onChange={handleChange}
                     >
                       {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
                     </Upload>
+                    <Image
+                        wrapperStyle={{ display: 'none' }}
+                        preview={{
+                          visible: previewVisible,
+                          onVisibleChange: (visible) => {
+                            setPreviewVisible(visible);
+                            if (!visible) {
+                              // Reset preview image when modal is closed
+                              setPreviewImage('');
+                            }
+                          },
+                        }}
+                        src={previewImage}
+                      />
                   </Form.Item>
                 </Col>
                 <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}>
@@ -701,14 +718,21 @@ const FabricSwatchApproval = () => {
               </Form>
         </Card>
         <Modal
-          title="Image Previews"
+          title="Previous Uploaded Images "
           visible={modal}
           onCancel={() => setModal(false)}
           footer={[
             // Submit button inside modal footer
-            <Button key="submit" type="primary" onClick={onFinish}>
+            <Popconfirm
+              title="Are you sure to submit ?"
+              onConfirm={onFinish} // handleDeleteImage is your delete image handler function
+              okText="Yes"
+              cancelText="No"
+            >
+            <Button key="submit" type="primary">
               Submit
             </Button>
+            </Popconfirm>
             ]}
         >
         <Image.PreviewGroup>
