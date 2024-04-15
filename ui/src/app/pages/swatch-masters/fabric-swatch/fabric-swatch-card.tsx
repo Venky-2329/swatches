@@ -194,7 +194,7 @@ export default function FabricSwatch() {
         <br/>
         <Row gutter={[16,16]} >
             {data.map((i,index) => {
-                const {buyerName , brandName , styleNo , itemNo  , createdAt , status } = i
+                const {buyerName , brandName , styleNo , itemNo  , createdAt , status, fabricSwatchNo } = i
                 const date = moment(createdAt).format('YYYY-MM-DD')
                 const cardStyle : CSSProperties = {
                     background: backgroundColors[index % backgroundColors.length],
@@ -213,7 +213,7 @@ export default function FabricSwatch() {
                             <img
                             style={{ height: '200px', objectFit: 'cover' }}
                               alt="example"
-                              src={'http://dsw7.shahi.co.in/services/kanban-service/upload-files'+data[0]?.fileName}
+                              src={'http://dsw7.shahi.co.in/services/kanban-service/upload-files/'+i.fileName}
                               onClick={() => ViewDetails(i)}
                             />
                           }
@@ -221,6 +221,7 @@ export default function FabricSwatch() {
                     <Meta
                   description={
                     <div className="print">
+                        <div>Swatch No: <b>{fabricSwatchNo}</b></div>
                       <div>Buyer: <b>{buyerName}</b></div>
                       <div>Created On: <b>{date}</b></div>
                       <div>Style No: <b>{styleNo}</b></div>

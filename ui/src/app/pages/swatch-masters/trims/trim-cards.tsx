@@ -298,7 +298,7 @@ export default function TrimCards() {
                             <img
                             style={{ height: '200px', objectFit: 'cover' }}
                               alt="example"
-                              src={'http://dsw7.shahi.co.in/services/kanban-service/upload-files'+data[0]?.file_name}
+                              src={'http://dsw7.shahi.co.in/services/kanban-service/upload-files/'+i.file_name}
                               onClick={() => ViewDetails(i)}
                             />
                           }
