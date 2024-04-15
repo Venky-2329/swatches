@@ -228,4 +228,14 @@ async getReport(@Body() req:any):Promise<CommonResponseModel>{
   }
 }
 
+@Post('/deleteImage')
+@ApiBody({type: TrimSwatchStatus})
+async deleteImage(@Body() req: any): Promise<CommonResponseModel>{
+    try{
+        return await this.service.deleteImage(req)
+    }catch(err){
+        return this.appHandler.returnException(CommonResponseModel,err)
+    }
+}
+
 }

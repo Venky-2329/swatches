@@ -82,4 +82,8 @@ export class TrimSwatchService extends CommonAxiosServicePms{
     async getReport(req ?: ReportReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL+ '/getReport' , req);
     }
+
+    async deleteImage(req: TrimSwatchStatus):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL+ '/deleteImage',req)
+    }
 }

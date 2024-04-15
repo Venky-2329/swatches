@@ -461,4 +461,18 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
     }
   }
 
+  async deleteImage(req: TrimSwatchStatus): Promise<CommonResponseModel> {
+    try {
+      const dataToDelete = await this.updateRepo.findOne({where:{uploadId: req.trimSwatchId}});
+      if (!dataToDelete) {
+        return new CommonResponseModel(false, 0, 'Data not found');
+      }
+      
+      await this.updateRepo.remove(dataToDelete);
+      return new CommonResponseModel(true, 1, 'Data deleted successfully');
+    } catch (error) {
+      return new CommonResponseModel(false, 0, 'Something went wrong');
+    }
+  }
+
 }

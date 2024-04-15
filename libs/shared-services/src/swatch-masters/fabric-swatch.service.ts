@@ -52,4 +52,8 @@ export class FabricSwatchService extends CommonAxiosServicePms{
     async getAllBrands():Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL+ '/getAllBrands')
     }
+
+    async deleteImage(req: SwatchStatus):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL+ '/deleteImage',req)
+    }
 }

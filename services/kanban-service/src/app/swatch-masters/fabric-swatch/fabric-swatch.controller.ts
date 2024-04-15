@@ -202,4 +202,14 @@ export class FabricSwatchController{
       }
   }
 
+  @Post('/deleteImage')
+  @ApiBody({type: SwatchStatus})
+  async deleteImage(@Body() req: any): Promise<CommonResponseModel>{
+      try{
+          return await this.service.deleteImage(req)
+      }catch(err){
+          return this.appHandler.returnException(CommonResponseModel,err)
+      }
+  }
+
 }

@@ -276,7 +276,7 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     fs.season_id AS seasonId,ssm.season_name AS seasonName,
     fs.grn_date as grnDate,fs.rejection_reason as rejectionReason,fue.file_name as fileName, 
     fue.file_path as filePath,fs.created_at as createdAt, fs.created_user as createdUser,
-    fs.created_user_mail as createdUserMail,fs.rework,fs.rework_remarks as reworkRemarks,fs.approval_remarks as approvalRemarks,fs.remarks
+    fs.created_user_mail as createdUserMail,fs.rework,fs.rework_remarks as reworkRemarks,fs.approval_remarks as approvalRemarks,fs.remarks,fue.upload_id as uploadId
     FROM fabric_swatch fs
     LEFT JOIN swatch_buyer b ON b.buyer_id = fs.buyer_id
     LEFT JOIN swatch_supplier s ON s.supplier_id = fs.supplier_id
@@ -353,5 +353,20 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
       throw(err)
     }
   }
+
+  async deleteImage(req: SwatchStatus): Promise<CommonResponseModel> {
+    try {
+      const dataToDelete = await this.uploadRepo.findOne({where:{uploadId: req.fabricSwatchId}});
+      if (!dataToDelete) {
+        return new CommonResponseModel(false, 0, 'Data not found');
+      }
+      
+      await this.uploadRepo.remove(dataToDelete);
+      return new CommonResponseModel(true, 1, 'Data deleted successfully');
+    } catch (error) {
+      return new CommonResponseModel(false, 0, 'Something went wrong');
+    }
+  }
+  
 
 }

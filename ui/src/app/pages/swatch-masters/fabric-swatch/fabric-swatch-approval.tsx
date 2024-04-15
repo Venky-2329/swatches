@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {Alert,Button,Card,Checkbox,Col,DatePicker,Divider,Drawer,Form,Input,Modal,Popconfirm,Row,Segmented,Select,Table,Tabs,Tag,Tooltip,Upload,UploadFile,message, notification} from 'antd';
+import {Alert,Button,Card,Checkbox,Col,DatePicker,Divider,Drawer,Form,Input,Row,Select,Table,Tabs,Tag,Tooltip,Upload,UploadFile,message, notification, Image, Popconfirm, Modal} from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {SearchOutlined,SyncOutlined,EditOutlined, BarcodeOutlined, EyeOutlined} from '@ant-design/icons';
+import {SearchOutlined,SyncOutlined,EditOutlined, BarcodeOutlined, EyeOutlined, DeleteOutlined} from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import Highlighter from 'react-highlight-words';
 import { DateReq, EmailModel, StatusEnum, SwatchStatus, } from 'libs/shared-models';
@@ -39,6 +39,7 @@ const FabricSwatchApproval = () => {
   const [uploading, setUploading] = useState(false);
   const [pageSize, setPageSize] = useState<number>(null);
   const mailService = new EmailService()
+  const [ dataById, setDataById ] = useState<any[]>([])
 
 
 
@@ -110,18 +111,18 @@ const FabricSwatchApproval = () => {
   };
 
   const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as RcFile);
-        reader.onload = () => resolve(reader.result as string);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+    // let src = file.url as string;
+    // if (!src) {
+    //   src = await new Promise((resolve) => {
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(file.originFileObj as RcFile);
+    //     reader.onload = () => resolve(reader.result as string);
+    //   });
+    // }
+    // const image = new Image();
+    // image.src = src;
+    // const imgWindow = window.open(src);
+    // imgWindow?.document.write(image.outerHTML);
   };
 
   const handleChange = (info) => {
@@ -153,6 +154,15 @@ const FabricSwatchApproval = () => {
       } else {
         setData([]);
         message.error(res.internalMessage, 2);
+      }
+    });
+  };
+
+  const getSwatchDetails = (value) => {
+    const req = new SwatchStatus(value.fabricSwatchId, undefined, undefined);
+    service.getDataById(req).then((res) => {
+      if (res.status) {
+        setDataById(res.data);
       }
     });
   };
@@ -371,10 +381,12 @@ const FabricSwatchApproval = () => {
     // console.log(viewData,'oooooooooooooooooooooooooooooo')
     setDrawerVisible(true);
     setSelectedData(viewData);
+    getSwatchDetails(viewData)
   }
 
   const closeDrawer=()=>{
     setDrawerVisible(false);
+    setFileList([])
   }
 
   const columns: any = [
@@ -574,12 +586,35 @@ const FabricSwatchApproval = () => {
     setFileList([])
   };
 
+  const handleDeleteImage = (value)=>{
+    console.log(value.uploadId,'-----------------')
+    const req = new SwatchStatus(value.uploadId,undefined)
+    service.deleteImage(req).then((res)=>{
+      if(res.status){
+        message.success(res.internalMessage,2)
+        // getSwatchDetails(value.fabricSwatchId)
+      }else{
+        message.error(res.internalMessage,2)
+      }
+    })
+  }
+
   const tabData = [
     { key: StatusEnum.SENT_FOR_APPROVAL, label: "WAITING FOR APPROVAL", color: "#d4b417", countKey: "waitingCount", excludeColumns: ['rejectionReason', 'poNumber', 'grnNumber', 'grnDate', 'itemDescription', 'edit'] },
     { key: StatusEnum.APPROVED, label: "APPROVED", color: "green", countKey: "approvedCount", excludeColumns: ['rejectionReason', 'poNumber', 'grnNumber', 'grnDate', 'itemDescription','edit'] },
     { key: StatusEnum.REJECTED, label: "REJECTED", color: "red", countKey: "rejectedCount", excludeColumns: ['poNumber', 'grnNumber', 'grnDate', 'itemDescription','edit'] },
     { key: StatusEnum.REWORK, label: "REWORK", color: "orange", countKey: "reworkCount", excludeColumns: [''] }
   ];  
+
+  // const imageUrls = dataById.map(item => `http://dsw7.shahi.co.in/services/kanban-service/upload-files/${item?.fileName}`);
+
+  const onSubmit = () =>{
+    if(fileList.length > 0){
+    setModal(true)
+    }else{
+      notification.info({ message: 'Please upload at least one Image' })
+    }
+  }
 
   return (
     <Card
@@ -622,7 +657,7 @@ const FabricSwatchApproval = () => {
       </Tabs>
       <Drawer bodyStyle={{ paddingBottom: 80 }} title={selectedData?.fabricSwatchNo} width={window.innerWidth > 768 ? '50%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
-        <Card>
+        <Card>  
               <Form form={form} layout="vertical" onFinish={onFinish}>
                 <Row gutter={16}>
                 <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 18 }} lg={{ span: 15 }} xl={{ span: 4 }}>
@@ -652,7 +687,7 @@ const FabricSwatchApproval = () => {
                 </Row>
 
                 <Col span={24} style={{ textAlign: 'right' }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" onClick={onSubmit}>
                 Submit
               </Button>
               <Button
@@ -665,6 +700,53 @@ const FabricSwatchApproval = () => {
             </Col>
               </Form>
         </Card>
+        <Modal
+          title="Image Previews"
+          visible={modal}
+          onCancel={() => setModal(false)}
+          footer={[
+            // Submit button inside modal footer
+            <Button key="submit" type="primary" onClick={onFinish}>
+              Submit
+            </Button>
+            ]}
+        >
+        <Image.PreviewGroup>
+          {dataById.map((item, index) => (
+            <div key={index} style={{ position: 'relative', marginRight: '10px', display: 'inline-block' }}>
+              <div style={{ position: 'relative' }}>
+                <Image
+                  src={`http://dsw7.shahi.co.in/services/kanban-service/upload-files/${item?.fileName}`}
+                  alt={`Preview`}
+                  height={'100px'}
+                  width={'280px'}
+                  style={{
+                    width: '100%',
+                    objectFit: 'contain',
+                  }}
+                />
+                <Popconfirm
+              title="Are you sure to delete this image?"
+              onConfirm={() => handleDeleteImage(item)} // handleDeleteImage is your delete image handler function
+              okText="Yes"
+              cancelText="No"
+            >
+              <DeleteOutlined
+                style={{
+                  position: 'absolute',
+                  top: '5px',
+                  right: '5px',
+                  color: 'red',
+                  cursor: 'pointer',
+                  fontSize: '20px', // Increase the size of the delete icon
+                }}
+              />
+            </Popconfirm>
+              </div>
+            </div>
+          ))}
+        </Image.PreviewGroup>
+        </Modal>
         </Drawer>
     </Card>
   );
