@@ -174,8 +174,8 @@ export function BasicLayout(props: BasicLayoutProps) {
   ];
 
   function filterRoutesByRole(routes: any[], department: number, userRole: string): any[] {
-    if (department === 1 || department === 2) {
-      if (userRole === 'MARKETING' || userRole === 'STORES') {
+    if (department === 1 || department === 2 || department === 4) {
+      if (userRole === 'MARKETING' || userRole === 'STORES' || userRole === 'ADMIN') {
         return routes.filter(route =>
           ['/swatch-card', '/fabric-swatch-cards', 'trim-swatch-cards'].includes(route.path)
         );

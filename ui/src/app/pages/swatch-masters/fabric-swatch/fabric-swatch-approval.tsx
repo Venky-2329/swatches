@@ -188,6 +188,7 @@ const FabricSwatchApproval = () => {
                 sendMailForApprovalUser()
                 // onReset();
                 setDrawerVisible(false)
+                setModal(false)
                 setFileList([])
                 getData(tabName)
                 getCount()
