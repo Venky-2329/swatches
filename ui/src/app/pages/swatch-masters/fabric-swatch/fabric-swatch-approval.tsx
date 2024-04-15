@@ -751,7 +751,7 @@ const FabricSwatchApproval = () => {
                 />
                 <Popconfirm
               title="Are you sure to delete this image?"
-              onConfirm={() => handleDeleteImage(item)} // handleDeleteImage is your delete image handler function
+              onConfirm={() => handleDeleteImage(item)}
               okText="Yes"
               cancelText="No"
             >
@@ -762,7 +762,7 @@ const FabricSwatchApproval = () => {
                   right: '5px',
                   color: 'red',
                   cursor: 'pointer',
-                  fontSize: '20px', // Increase the size of the delete icon
+                  fontSize: '20px',
                 }}
               />
             </Popconfirm>
