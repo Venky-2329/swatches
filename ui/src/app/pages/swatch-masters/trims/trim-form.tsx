@@ -13,6 +13,7 @@ import {
   notification,
   Spin,
   Image,
+  Modal,
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { SyncOutlined } from '@ant-design/icons'
@@ -55,8 +56,10 @@ export default function TrimSwatchUpload() {
   const employeeService = new ApprovalUserService()
   const [ employeeData, setEmployeeData ] = useState<any[]>([])
   const [ resData, setResData ] = useState<any[]>([])
-  const [previewImage, setPreviewImage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+
 
 
 
@@ -179,13 +182,14 @@ export default function TrimSwatchUpload() {
 
   function createUpload(values) {
     if (fileList.length > 0) {
-      console.log(values,'...................')
+      console.log(values,'...................7777777777')
       mainService.createTrimSwatch(values).then((res) => {
         console.log(res.data)
         if (res.status) {
           if (fileList.length > 0) {
             const formData = new FormData();
             fileList.forEach((file: any) => {
+              console.log(file,'999999999999')
               formData.append('file', file);
             });
             formData.append('trimSwatchId', `${res.data.trimSwatchId}`);
@@ -218,23 +222,56 @@ export default function TrimSwatchUpload() {
   }
 
 
+   
+    const handleCancel = () => setPreviewVisible(false);
+  
+    const handlePreview = async file => {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+  
+      setPreviewImage(file.url || file.preview);
+      setPreviewVisible(true);
+    };
+  
+    const handleChange = ({ fileList }) => setFileList(fileList);
+  
+    const getBase64 = file => {
+      return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+      });
+    };
+  
 
-  const getBase64 = (file: UploadFile ): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file.originFileObj as Blob);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
 
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file);
-    }
+  // const getBase64 = (file: UploadFile ): Promise<string> =>
+  //   new Promise((resolve, reject) => {
+  //     console.log(file,'iiiiiiiiiiiiiiiiiiii88888888')
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file.originFileObj as Blob);
+  //     reader.onload = () => resolve(reader.result as string);
+  //     reader.onerror = (error) => {
+  //       console.error('Error reading file:', error);
+  //       reject(error);
+  //     };
+  //   });
+  
+  //   const handlePreview = async (file) => {
+  //     console.log(file,'iiiiiiiiiii')
+  //     if (!file.url && !file.preview) {
+  //       try {
+  //         file.preview = await getBase64(file);
+  //       } catch (error) {
+  //         console.error('Error generating base64:', error);
+  //       }
+  //     }
+    
+  //     setPreviewImage(file.url || file.preview);
+  //     setPreviewOpen(true);
+  //   };
 
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
-  };
 
   function gotoGrid() {
     navigate('/trims-swatch-approval');
@@ -631,20 +668,38 @@ export default function TrimSwatchUpload() {
               lg={{ span: 6 }}
               xl={{ span: 15 }}
             >
-              <Form.Item label={'Trim Image'} required={true}>
-                <Upload
-                  {...uploadFieldProps}
-                  listType="picture-card"
-                  fileList={fileList}
-                  onPreview={handlePreview}
-                  style={{ width: '200px', height: '200px' }}
-                  accept=".png,.jpeg,.PNG,.jpg,.JPG"
-                >
-                  {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
+           <Form.Item label={'Trim Image'} required={true}>
+  <Upload
+    {...uploadFieldProps}
+    listType="picture-card"
+    fileList={fileList}
+    onPreview={handlePreview}
+    onChange={handleChange}
+    style={{ width: '200px', height: '200px' }}
+    accept=".png,.jpeg,.PNG,.jpg,.JPG"
+  >
+    {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
+  </Upload>
+  {/* <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
+        <img alt="Preview" style={{ width: '100%' }} src={previewImage} />
+      </Modal> */}
 
+<Image
+  wrapperStyle={{ display: 'none' }}
+  preview={{
+    visible: previewVisible,
+    onVisibleChange: (visible) => {
+      setPreviewVisible(visible);
+      if (!visible) {
+        // Reset preview image when modal is closed
+        setPreviewImage('');
+      }
+    },
+  }}
+  src={previewImage}
+/>
+</Form.Item>
 
-                </Upload>
-              </Form.Item>
             </Col>
           </Row>
           <br></br>
