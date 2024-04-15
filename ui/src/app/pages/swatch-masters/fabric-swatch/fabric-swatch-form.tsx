@@ -1,4 +1,4 @@
-import {Button,Card,Col,Form,Input,Modal,Row,Select,Spin,Upload,message,notification} from 'antd';
+import {Button,Card,Col,Form,Image,Input,Modal,Row,Select,Spin,Upload,message,notification} from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { useEffect, useState } from 'react';
 import {ApprovalUserService, BuyerService,EmailService,EmployeeService,FabricSwatchService,createSample,getBrandsData,getCategoryData,getLocationData,getSeasonData,  SupplierService,
@@ -281,33 +281,20 @@ export default function FabricSwatchUpload() {
     }
   };
 
-  const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-  }
 
-  const onPreview = (res) => {
-    setModal('fileUpload')
-    setPreviewVisible(true)
-    setImageName(res.name)
-    getBase64(res, imageUrl =>
-      setImageUrl(imageUrl)
-    );
-  }
 
   const onUserChange =(value,option)=>{
     form.setFieldsValue({approverName: option?.name})
     form.setFieldsValue({approverMail: option?.mail})
   }
 
-  const handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-      setUploading(true);
-    } else {
-      setUploading(false);
-    }
-  };
+  // const handleChange = (info) => {
+  //   if (info.file.status === 'uploading') {
+  //     setUploading(true);
+  //   } else {
+  //     setUploading(false);
+  //   }
+  // };
 
   const onBuyerChange = (value, option)=>{
     form.setFieldsValue({buyerName: option?.name})
@@ -322,10 +309,29 @@ export default function FabricSwatchUpload() {
     console.log(form.setFieldsValue({supplierName:option?.name}))
   }
 
+  const handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    setPreviewImage(file.url || file.preview);
+    setPreviewVisible(true);
+  };
+
+  const handleChange = ({ fileList }) => setFileList(fileList);
+
+  const getBase64 = file => {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+    });
+  };
+
   
   return (
     <>
-    {/* {uploading && (
+    {uploading && (
           <div
             style={{
               position: 'fixed',
@@ -343,7 +349,7 @@ export default function FabricSwatchUpload() {
             <Spin size="large" />
             <div style={{ marginLeft: 10 }}> Uploading...</div>
           </div>
-        )} */}
+        )}
       <Card
             title={<span style={{ color: "white" }}>Fabric Swatch</span>}
             extra={
@@ -634,13 +640,27 @@ export default function FabricSwatchUpload() {
               {...uploadFieldProps}
               listType="picture-card"
               fileList={fileList}
-              onPreview={onPreview}
+              onPreview={handlePreview}
+              onChange={handleChange}              
               style={{ width: '200px', height: '200px' }}
               accept=".png,.jpeg,.PNG,.jpg,.JPG"
-              onChange={handleChange}
             >
               {uploading ? <SyncOutlined spin /> : (fileList.length < 3 && '+ Upload')}
             </Upload>
+            <Image
+                  wrapperStyle={{ display: 'none' }}
+                  preview={{
+                    visible: previewVisible,
+                    onVisibleChange: (visible) => {
+                      setPreviewVisible(visible);
+                      if (!visible) {
+                        // Reset preview image when modal is closed
+                        setPreviewImage('');
+                      }
+                    },
+                  }}
+                  src={previewImage}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -661,27 +681,7 @@ export default function FabricSwatchUpload() {
           </Row>
         </Form> 
       </Card>
-      <Modal
-          visible={previewVisible}
-          title={imageName}
-          footer={null}
-          onCancel={() => setPreviewVisible(false)}
-        >
-          {modal == 'fileUpload' ? <>
-            <Card style={{ height: '250px' }}>
-              <Form.Item>
-                <img
-                  src={imageUrl}
-                  alt="Preview"
-                  height={'200px'}
-                  width={'500px'}
-                  style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
-                />
-              </Form.Item>
-            </Card>
-          </> : <img alt="example" style={{ width: "100%" }} src={previewImage} />}
-
-        </Modal>
+      
     </>
   );
 }
