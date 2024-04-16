@@ -108,13 +108,11 @@ export default function TrimSwatchUpload() {
 
   const handleRemove = (file) => {
     // setFileList([]);
-    console.log(file,'-----------fileId')
     const updatedFileList = fileList.filter(item => item.uid !== file.uid);
     setFileList(updatedFileList);
   };
 
   const onUserChange =(value,option)=>{
-    console.log(option?.name,';;;;;;;;;;;;;;;;;')
     form.setFieldsValue({approverName: option?.name})
     form.setFieldsValue({approverMail : option?.mail})
 }
@@ -177,14 +175,10 @@ export default function TrimSwatchUpload() {
     },
     fileList: fileList,
   };
-  console.log(uploadFieldProps,'kkkkkkkkkkkkkkk')
-
 
   function createUpload(values) {
     if (fileList.length > 0) {
-      console.log(values,'...................7777777777')
       mainService.createTrimSwatch(values).then((res) => {
-        console.log(res.data)
         if (res.status) {
           if (fileList.length > 0) {
             const formData = new FormData();
@@ -220,10 +214,6 @@ export default function TrimSwatchUpload() {
       return notification.info({ message: 'Please upload sample' });
     }
   }
-
-
-   
-    const handleCancel = () => setPreviewVisible(false);
   
     const handlePreview = async file => {
       if (!file.url && !file.preview) {
@@ -352,7 +342,6 @@ export default function TrimSwatchUpload() {
       `
         swatchDetails.subject = "Trim Swatch : " + form.getFieldValue('trimSwatchNumber')
         const res = await mailService.sendSwatchMail(swatchDetails)
-        console.log(res)
         if (res.status == 201) {
             if (res.data.status) {
                 message.success("Mail sent successfully")
