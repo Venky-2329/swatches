@@ -174,7 +174,7 @@ export class FabricSwatchController{
   }))
   async fabricUpload(@UploadedFiles() file: File[], @Body() uploadData: any): Promise<CommonResponseModel> {
     try {
-      console.log(file,'-=-=====-=-=-=-=-=-=-')
+      console.log(file,'-=-=====-=-=-=-=-=-=-',uploadData[0])
       return await this.service.updatePath(file, uploadData.fabricSwatchId)
     } catch (error) {
       return this.appHandler.returnException(CommonResponseModel, error);

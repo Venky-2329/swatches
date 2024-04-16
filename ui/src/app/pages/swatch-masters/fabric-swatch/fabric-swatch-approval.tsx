@@ -152,14 +152,17 @@ const FabricSwatchApproval = () => {
     if (fileList.length > 0) {
       console.log(form.getFieldValue('remarks'))
       const req = new SwatchStatus(selectedData.fabricSwatchId,undefined,undefined,undefined,undefined,form.getFieldValue('remarks'))
-      console.log(req,'pppppppppppppppppppppp')
       service.updateSentForApprovalStatus(req).then((res) => {
         if (res.status) {
           if (fileList.length > 0) {
             const formData = new FormData();
-            fileList.forEach((file: any) => {
-              formData.append('file', file);
-            })
+            // fileList.forEach((file: any) => {
+            //   formData.append('file', file);
+            // })
+            for(const file of fileList){
+              formData.append('file', file.originFileObj);
+              console.log(formData)
+            }
             formData.append('fabricSwatchId', `${res.data.fabricSwatchId}`)
             service.uploadPhoto(formData).then((fileres) => {
               if (res.status) {
@@ -595,7 +598,7 @@ const FabricSwatchApproval = () => {
     service.deleteImage(req).then((res)=>{
       if(res.status){
         message.success(res.internalMessage,2)
-        // getSwatchDetails(value.fabricSwatchId)
+        setDataById(prevData => prevData.filter(item => item.uploadId !== value.uploadId));
       }else{
         message.error(res.internalMessage,2)
       }

@@ -9,7 +9,6 @@ export class FabricSwatchService extends CommonAxiosServicePms{
     }
 
     async uploadPhoto(file: any): Promise<CommonResponseModel> {
-        console.log(file,'----------------------')
         return this.axiosPostCall(this.URL+ '/photoUpload', file);
     }
 
