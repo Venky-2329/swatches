@@ -721,7 +721,7 @@ const FabricSwatchApproval = () => {
               </Form>
         </Card>
         <Modal
-          title="Previous Uploaded Images "
+          title={'Previous Uploaded Images '}
           visible={modal}
           onCancel={() => setModal(false)}
           footer={[
@@ -732,12 +732,14 @@ const FabricSwatchApproval = () => {
               okText="Yes"
               cancelText="No"
             >
+
             <Button key="submit" type="primary">
               Submit
             </Button>
             </Popconfirm>
             ]}
         >
+            <p style={{padding:'5px' , color: 'red'}}>If want to delete existing uploaded images.., Please Click Delete Button </p>
         <Image.PreviewGroup>
           {dataById.map((item, index) => (
             <div key={index} style={{ position: 'relative', marginRight: '10px', display: 'inline-block' }}>
@@ -750,6 +752,7 @@ const FabricSwatchApproval = () => {
                   style={{
                     width: '100%',
                     objectFit: 'contain',
+                    padding : '6px',
                   }}
                 />
                 <Popconfirm

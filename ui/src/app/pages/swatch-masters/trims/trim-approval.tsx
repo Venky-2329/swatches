@@ -832,11 +832,19 @@ function handleReset(clearFilters) {
           onCancel={() => setModal(false)}
           footer={[
             // Submit button inside modal footer
-            <Button key="submit" type="primary" onClick={onFinish}>
+            <Popconfirm
+              title="Are you sure to Submit?"
+              onConfirm={onFinish}
+              okText="Yes"
+              cancelText="No"
+            >
+            <Button key="submit" type="primary">
               Submit
             </Button>
+            </Popconfirm>
             ]}
         >
+        <p style={{padding:'5px' , color: 'red'}}>If want to delete existing uploaded images.., Please Click Delete Button </p>
         <Image.PreviewGroup>
           {dataById.map((item, index) => (
             <div key={index} style={{ position: 'relative', marginRight: '10px', display: 'inline-block' }}>
@@ -849,6 +857,7 @@ function handleReset(clearFilters) {
                   style={{
                     width: '100%',
                     objectFit: 'contain',
+                    padding : '6px',
                   }}
                 />
                 <Popconfirm

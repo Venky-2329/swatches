@@ -114,7 +114,7 @@ export function BasicLayout(props: BasicLayoutProps) {
       ],
     },
     {
-      label: 'Swatch Card ',
+      label: 'Swatch Card Generation',
       path: '/swatch-card',
       icon: <RiScissorsCutLine />,
       filepath: '../',
@@ -136,19 +136,28 @@ export function BasicLayout(props: BasicLayoutProps) {
       ],
     },
     {
-      label: 'Fabric-Swatch-Cards',
-      key: 'fabric-swatch-cards',
-      path: '/fabric-swatch-cards',
-      icon: <RobotOutlined />,
+      label: 'Swatch Card List ',
+      path: '/swatch-card-list',
+      icon: <RiScissorsCutLine />,
       filepath: '../',
-    },
-    {
-      label: 'Trim-Swatch-Cards',
-      key: 'trim-swatch-cards',
-      path: 'trim-swatch-cards',
-      icon: <RobotOutlined />,
-      filepath: '../',
-    },
+      children: [
+                  {
+                    label: 'Fabric-Swatch-Cards',
+                    key: 'fabric-swatch-cards',
+                    path: '/fabric-swatch-cards',
+                    icon: <RobotOutlined />,
+                    filepath: '../',
+                  },
+                  {
+                    label: 'Trim-Swatch-Cards',
+                    key: 'trim-swatch-cards',
+                    path: '/trim-swatch-cards',
+                    icon: <RobotOutlined />,
+                    filepath: '../',
+                  },
+                ],
+     },
+
     {
       label: 'Report ',
       path: '/swatch-view',
@@ -177,12 +186,12 @@ export function BasicLayout(props: BasicLayoutProps) {
     if (department === 1 || department === 2) {
       if (userRole === 'MARKETING' || userRole === 'STORES') {
         return routes.filter(route =>
-          ['/swatch-card', '/fabric-swatch-cards', 'trim-swatch-cards'].includes(route.path)
+          ['/swatch-card', '/swatch-card-list'].includes(route.path)
         );
       }
     } else if (department === 3 && userRole === 'FACTORY') {
       return routes.filter(route =>
-        ['/fabric-swatch-cards', 'trim-swatch-cards'].includes(route.path)
+        ['/swatch-card-list'].includes(route.path)
       );
     }
     return routes;
