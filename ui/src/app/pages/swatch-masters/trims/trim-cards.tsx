@@ -55,7 +55,7 @@ export default function TrimCards() {
     }
 
     function getSupplier(){
-        supplierService.getAllSuppliers().then((res) => {
+        supplierService.getAllActiveSuppliers().then((res) => {
             if(res.data){
                 setSupplier(res.data)
             }
@@ -134,6 +134,10 @@ export default function TrimCards() {
         if(form.getFieldValue('approverId') != undefined){
             req.approverId = form.getFieldValue('approverId')
         }
+        if(form.getFieldValue('status') != undefined){
+            req.status = form.getFieldValue('status')
+        }
+
         
         trimsService.getAllTrimSwatchData(req).then((res)=>{
             if(res.data){
@@ -265,6 +269,18 @@ export default function TrimCards() {
                             })}
                         </Select>
                     </Form.Item> 
+                </Col>
+
+                <Col xs={24} sm={24}md={{span: 6}} lg={{span: 4  }} xl={{span: 4 }}>
+                <Form.Item name="status" label="Status" >
+                <Select allowClear placeholder='Select Status'>
+                {Object.values(StatusDisplayEnum).map((val) => (
+                    <Select.Option key={val.name} value={val.name}>
+                    {val.displayVal}
+                    </Select.Option>
+                ))}
+                    </Select>    
+                </Form.Item>
                 </Col>
             </Row>
             <Row justify='end'>

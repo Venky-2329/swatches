@@ -45,8 +45,9 @@ export class EmployeeService {
       left join swatch_department d on d.id = e.department 
       left join swatch_designation de on de.designation_id = e.designation
 	    left join swatch_sections s on s.section_id = e.section
-      left join swatch_units u on u.unit_code = e.unit WHERE e.is_active = 1 `
+      left join swatch_units u on u.unit_code = e.unit ORDER BY e.employee_name ASC`
       const employeeData = await this.employeeRepo.query(query);
+
       if (employeeData.length > 0) {
         return new CommonResponseModel(true, 221, 'Data retrieved', employeeData);
       } else {
@@ -159,5 +160,17 @@ export class EmployeeService {
     }
   }
 
+  async getAllMarketingEmployees(): Promise<any> {
+    let query = `SELECT e.employee_id AS employeeId, e.employee_name AS employeeName,e.email_id AS emailId
+    from swatch_employees e
+    left join swatch_department d on d.id = e.department
+    WHERE e.department = 1 ORDER BY e.employee_name ASC`
+    const data = await this.employeeRepo.query(query);
+    if(data.length > 0){
+      return new CommonResponseModel(true, 1, 'Data retrieved',data)
+    }else{
+      return new CommonResponseModel(false, 0, 'No data found',[])
+    }
+  }
 
 }

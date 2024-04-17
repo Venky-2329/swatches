@@ -1,5 +1,6 @@
 export class supplierDto {
   supplierId: number;
+  supplierCode: string;
   supplierName: string;
   createdUser: string;
   updatedUser: string;
@@ -7,6 +8,7 @@ export class supplierDto {
   createdAt : Date;
   constructor(
     supplierId: number,
+    supplierCode: string,
     supplierName: string,
     createdUser: string,
     updatedUser: string,
@@ -14,6 +16,7 @@ export class supplierDto {
     createdAt : Date
   ) {
     this.supplierId = supplierId;
+    this.supplierCode = supplierCode;
     this.supplierName = supplierName;
     this.createdUser = createdUser;
     this.updatedUser = updatedUser;

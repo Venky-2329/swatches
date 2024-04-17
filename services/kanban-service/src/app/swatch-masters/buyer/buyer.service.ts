@@ -56,10 +56,11 @@ export class BuyerService {
 async getAllBuyers():Promise<CommonResponseModel>{
     try{
         const data = await this.repo.find({order:{buyerName:'ASC'}})
-        if(data){
+        console.log(data,'-------------')
+        if(data.length){
             return new CommonResponseModel(true, 1, 'Data retrieved successfully',data)
         }else{
-            return new CommonResponseModel(false, 0, 'No data found')
+            return new CommonResponseModel(false, 0, 'No data found',[])
         }
     }catch(err){
         throw(err)

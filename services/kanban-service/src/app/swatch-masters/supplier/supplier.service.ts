@@ -15,7 +15,7 @@ export class SupplierService {
   
   async createSupplier(dto : supplierDto , isUpdate : boolean): Promise <CommonResponseModel> {
     
-      const exisiting =  await this.repo.findOne({where : {supplierName : dto.supplierName}})
+      const exisiting =  await this.repo.findOne({where : {supplierCode : dto.supplierCode}})
 
       if (exisiting && (!isUpdate || (isUpdate && exisiting.supplierId !== dto.supplierId ))){
         return new CommonResponseModel(false , 0 , 'Supplier already exists')
@@ -25,9 +25,11 @@ export class SupplierService {
       if (dto.supplierId){
         entity.supplierId = dto.supplierId;
         entity.updatedUser = dto.updatedUser;
+        entity.supplierCode = dto.supplierCode;
       }
       entity.supplierName = dto.supplierName;
       entity.createdUser = dto.createdUser;
+      entity.supplierCode = dto.supplierCode;
 
       const save = await this.repo.save(entity);
       console.log(save ,'-----save');
@@ -38,7 +40,7 @@ export class SupplierService {
   }
 
   async getAllSuppliers():Promise<CommonResponseModel>{
-    const data = await this.repo.find();
+    const data = await this.repo.find({order:{createdAt:'DESC'}});
     if (data){
       return new CommonResponseModel(true , 1 ,'Data retrieved successfully' , data)
     }else{

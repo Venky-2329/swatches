@@ -4,6 +4,7 @@ import {
     Col,
     Divider,
     Drawer,
+    Input,
     Popconfirm,
     Row,
     Switch,
@@ -14,10 +15,11 @@ import {
     RightSquareOutlined,
     SearchOutlined,
   } from '@ant-design/icons';
-  import { useEffect, useState } from 'react';
+  import { useEffect, useRef, useState } from 'react';
   import { useNavigate } from 'react-router-dom';
   import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import SupplierForm from './supplier-form';
+import Highlighter from 'react-highlight-words';
 import { SupplierService } from 'libs/shared-services';
 import { supplierDto, supplierReq } from 'libs/shared-models';
   
@@ -26,6 +28,9 @@ import { supplierDto, supplierReq } from 'libs/shared-models';
     const [data, setData] = useState([]);
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [selectedSupplier, setSelectedSupplier] = useState<any>(undefined);
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const [searchText, setSearchText] = useState('');
+    const searchInput = useRef(null); 
     const service = new SupplierService();
   
     useEffect(() => {
@@ -42,7 +47,6 @@ import { supplierDto, supplierReq } from 'libs/shared-models';
   
     const updateSupplier = (supplier: supplierDto) => {
       const authdata = JSON.parse(localStorage.getItem(''));
-  
       console.log(supplier.updatedUser);
       service.updateSuppliers(supplier).then((res) => {
         if (res.status) {
@@ -80,14 +84,104 @@ import { supplierDto, supplierReq } from 'libs/shared-models';
       setDrawerVisible(false);
     };
   
+    const getColumnSearchProps = (dataIndex: string) => ({
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={searchInput}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          />
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90, marginRight: 8 }}
+          >
+            Search
+          </Button>
+          <Button
+            size="small"
+            style={{ width: 90 }}
+            onClick={() => {
+              handleReset(clearFilters);
+              setSearchedColumn(dataIndex);
+              confirm({ closeDropdown: true });
+            }}
+          >
+            Reset
+          </Button>
+        </div>
+      ),
+      filterIcon: (filtered) => (
+        <SearchOutlined
+          type="search"
+          style={{ color: filtered ? '#1890ff' : undefined }}
+        />
+      ),
+      onFilter: (value, record) =>
+        record[dataIndex]
+          ? record[dataIndex]
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          : false,
+      onFilterDropdownVisibleChange: (visible) => {
+        if (visible) {
+          setTimeout(() => searchInput.current.select());
+        }
+      },
+      render: (text) =>
+        text ? (
+          searchedColumn === dataIndex ? (
+            <Highlighter
+              highlightStyle={{ backgroundColor: '#faf8f5', padding: 0 }}
+              // '#e8e4df'
+              searchWords={[searchText]}
+              autoEscape
+              textToHighlight={text.toString()}
+            />
+          ) : (
+            text
+          )
+        ) : null,
+    });
+    function handleSearch(selectedKeys, confirm, dataIndex) {
+      confirm();
+      setSearchText(selectedKeys[0]);
+      setSearchedColumn(dataIndex);
+    }
+    
+    function handleReset(clearFilters) {
+      clearFilters();
+      setSearchText('');
+    }
+
     const columns: any = [
       {
         title: 'S.No',
         render: (val, record, index) => index + 1,
       },
       {
+        title: 'Supplier Code',
+        dataIndex: 'supplierCode',
+        ...getColumnSearchProps('supplierCode')
+      },
+      {
         title: 'Supplier Name',
         dataIndex: 'supplierName',
+        ...getColumnSearchProps('supplierName')
       },
       {
         title: `Action`,

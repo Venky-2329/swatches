@@ -18,6 +18,10 @@ export class EmployeeService extends CommonAxiosServicePms {
         return await this.axiosGetCall(this.EmployeeController + '/getAllEmployees')
     }
 
+    async getAllActiveEmployees(): Promise<any> {
+        return await this.axiosGetCall(this.EmployeeController + '/getAllActiveEmployees')
+    }
+
     async getAllEmployeesByUnit(req: UnitReq): Promise<any> {
         return await this.axiosPostCall(this.EmployeeController +'/getAllEmployeesByUnit', req);
     }
@@ -32,6 +36,10 @@ export class EmployeeService extends CommonAxiosServicePms {
 
     async deactiveEmployee(req: any): Promise<any> {
         return await this.axiosPostCall(this.EmployeeController +'/deactiveEmployee', req);
+    }
+
+    async getAllMarketingEmployees(): Promise<any> {
+        return await this.axiosPostCall(this.EmployeeController +'/getAllMarketingEmployees');
     }
 
     

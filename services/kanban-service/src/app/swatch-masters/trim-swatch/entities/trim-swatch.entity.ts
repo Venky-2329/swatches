@@ -40,7 +40,7 @@ export class TrimSwatchEntity {
 
     @Column('varchar',{
         name:'invoice_no',
-        nullable: false,
+        nullable: true,
         length:50
     })
     invoiceNo: string
@@ -54,7 +54,7 @@ export class TrimSwatchEntity {
 
     @Column('varchar',{
         name:'grn_number',
-        nullable: false
+        nullable: true
     })
     grnNumber: string
 

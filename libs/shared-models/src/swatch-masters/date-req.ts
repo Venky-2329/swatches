@@ -1,3 +1,5 @@
+import { StatusEnum } from "../enums";
+
 export class DateReq{
     tabName?: string
     fromDate?: any
@@ -12,6 +14,7 @@ export class DateReq{
     approverId ?: number;
     brandId?: number
     createdBy?: string
+    status?: StatusEnum
 
     constructor(
         tabName?: string,
@@ -26,7 +29,9 @@ export class DateReq{
         itemNo?: string,
         approverId ?: number,
         brandId?: number,
-        createdBy?: string
+        createdBy?: string,
+        status?: StatusEnum
+        
     ){
         this.tabName = tabName
         this.fromDate = fromDate
@@ -41,6 +46,7 @@ export class DateReq{
         this.approverId = approverId
         this.brandId = brandId
         this.createdBy = createdBy
+        this.status = status
     }
 }
 

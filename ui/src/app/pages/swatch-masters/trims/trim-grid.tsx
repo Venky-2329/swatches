@@ -61,8 +61,6 @@ export const TrimSwatchGrid = () => {
     service.getApprovedBy().then((res) => {
       if (res.status){
         setApprovedBy(res.data);
-      }else{
-        message.error(res.internalMessage,2)
       }
     })
   }
@@ -71,8 +69,6 @@ export const TrimSwatchGrid = () => {
     service.getCreatedBy().then((res) => {
       if (res.status){
         setCreatedBy(res.data);
-      }else{
-        message.error(res.internalMessage,2)
       }
     })
   }
@@ -81,8 +77,6 @@ export const TrimSwatchGrid = () => {
     service.getStatus().then((res) => {
       if (res.status){
         setStatus(res.data);
-      }else{
-        message.error(res.internalMessage,2)
       }
     })
   }
@@ -91,8 +85,6 @@ export const TrimSwatchGrid = () => {
     service.getSwatchNo().then((res) => {
       if (res.status){
         setTrimNumber(res.data);
-      }else{
-        message.error(res.internalMessage,2)
       }
     })
   }

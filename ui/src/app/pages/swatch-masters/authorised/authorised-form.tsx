@@ -64,7 +64,7 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
     form.setFieldsValue({ createdUser: authdata?.userName });
   }, []);
   const getAllEmployees = () => {
-    employeeService.getAllEmployees().then((res) => {
+    employeeService.getAllMarketingEmployees().then((res) => {
       if (res) {
         console.log('This is employee');
         // console.log(res);

@@ -6,6 +6,9 @@ export class SupplierDto {
     supplierId : number;
 
     @ApiProperty()
+    supplierCode : string;
+
+    @ApiProperty()
     supplierName : string;
 
     @ApiProperty()

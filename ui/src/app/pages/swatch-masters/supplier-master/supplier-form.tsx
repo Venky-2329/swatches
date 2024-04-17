@@ -37,6 +37,7 @@ import { SupplierService } from 'libs/shared-services';
     }
   
     function onFinish(supplierData: supplierDto) {
+      console.log(supplierData , 'dataaaaaaa')
       service.createSupplier(supplierData)
         .then((res) => {
           if (res.status) {
@@ -96,7 +97,23 @@ import { SupplierService } from 'libs/shared-services';
                 xl={{ span: 4 }}
               >
                 <Form.Item
-                  label="Supplier"
+                  label="Supplier Code"
+                  name={'supplierCode'}
+                  rules={[{ required: true }]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 6 }}
+                lg={{ span: 6 }}
+                xl={{ span: 4 }}
+              >
+                <Form.Item
+                  label="Supplier Name"
                   name={'supplierName'}
                   rules={[{ required: true }]}
                 >

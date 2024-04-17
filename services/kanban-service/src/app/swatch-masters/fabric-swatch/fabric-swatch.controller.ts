@@ -124,10 +124,10 @@ export class FabricSwatchController{
       }
     }
 
-    @Post('/getAllBuyers')
-    async getAllBuyers(): Promise<CommonResponseModel>{
+    @Post('/getAllFabricBuyers')
+    async getAllFabricBuyers(): Promise<CommonResponseModel>{
         try{
-            return await this.service.getAllBuyers()
+            return await this.service.getAllFabricBuyers()
         }catch(err){
             return this.appHandler.returnException(CommonResponseModel,err)
         }

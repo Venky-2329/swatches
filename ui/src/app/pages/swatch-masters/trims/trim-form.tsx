@@ -430,7 +430,7 @@ export default function TrimSwatchUpload() {
               <Form.Item
                 label="GRN No"
                 name={'grnNumber'}
-                rules={[{ required: true, message: 'GRN is required' }]}
+                rules={[{ required: false, message: 'GRN is required' }]}
               >
                 <Input placeholder="Enter GRN No" />
               </Form.Item>
@@ -575,7 +575,7 @@ export default function TrimSwatchUpload() {
               <Form.Item
                 label="Invoice No"
                 name={'invoiceNo'}
-                rules={[{ required: true, message: 'Please input Invoice No' }]}
+                rules={[{ required: false, message: 'Please input Invoice No' }]}
               >
                 <Input placeholder="Enter Invoice No" />
               </Form.Item>

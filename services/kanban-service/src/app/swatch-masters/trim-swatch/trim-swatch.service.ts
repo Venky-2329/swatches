@@ -162,6 +162,9 @@ export class TrimSwatchService {
       if(req.approverId != undefined ){
         query = query + ` and ts.approver_id = ${req.approverId}`
       }
+      if(req.status != undefined ){
+        query = query + ` and ts.status = '${req.status}'`
+      }
       query = query + ` GROUP BY ts.trim_swatch_number ORDER BY ts.trim_swatch_number DESC`
 
       const data = await this.repo.query(query)

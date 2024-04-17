@@ -97,5 +97,14 @@ export class EmployeeController {
         }
     }
 
+    @Post('/getAllMarketingEmployees')
+    async getAllMarketingEmployees(): Promise<CommonResponseModel> {
+        try {
+            return await this.service.getAllMarketingEmployees();
+        } catch (error) {
+            return (error);
+        }
+    }
+
 
 }

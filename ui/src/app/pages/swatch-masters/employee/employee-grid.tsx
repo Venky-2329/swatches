@@ -221,36 +221,36 @@ const EmployeeGrid = () => {
             dataIndex: 'emailId',
             align: 'center'
         },
-        {
-            title: `Action`,
-            dataIndex: 'action',
-            align: "center",
-            render: (text, rowData) => (
-                <span>
-                    <EditOutlined className={'editSamplTypeIcon'} type="edit"
-                        onClick={() => {
-                            console.log(rowData)
-                            if (rowData.isActive) {
-                                openFormWithData(rowData);
-                            } else {
-                                message.error('You Cannot Edit Deactivated Employee');
-                            }
-                        }}
-                        style={{ color: '#1890ff', fontSize: '14px' }}
-                    />
-                    <Divider type="vertical" />
-                    <Popconfirm onConfirm={e => { deactiveEmployee(rowData); }}
-                        title={
-                            rowData.isActive
-                                ? 'Are you sure to Delete Address ?'
-                                : 'Are you sure to Delete Address ?'
-                        }
-                    >
-                        <DeleteOutlined />
-                    </Popconfirm>
-                </span>
-            )
-        }
+        // {
+        //     title: `Action`,
+        //     dataIndex: 'action',
+        //     align: "center",
+        //     render: (text, rowData) => (
+        //         <span>
+        //             <EditOutlined className={'editSamplTypeIcon'} type="edit"
+        //                 onClick={() => {
+        //                     console.log(rowData)
+        //                     if (rowData.isActive) {
+        //                         openFormWithData(rowData);
+        //                     } else {
+        //                         message.error('You Cannot Edit Deactivated Employee');
+        //                     }
+        //                 }}
+        //                 style={{ color: '#1890ff', fontSize: '14px' }}
+        //             />
+        //             <Divider type="vertical" />
+        //             <Popconfirm onConfirm={e => { deactiveEmployee(rowData); }}
+        //                 title={
+        //                     rowData.isActive
+        //                         ? 'Are you sure to Delete Address ?'
+        //                         : 'Are you sure to Delete Address ?'
+        //                 }
+        //             >
+        //                 <DeleteOutlined />
+        //             </Popconfirm>
+        //         </span>
+        //     )
+        // }
 
     ]
     return (

@@ -162,6 +162,9 @@ export class FabricSwatchService{
         if(req.createdBy != undefined){
           query = query + ` and fs.created_user = ${req.createdBy}`
         }
+        if(req.status != undefined){
+          query = query + ` and fs.status = '${req.status}'`
+        }
         query = query + ` GROUP BY fs.fabric_swatch_number ORDER BY fs.fabric_swatch_number DESC`
 
         const data = await this.dataSource.query(query)
@@ -303,7 +306,7 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
 }
 
 
-  async getAllBuyers():Promise<CommonResponseModel>{
+  async getAllFabricBuyers():Promise<CommonResponseModel>{
     try{
       let query =`SELECT fs.buyer_id,sb.buyer_name AS buyerName
       FROM fabric_swatch fs
@@ -312,9 +315,9 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
       const data = await this.dataSource.query(query)
 
       if(data.length > 0){
-        return new CommonResponseModel(true, 1, 'Data retrieved successfully', data)
+        return new CommonResponseModel(true, 1, 'Data retrieved successfully', [data])
       }else{
-        return new CommonResponseModel(false, 2, 'No data found','[]')
+        return new CommonResponseModel(false, 2, 'No data found',[])
       }
     }catch(err){
       throw(err)
@@ -330,9 +333,9 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
       const data = await this.dataSource.query(query)
 
       if(data.length > 0){
-        return new CommonResponseModel(true, 1, 'Data retrieved successfully', data)
+        return new CommonResponseModel(true, 1, 'Data retrieved successfully', [data])
       }else{
-        return new CommonResponseModel(false, 2, 'No data found','[]')
+        return new CommonResponseModel(false, 2, 'No data found',[])
       }
     }catch(err){
       throw(err)
@@ -345,9 +348,9 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
       const data = await this.dataSource.query(query)
 
       if(data.length > 0){
-        return new CommonResponseModel(true, 1, 'Data retrieved successfully', data)
+        return new CommonResponseModel(true, 1, 'Data retrieved successfully', [data])
       }else{
-        return new CommonResponseModel(false, 2, 'No data found','[]')
+        return new CommonResponseModel(false, 2, 'No data found',[])
       }
     }catch(err){
       throw(err)

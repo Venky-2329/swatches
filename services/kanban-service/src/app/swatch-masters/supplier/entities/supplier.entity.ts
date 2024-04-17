@@ -7,6 +7,9 @@ export class SupplierEntity {
   })
   supplierId: number;
 
+  @Column('varchar', { name: 'supplier_code', length: 60 })
+  supplierCode: string;
+
   @Column('varchar', { name: 'supplier_name', length: 60 })
   supplierName: string;
 
