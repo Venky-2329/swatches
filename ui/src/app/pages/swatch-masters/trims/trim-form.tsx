@@ -73,7 +73,7 @@ export default function TrimSwatchUpload() {
   }, []);
 
   function getBuyers() {
-    service.getAllBuyers().then((res) => {
+    service.getAllActiveBuyers().then((res) => {
       if (res.data) {
         setBuyer(res.data);
       }
@@ -81,7 +81,7 @@ export default function TrimSwatchUpload() {
   }
 
   function getSupplier() {
-    service2.getAllSuppliers().then((res) => {
+    service2.getAllActiveSuppliers().then((res) => {
       if (res.data) {
         setSupplier(res.data);
       }
@@ -474,7 +474,7 @@ export default function TrimSwatchUpload() {
               sm={{ span: 24 }}
               md={{ span: 6 }}
               lg={{ span: 6 }}
-              xl={{ span: 4 }}
+              xl={{ span: 6 }}
             >
               <Form.Item
                 label="Supplier"
@@ -490,7 +490,7 @@ export default function TrimSwatchUpload() {
                 >
                   {supplier.map((item) => {
                     return (
-                      <Option value={item.supplierId} name={item.supplierName} >{item.supplierName}</Option>
+                      <Option value={item.supplierId} name={item.supplierName} >{item.supplierName}-{item.supplierCode}</Option>
                     );
                   })}
                 </Select>

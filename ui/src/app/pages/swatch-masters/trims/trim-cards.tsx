@@ -39,7 +39,7 @@ export default function TrimCards() {
     },[])
 
     function getBuyers(){
-        buyerService.getAllBuyers().then((res)=> {
+        trimsService.getAllTrimBuyer().then((res)=> {
             if(res.data){
                 setBuyer(res.data)
             }
@@ -55,7 +55,7 @@ export default function TrimCards() {
     }
 
     function getSupplier(){
-        supplierService.getAllActiveSuppliers().then((res) => {
+        trimsService.getAllTrimSupplier().then((res) => {
             if(res.data){
                 setSupplier(res.data)
             }

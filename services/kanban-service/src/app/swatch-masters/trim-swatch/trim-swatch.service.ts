@@ -478,4 +478,32 @@ async getDataById(req:TrimSwatchStatus):Promise<CommonResponseModel>{
     }
   }
 
+  async getAllTrimBuyer():Promise<CommonResponseModel>{
+    let query = `SELECT b.buyer_id AS buyerId  , b.buyer_name AS buyerName
+    FROM trim_swatch t
+    LEFT JOIN swatch_buyer b ON b.buyer_id = t.buyer_id
+    GROUP BY b.buyer_name`
+    const data = await this.dataSource.query(query)
+
+    if(data.length>0){
+      return new CommonResponseModel(true , 1 ,'Data retrieved',data)
+    }else{
+      return new CommonResponseModel(false ,0 , 'No Data',[])
+    }
+  }
+ 
+  async getAllTrimSupplier():Promise<CommonResponseModel>{
+    let query = `SELECT s.supplier_id AS supplierId  , s.supplier_name AS supplierName
+    FROM trim_swatch t
+    LEFT JOIN swatch_supplier s ON s.supplier_id = t.supplier_id
+    GROUP BY s.supplier_name`
+    const data = await this.dataSource.query(query)
+
+    if(data.length>0){
+      return new CommonResponseModel(true , 1 ,'Data retrieved',data)
+    }else{
+      return new CommonResponseModel(false ,0 , 'No Data',[])
+    }
+  }
+
 }

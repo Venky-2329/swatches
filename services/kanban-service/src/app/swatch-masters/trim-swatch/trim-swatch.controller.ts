@@ -146,6 +146,7 @@ async getStyleNo():Promise<CommonResponseModel>{
     return this.appHandler.returnException(CommonResponseModel,error)
   }
 }
+
 @Post('/getItemNo')
 async getItemNo():Promise<CommonResponseModel>{
   try {
@@ -238,4 +239,21 @@ async deleteImage(@Body() req: any): Promise<CommonResponseModel>{
     }
 }
 
+@Post('/getAllTrimBuyer')
+async getAllTrimBuyer():Promise<CommonResponseModel>{
+  try {
+    return await this.service.getAllTrimBuyer();
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
+ 
+@Post('/getAllTrimSupplier')
+async getAllTrimSupplier():Promise<CommonResponseModel>{
+  try {
+    return await this.service.getAllTrimSupplier();
+  } catch (error) {
+    return this.appHandler.returnException(CommonResponseModel,error)
+  }
+}
 }

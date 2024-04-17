@@ -87,7 +87,7 @@ export default function FabricSwatchUpload() {
   }
 
   function getSupplier() {
-    supplierService.getAllSuppliers().then((res) => {
+    supplierService.getAllActiveSuppliers().then((res) => {
       if (res.data) {
         setSupplier(res.data);
       }
@@ -407,7 +407,7 @@ export default function FabricSwatchUpload() {
               sm={{ span: 24 }}
               md={{ span: 6 }}
               lg={{ span: 6 }}
-              xl={{ span: 4 }}
+              xl={{ span: 6 }}
             >
               <Form.Item
                 label="Supplier"
@@ -423,7 +423,7 @@ export default function FabricSwatchUpload() {
                 >
                   {supplier.map((item) => {
                     return (
-                      <Option value={item.supplierId} name={item.supplierName} >{item.supplierName}</Option>
+                      <Option value={item.supplierId} name={item.supplierName} >{item.supplierName}-{item.supplierCode}</Option>
                     );
                   })}
                 </Select>
