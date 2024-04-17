@@ -183,11 +183,11 @@ const EmployeeGrid = () => {
             dataIndex: 'departmentName',
             align: 'center'
         },
-        {
-            title: 'Section',
-            dataIndex: 'sectionName',
-            align: 'center'
-        },
+        // {
+        //     title: 'Section',
+        //     dataIndex: 'sectionName',
+        //     align: 'center'
+        // },
         {
             title: 'Designation',
             dataIndex: 'designationName',
