@@ -12,7 +12,7 @@ export default function UserForm() {
   const users: any = JSON.parse(localStorage.getItem('auth'))
   const createdUser = users.userName
   const employeeService = new EmployeeService()
-  const [ employeeData, setEmployeeData ] = useState<any[]>([])
+  const [employeeData, setEmployeeData] = useState([]);
   const departmentService = new DepartmentService()
   const [ departData, setDepartData ] = useState<any[]>([])
 
@@ -60,6 +60,10 @@ export default function UserForm() {
     form.resetFields();
   }
 
+  const filterEmployee = (inputValue, option) => {
+    return option.children.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0;
+  };
+
   return (
     <>
       <Card
@@ -90,12 +94,19 @@ export default function UserForm() {
             <Row gutter={24}>
               <Col span={12}>
                 <Form.Item label="Employee" name={'employeeId'} rules={[{ required: true }]}>
-                  <Select placeholder='Select Employee' onChange={onEmployee} showSearch allowClear>
-                    {employeeData?.map((item) => (
+                  <Select 
+                  showSearch
+                  placeholder='Select Employee' 
+                  onChange={onEmployee}    
+                  allowClear
+                  filterOption={filterEmployee}>
+                    {employeeData?.map((item : any) => {
+                      return (
                       <Option key={item.employeeId} value={item.employeeId} name={item.emailId} department={item.department}>
-                        {item.employeeName}
+                        {item.employeeName} 
                       </Option>
-                    ))}
+                      );
+                  })}
                   </Select>
                 </Form.Item>
               </Col>

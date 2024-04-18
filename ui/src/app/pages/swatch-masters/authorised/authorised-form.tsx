@@ -273,7 +273,7 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
                         return (
                           <Option key={app.employeeId} value={app.employeeId} name={app.emailId}>
                             {app.employeeName}
-                          </Option>
+                          </Option> 
                         );
                       })}
                     </Select>
@@ -312,7 +312,7 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
                     label="Signature Image(Upload the image in landscape)"
                     rules={[
                       {
-                        required: true,
+                        required: false,
                       },
                     ]}
                     initialValue={

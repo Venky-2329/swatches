@@ -19,11 +19,13 @@ export class ApprovalUserEntity {
     
       @Column('varchar', {
             name: 'user_signature',
+            nullable: true
         })
         signImageName: string;
       
         @Column('varchar', {
           name: 'sign_path',
+          nullable: true
       })
        signPath: string;
     

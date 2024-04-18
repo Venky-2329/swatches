@@ -423,7 +423,7 @@ export default function FabricSwatchUpload() {
                 >
                   {supplier.map((item) => {
                     return (
-                      <Option value={item.supplierId} name={item.supplierName} >{item.supplierName}-{item.supplierCode}</Option>
+                      <Option value={item.supplierId} name={item.supplierName} >{item.supplierName} - {item.supplierCode}</Option>
                     );
                   })}
                 </Select>
