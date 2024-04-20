@@ -30,7 +30,6 @@ export default function TrimCard() {
   const [uploadList, setUploadList] = useState([]);
 
   const excelUploadProps: UploadProps = {
-
     name: 'file',
     accept: '.xlsx',
     multiple: false,
@@ -195,6 +194,7 @@ console.log(uploadList)
 
   const extractTextFromPdf = async (pdfFile) => {
     const pdfData = await pdfFile.arrayBuffer();
+    console.log(pdfData)
     const pdf = await pdfjs.getDocument({ data: pdfData }).promise;
     let text = '';
     const page = await pdf.getPage(1);
@@ -309,7 +309,7 @@ console.log(uploadList)
       <Card>
         <Row gutter={24}>
           <Col span={24}>
-            <Dragger {...excelUploadProps}>
+            <Dragger {...uploadProps}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>

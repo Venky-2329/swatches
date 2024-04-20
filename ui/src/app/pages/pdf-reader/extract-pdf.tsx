@@ -15,7 +15,7 @@ export const PdfDataExtractor = async (pdf) => {
   const itemsArr: { itemNo: string; itemIndex: number }[] = [];
   const filteredData = [];
   const trimPdf: TrimPodfModel = new TrimPodfModel();
-
+console.log(pdf)
   for (let i = 1; i < pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const textContent: any = await page.getTextContent();
