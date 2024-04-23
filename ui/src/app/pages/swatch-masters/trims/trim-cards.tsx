@@ -71,7 +71,7 @@ export default function TrimCards() {
     }
 
     function getApprovalUser(){
-        approvalService.getAllApprovalUser().then((res) =>{
+        trimsService.getAllApprovaTrimlUser().then((res) =>{
             if(res.data){
                 setApprovalUser(res.data)
             }
@@ -109,7 +109,6 @@ export default function TrimCards() {
 
     function getTrimCards() {
         const req = new DateReq();
-        console.log(req);
         if(form.getFieldValue('swatchNo') != undefined){
             req.swatchNo = form.getFieldValue('swatchNo')
         }

@@ -1,4 +1,4 @@
-import { CheckCircleOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from '@ant-design/icons'
+import {  CloseCircleOutlined, DeleteOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from '@ant-design/icons'
 import { Button, Card, Col, Divider, Drawer, Input, Popconfirm, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -6,7 +6,7 @@ import EmployeeForm from './employee-form'
 import { EmployeeService } from 'libs/shared-services'
 import { ColumnType } from 'antd/es/table'
 import moment from 'moment'
-import { CreateEmployeeDto } from 'libs/shared-models'
+import { CreateEmployeeDto, EmployeeRequestDto } from 'libs/shared-models'
 import Highlighter from 'react-highlight-words'
 
 const EmployeeGrid = () => {
@@ -126,13 +126,14 @@ const EmployeeGrid = () => {
         })
     }
 
-    const deactiveEmployee = (val: any) => {
-        service.deactiveEmployee(val).then((res) => {
+    const activateOrDeactivateEmployee = (val: EmployeeRequestDto) => {
+        val.isActive = val.isActive ? false:true;
+        service.activateOrDeactivateEmployee(val).then((res) => {
             if (res.status) {
-                message.success(res.internalMessage);
+                message.success(res.internalMessage , 2);
                 getAllEmployees()
             } else {
-                message.error(res.internalMessage);
+                message.error(res.internalMessage , 2);
             }
         })
     }
@@ -221,36 +222,41 @@ const EmployeeGrid = () => {
             dataIndex: 'emailId',
             align: 'center'
         },
-        // {
-        //     title: `Action`,
-        //     dataIndex: 'action',
-        //     align: "center",
-        //     render: (text, rowData) => (
-        //         <span>
-        //             <EditOutlined className={'editSamplTypeIcon'} type="edit"
-        //                 onClick={() => {
-        //                     console.log(rowData)
-        //                     if (rowData.isActive) {
-        //                         openFormWithData(rowData);
-        //                     } else {
-        //                         message.error('You Cannot Edit Deactivated Employee');
-        //                     }
-        //                 }}
-        //                 style={{ color: '#1890ff', fontSize: '14px' }}
-        //             />
-        //             <Divider type="vertical" />
-        //             <Popconfirm onConfirm={e => { deactiveEmployee(rowData); }}
-        //                 title={
-        //                     rowData.isActive
-        //                         ? 'Are you sure to Delete Address ?'
-        //                         : 'Are you sure to Delete Address ?'
-        //                 }
-        //             >
-        //                 <DeleteOutlined />
-        //             </Popconfirm>
-        //         </span>
-        //     )
-        // }
+        {
+            title: `Action`,
+            dataIndex: 'action',
+            align: "center",
+            render: (text, rowData) => (
+                <span>
+                    <EditOutlined className={'editSamplTypeIcon'} type="edit"
+                        onClick={() => {
+                            if (rowData.isActive) {
+                                openFormWithData(rowData);
+                            } else {
+                                message.error('You Cannot Edit Deactivated Employee');
+                            }
+                        }}
+                        style={{ color: '#1890ff', fontSize: '14px' }}
+                    />
+                    <Divider type="vertical" />
+                    <Popconfirm onConfirm={e => { activateOrDeactivateEmployee(rowData); }}
+                        title={
+                            rowData.isActive
+                                ? 'Are you sure to deactivate this employee  ?'
+                                : 'Are you sure to activate this employee ?'
+                        }
+                    >
+                        <Switch 
+                         size='default'
+                         className={rowData.isActive ?  'toggle-activated' : 'toggle-deactivated'}
+                         checkedChildren = {< RightSquareOutlined type='check' />}
+                         unCheckedChildren = {< RightSquareOutlined type='close' />}
+                         checked={rowData.isActive}
+                        ></Switch>
+                    </Popconfirm>
+                </span>
+            )
+        }
 
     ]
     return (
@@ -269,10 +275,15 @@ const EmployeeGrid = () => {
                     sticky={true}
                     bordered
                 />
-                <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
-                    onClose={closeDrawer} visible={drawerVisible} closable={true}>
+                <Drawer bodyStyle={{ paddingBottom: 80 }} 
+                title='Update' 
+                width={window.innerWidth > 768 ? '80%' : '85%'}
+                onClose={closeDrawer}
+                visible={drawerVisible} 
+                >
                     <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-                        <EmployeeForm key={Date.now()}
+                        <EmployeeForm 
+                            key={Date.now()}
                             updateDetails={updateEmployee}
                             isUpdate={true}
                             employeeData={selectedEmployeeData}

@@ -20,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import { ApprovedUserDto } from 'libs/shared-models';
 import { ApprovalUserService, EmployeeService } from 'libs/shared-services';
+// import {img} from '../../../../../../upload-files/AOB_SwatchBookPT4.webp'
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -42,6 +43,8 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
   const authdata = JSON.parse(localStorage.getItem('userName'));
   const employeeService = new EmployeeService();
   const users: any = JSON.parse(localStorage.getItem('auth'))
+  const createdUser = users.userName;
+  const createdUserMail = users.userMail;
   // const createdUser = users.userName
 
 
@@ -63,10 +66,11 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
     getAllEmployees();
     form.setFieldsValue({ createdUser: authdata?.userName });
   }, []);
+
+
   const getAllEmployees = () => {
     employeeService.getAllMarketingEmployees().then((res) => {
       if (res) {
-        console.log('This is employee');
         // console.log(res);
         setEmployee(res.data);
       }
@@ -89,10 +93,10 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
       <div style={{ marginTop: 8 }}>Upload Style</div>
     </div>
   );
-  let createdUser = '';
+
 
   if (!props.isUpdate) {
-    createdUser = localStorage.getItem('createdUser');
+     const createdUser = localStorage.getItem('createdUser');
   }
 
   const onReset = () => {
@@ -111,31 +115,24 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
     setDisable(true);
     // const file:any = data.fabricWeaveImageName
     // const abc:string =file.file.name
-    const req = new ApprovedUserDto(
-      data.approvedId,
-      data.userId,
-      data.emailId,
-      data.isActive,
-      data.createdUser,
-      data.versionFlag
-    );
+    const req = new ApprovedUserDto( );
+    req.emailId = data.emailId
+    req.userId = data.userId
+    req.createdUser = data.createdUser
+    req.approvedId = data.approvedId
+
+
     Service.createApprovalUser(req)
       .then((res) => {
-        // console.log(req,'req');
         setDisable(false);
-        console.log(res);
         if (res.status) {
           message.success('User Created Successfully');
           if (fileList.length > 0) {
-            console.log(fileList);
             const formData = new FormData();
             fileList.forEach((file: any) => {
-              console.log(file);
               formData.append('file', file);
             });
-            console.log(res);
             formData.append('approvedId', `${res.data.approvedId}`);
-            console.log(formData);
             Service.approvalUserImageUpload(formData).then((fileRes) => {});
           }
           navigate('/approval-grid');
@@ -182,7 +179,7 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
           return true;
         } else {
           setFileList([file]);
-          getBase64(file, (imageUrl) => setImageUrl(imageUrl));
+          getBase64(file, (imageUrl) => setImageUrl(imageUrl) );
 
           return false;
         }
@@ -225,15 +222,14 @@ export function ApprovedUserForm(props: ApprovedUserFormProps) {
         initialValues={props.data}
         layout="vertical"
       >
-        <Form.Item name="approvedId" style={{ display: 'none' }}>
+        <Form.Item name="approvedUserId" style={{ display: 'none' }}>
           <Input hidden />
         </Form.Item>
         <Form.Item
           style={{ display: 'none' }}
-          name="createdUser"
-          initialValue={''}
+          name="createdUser" initialValue={createdUser}
         >
-          <Input hidden />
+          <Input defaultValue={createdUser} hidden />
         </Form.Item>
         <Row gutter={24}>
           <Col

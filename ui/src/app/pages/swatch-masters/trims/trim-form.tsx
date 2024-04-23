@@ -99,7 +99,7 @@ export default function TrimSwatchUpload() {
   }
 
   const getEmployeeData = ()=>{
-    employeeService.getAllApprovalUser().then((res)=>{
+    employeeService.getAllActiveApprovalUser().then((res)=>{
       if(res.status){
         setEmployeeData(res.data)
       }
@@ -118,7 +118,6 @@ export default function TrimSwatchUpload() {
 }
 
   const handleBeforeUpload = async (file) => {
-    console.log(file,'-------------------------')
     setUploading(true)
     if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG)$/)) {
       notification.info({ message: 'Only png, jpeg, jpg files are allowed!' });
@@ -188,7 +187,6 @@ export default function TrimSwatchUpload() {
             // });
             for(const file of fileList){
               formData.append('file', file.originFileObj);
-              console.log(formData)
             }
             formData.append('trimSwatchId', `${res.data.trimSwatchId}`);
             mainService.photoUpload(formData).then((fileres) => {

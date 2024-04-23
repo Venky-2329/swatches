@@ -4,18 +4,19 @@ import {
   BrandDto,
   CommonResponseModel,
   ErrorResponse,
+  brandReq,
 } from 'libs/shared-models';
 import { BrandsEntity } from './entity/brands.entity';
 
 @Injectable()
 export class BrandsService {
-  constructor(private readonly brandsRepo: BrandsEntityRepository) {}
+  constructor(private readonly brandsRepo: BrandsEntityRepository) { }
 
   async createBrand(
     dto: any
     // isUpdate: Boolean
   ): Promise<CommonResponseModel> {
-    console.log(dto);
+    // console.log(dto);
     const entity = new BrandsEntity();
     entity.brandName = dto.brandName;
     entity.brandCode = dto.brandCode;
@@ -31,7 +32,7 @@ export class BrandsService {
   }
 
   async getData(): Promise<CommonResponseModel> {
-    const data = await this.brandsRepo.find({ where: { isActive: true } });
+    const data = await this.brandsRepo.find({});
     if (data)
       return new CommonResponseModel(
         true,
@@ -42,7 +43,7 @@ export class BrandsService {
     return new CommonResponseModel(false, 0, 'Something went wrong');
   }
 
-  async activateOrDeactivateBrands(req: any): Promise<CommonResponseModel> {
+  async activateOrDeactivateBrands(req: brandReq): Promise<CommonResponseModel> {
     try {
       const exists = await this.brandsRepo.findOne({
         where: { brandId: req.brandId },
@@ -60,11 +61,19 @@ export class BrandsService {
           );
           if (exists.isActive) {
             if (statusUpdate.affected) {
+              return new CommonResponseModel(true, 1, 'Brand is Deactivated Successfully')
+            } else {
+              return new CommonResponseModel(true, 1, 'Brand is already deactivated')
             }
-            return;
+          } else {
+            if (statusUpdate.affected) {
+              return new CommonResponseModel(true, 1, 'Brand is Activated Successfully')
+            } else {
+              return new CommonResponseModel(true, 1, 'Brand is already activated')
+            }
           }
         }
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 }

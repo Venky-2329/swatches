@@ -37,7 +37,6 @@ import { SupplierService } from 'libs/shared-services';
     }
   
     function onFinish(supplierData: supplierDto) {
-      console.log(supplierData , 'dataaaaaaa')
       service.createSupplier(supplierData)
         .then((res) => {
           if (res.status) {

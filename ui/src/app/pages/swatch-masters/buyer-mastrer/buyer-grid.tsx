@@ -41,10 +41,8 @@ import { BuyerDto, BuyerReq } from 'libs/shared-models';
     }
   
     const updateBuyer = (buyer: BuyerDto) => {
-      console.log(buyer,'================')
       const authdata = JSON.parse(localStorage.getItem(''));
   
-      console.log(buyer.updatedUser);
       service.updateBuyers(buyer).then((res) => {
         if (res.status) {
           message.success('Updated Succesfully');
@@ -72,7 +70,6 @@ import { BuyerDto, BuyerReq } from 'libs/shared-models';
     // console.log(deletebuyer, '....................delete buyer');
   
     const openFormWithData = (viewData: BuyerDto) => {
-      console.log(viewData);
       setDrawerVisible(true);
       setSelectedBuyer(viewData);
     };
@@ -174,6 +171,7 @@ import { BuyerDto, BuyerReq } from 'libs/shared-models';
               headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }}
               size="small"
             >
+              
               <BuyerForm
                 key={Date.now()}
                 updateDetails={updateBuyer}

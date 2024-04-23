@@ -10,18 +10,16 @@ import { CategoryEntity } from './entity/category.entity';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly categoryRepo: CategoryEntityRepository) {}
+  constructor(private readonly categoryRepo: CategoryEntityRepository) { }
 
-  async create(dto: categoryDto,isUpdate: boolean): Promise<CommonResponseModel> {
-    const exisiting = await this.categoryRepo.findOne({where: { categoryName: dto.categoryName }});
+  async create(dto: categoryDto, isUpdate: boolean): Promise<CommonResponseModel> {
+    const exisiting = await this.categoryRepo.findOne({ where: { categoryName: dto.categoryName } });
 
-    if (exisiting &&(!isUpdate || (isUpdate && exisiting.categoryId !== dto.categoryId))) {
-      console.log('coming')
-      return new CommonResponseModel(false,1, 'Category already exists');
+    if (exisiting && (!isUpdate || (isUpdate && exisiting.categoryId !== dto.categoryId))) {
+      return new CommonResponseModel(false, 1, 'Category already exists');
     }
     const entity = new CategoryEntity();
 
-    console.log(dto, '---------dto');
     if (dto.categoryId) {
       entity.categoryId = dto.categoryId;
       entity.updatedUser = dto.updatedUser;
@@ -29,7 +27,6 @@ export class CategoryService {
     entity.categoryName = dto.categoryName;
     entity.createdUser = dto.createdUser;
     const save = await this.categoryRepo.save(entity);
-    console.log(save, '--------save');
 
     if (save) return new CommonResponseModel(true, 1, 'Saved successfully');
     return new CommonResponseModel(false, 0, 'Something went wrong');
@@ -37,7 +34,7 @@ export class CategoryService {
 
   async getData(): Promise<CommonResponseModel> {
     const data = await this.categoryRepo.find({
-      
+
     });
     if (data)
       return new CommonResponseModel(
@@ -51,20 +48,17 @@ export class CategoryService {
 
   async activateOrDeactivate(req: CategoryReq): Promise<CommonResponseModel> {
     try {
-      console.log(req,'service')
       const exists = await this.categoryRepo.findOne({
         where: { categoryId: req.categoryId },
       });
-      console.log(exists,'exists')
       if (exists) {
         if (!exists) {
-          throw new ErrorResponse(0, 'Someone updated the current Address information. Refresh and try again');
+          return new CommonResponseModel(false, 0, 'Someone updated the current Category information. Refresh and try again');
         } else {
           const statusUpdate = await this.categoryRepo.update(
             { categoryId: req.categoryId },
             { isActive: req.isActive }
           );
-          console.log(statusUpdate,'..statusupdate')
           if (exists.isActive) {
             if (statusUpdate.affected) {
               const response: CommonResponseModel = new CommonResponseModel(
@@ -97,7 +91,7 @@ export class CategoryService {
           }
         }
       } else {
-        throw new CommonResponseModel(false, 0, 'No Records Found');
+        return new CommonResponseModel(false, 0, 'No Records Found');
       }
     } catch (error) {
       return error;

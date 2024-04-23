@@ -100,7 +100,7 @@ export default function FabricSwatchUpload() {
   }
 
   const getEmployeeData = ()=>{
-    employeeService.getAllApprovalUser().then((res)=>{
+    employeeService.getAllActiveApprovalUser().then((res)=>{
       if(res.status){
         setEmployeeData(res.data)
       }
@@ -232,7 +232,6 @@ export default function FabricSwatchUpload() {
     `
       swatchDetails.subject = "Fabric Swatch : " + form.getFieldValue('fabricSwatchNumber')
       const res = await mailService.sendSwatchMail(swatchDetails)
-      console.log(res)
       if (res.status == 201) {
           if (res.data.status) {
               message.success("Mail sent successfully")
@@ -260,7 +259,6 @@ export default function FabricSwatchUpload() {
             // });
             for(const file of fileList){
               formData.append('file', file.originFileObj);
-              console.log(formData)
             }
             formData.append('fabricSwatchId', `${res.data.fabricSwatchId}`);
             service.uploadPhoto(formData).then((fileres) => {

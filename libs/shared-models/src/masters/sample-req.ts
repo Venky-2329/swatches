@@ -7,3 +7,9 @@ export class SampleCardReq{
     locationId:number;
     sampleId:number;
 }
+
+export class seasonReq {
+    seasonId:number;
+    isActive: boolean;
+    seasonName: string;
+}

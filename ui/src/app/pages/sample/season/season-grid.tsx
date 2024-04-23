@@ -6,10 +6,12 @@ import {
   Drawer,
   Popconfirm,
   Row,
+  Switch,
   Table,
   message,
 } from 'antd';
 import {
+  activateOrDeactivateSeason,
   getBrandsData,
   getCategoryData,
   getSeasonData,
@@ -17,8 +19,8 @@ import {
 } from 'libs/shared-services';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { SeasonDto } from 'libs/shared-models';
+import { RightSquareOutlined, EditOutlined } from '@ant-design/icons';
+import { SeasonDto, seasonReq } from 'libs/shared-models';
 import SeasonForm from './season-form';
 
 export default function SeasonGrid() {
@@ -39,17 +41,32 @@ export default function SeasonGrid() {
     });
   }
 
-  const updateSeasonData = (season: SeasonDto) => {
-    const authdata = JSON.parse(localStorage.getItem(''));
+  console.log(data)
 
+  const updateSeasonData = (season: SeasonDto) => {
+    console.log(season)
+    const authdata = JSON.parse(localStorage.getItem(''));
     updateSeason(season).then((res) => {
       if (res.status) {
         message.success(res.internalMessage);
+        setDrawerVisible(false);
+        getData();
       }
     });
   };
 
+  const activateOrDeactivate = (req : seasonReq) => {
+    req.isActive = req.isActive ? false: true
+    activateOrDeactivateSeason(req).then((res) => {
+      if(res.status){
+        message.success(res.internalMessage , 2)
+        getData();
+      }
+    })
+  }
+
   const openFormWithData = (values: SeasonDto) => {
+    console.log(values)
     setDrawerVisible(true);
     setSelectedSeason(values);
   };
@@ -67,10 +84,10 @@ export default function SeasonGrid() {
       title: 'Season',
       dataIndex: 'seasonName',
     },
-    {
+    { 
       title: 'Action',
       dataIndex: 'action',
-      render: (val, rowdata) => {
+      render: (val, rowdata) => (
         <span>
           <EditOutlined
             type="edit"
@@ -86,16 +103,24 @@ export default function SeasonGrid() {
 
           <Divider type="vertical" />
           <Popconfirm
+          onConfirm={() => {activateOrDeactivate(rowdata)}}
             title={
               rowdata.isActive
-                ? 'Are you sure to Delete this Season ?'
-                : 'Are you sure to Delete this Season ?'
+                ? 'Are you sure to Deactivate this Season ?'
+                : 'Are you sure to Activate this Season ?'
             }
           >
-            <DeleteOutlined />
+            <Switch 
+            size='default'
+            className={rowdata.isActive ? 'toggle-activated' : 'toggle-deactivated'}
+            checkedChildren = {<RightSquareOutlined type="check" />}
+            unCheckedChildren = {<RightSquareOutlined type="close" />}
+            checked = {rowdata.isActive}
+            />
           </Popconfirm>
-        </span>;
-      },
+        </span>
+      )
+
     },
   ];
 
@@ -110,7 +135,7 @@ export default function SeasonGrid() {
         extra={
           <span>
             <Button onClick={goToForm} type="primary">
-              Add
+              Create
             </Button>
           </span>
         }
@@ -123,10 +148,12 @@ export default function SeasonGrid() {
         <Drawer
           bodyStyle={{ paddingBottom: 80 }}
           title="Update"
+          width={window.innerWidth > 768 ? '65%' : '85%'}
           visible={drawerVisible}
           onClose={closeDrawer}
           closable={true}
         >
+          
           <SeasonForm
             seasonData={selectedSeason}
             isUpdate={true}

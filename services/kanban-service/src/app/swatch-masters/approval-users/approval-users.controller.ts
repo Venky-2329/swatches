@@ -13,14 +13,14 @@ export class ApprovalUsersController {
   constructor(
     private readonly service: ApprovalUsersService,
     private readonly appHandler: ApplicationExceptionHandler
-  ) {}
+  ) { }
 
   @Post('/createApprovalUser')
-  async createApprovalUser(@Body() dto:any): Promise<CommonResponseModel> {
+  async createApprovalUser(@Body() dto: any): Promise<CommonResponseModel> {
     try {
       return await this.service.createApprovalUser(dto);
     } catch (error) {
-      console.log(error,'err')
+      console.log(error, 'err')
       return this.appHandler.returnException(CommonResponseModel, error);
     }
   }
@@ -51,7 +51,7 @@ export class ApprovalUsersController {
 
   async imageUpload(@UploadedFile() file, @Body() uploadData: any): Promise<CommonResponseModel> {
     try {
-      return await this.service.updatePath(file.path,file.filename, uploadData.approvedId)
+      return await this.service.updatePath(file.path, file.filename, uploadData.approvedId)
     } catch (error) {
       return this.appHandler.returnException(CommonResponseModel, error);
     }
@@ -62,20 +62,40 @@ export class ApprovalUsersController {
     try {
       return await this.service.getAllApprovalUser();
     } catch (error) {
-      console.log(error,'err')
+      console.log(error, 'err')
       return this.appHandler.returnException(CommonResponseModel, error);
     }
   }
 
   @Post('/getAllApprovalIdUser')
-  async getAllApprovalIdUser(@Body() req:any): Promise<CommonResponseModel> {
+  async getAllApprovalIdUser(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.service.getAllApprovalIdUser(req);
     } catch (error) {
-      console.log(error,'err')
+      console.log(error, 'err')
+      return this.appHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+  @Post('/activateOrDeactivateUser')
+  async activateOrDeactivateUser(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return await this.service.activateOrDeactivateUser(req);
+    } catch (error) {
+      // console.log(error, 'err')
+      return this.appHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+  @Get('/getAllActiveApprovalUser')
+  async getAllActiveApprovalUser(): Promise<CommonResponseModel> {
+    try {
+      return await this.service.getAllActiveApprovalUser();
+    } catch (error) {
+      console.log(error, 'err')
       return this.appHandler.returnException(CommonResponseModel, error);
     }
   }
 
 }
- 
+

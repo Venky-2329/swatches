@@ -3,9 +3,16 @@ import { DepartmentService, EmployeeService, createSeason, createUser } from 'li
 import { useNavigate } from 'react-router-dom';
 import type { NotificationPlacement } from 'antd/es/notification/interface';
 import { useEffect, useState } from 'react';
-import { RoleEnum } from 'libs/shared-models';
+import { RoleEnum, UserDto } from 'libs/shared-models';
 
-export default function UserForm() {
+export interface UserFormPops {
+  userData : UserDto;
+  updateDetails : (userData : UserDto ) => void;
+  closeform: () => void;
+  isUpdate : Boolean
+}
+
+export default function UserForm(props : UserFormPops) {
   const { Option } = Select
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -16,7 +23,6 @@ export default function UserForm() {
   const departmentService = new DepartmentService()
   const [ departData, setDepartData ] = useState<any[]>([])
 
-  console.log(users,',,,,,,,,,,,,,,,,')
 
   function goToGrid() {
     navigate('/user-grid');
@@ -34,14 +40,25 @@ export default function UserForm() {
     })
   }
 
+  const saveData = (val : UserDto)  => {
+    if(props.isUpdate) {
+      console.log(val)
+      props.updateDetails(val)
+    }else{
+      onFinish(val)
+    }
+  }
+
   useEffect(()=>{
     getEmployees()
     getDepartments()
   },[])
 
   const getEmployees =()=>{
-    employeeService.getAllEmployees().then((res)=>{
-      setEmployeeData(res.data)
+    employeeService.getAllActiveEmployees().then((res)=>{
+      if(res){
+        setEmployeeData(res)
+      }
     })
   }
 
@@ -70,14 +87,16 @@ export default function UserForm() {
         title="User Creation"
         extra={
           <span>
+            {props.isUpdate == false && (
             <Button onClick={goToGrid}>
               View
             </Button>
+            )}
           </span>
         }
         headStyle={{ backgroundColor: '#25529a', color: 'white' }}
       >
-        <Form form={form} layout="vertical" onFinish={onFinish} style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <Form form={form} initialValues={props.userData} layout="vertical" onFinish={saveData} style={{ maxWidth: '800px', margin: '0 auto' }}>
           <Card >
             <Row gutter={24}>
               <Col span={12}>
@@ -143,6 +162,9 @@ export default function UserForm() {
                 <Form.Item hidden name={'createdUser'} initialValue={createdUser}>
                   <Input defaultValue={createdUser}/>
                 </Form.Item>
+                <Form.Item hidden name={'userId'}>
+              <Input />
+            </Form.Item>
               </Col>
             </Row>
             <Row>

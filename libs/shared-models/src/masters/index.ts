@@ -9,3 +9,4 @@ export * from './category.dto';
 export * from './season.dto';
 export * from './category-req';
 export * from './brand-req';
+export * from './user.dto';

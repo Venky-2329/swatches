@@ -4,12 +4,12 @@ import { SeasonService } from './season.service';
 
 @Controller('season')
 export class SeasonController {
-  constructor(private readonly service: SeasonService) {}
+  constructor(private readonly service: SeasonService) { }
 
   @Post('/create')
-  async create(@Body() req: any): Promise<CommonResponseModel> {
+  async create(@Body() req: any, isUpdate: boolean = false): Promise<CommonResponseModel> {
     try {
-      return this.service.create(req);
+      return this.service.create(req, isUpdate);
     } catch (err) {
       console.log(err);
     }
@@ -25,9 +25,18 @@ export class SeasonController {
   }
 
   @Post('/updateSeason')
-  async updateSeason(@Body() req: any): Promise<CommonResponseModel> {
+  async updateSeason(@Body() req: any, isUpdate: boolean = false): Promise<CommonResponseModel> {
     try {
-      return this.service.create(req);
+      return this.service.create(req, isUpdate);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  @Post('/activateOrDeactivateSeason')
+  async activateOrDeactivateSeason(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return this.service.activateOrDeactivateSeason(req);
     } catch (err) {
       console.log(err);
     }

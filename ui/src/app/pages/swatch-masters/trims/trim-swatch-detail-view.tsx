@@ -27,7 +27,6 @@ export const TrimSwatchDetailView = () => {
   
 
     useEffect(() => {
-        console.log(trimSwatchId,'kkkkkkkkkkkkkkkkkkkkkkk')
         getTrimDetails();
     },[trimSwatchId])
 
@@ -42,7 +41,6 @@ export const TrimSwatchDetailView = () => {
 
 
     const TrimAccepted = (value)=>{
-        console.log(value,',,,,,,,,,,,,,,,,,,,,')
         const req = new TrimSwatchStatus(value?.trim_swatch_id,value?.trim_swatch_number,undefined,undefined,form.getFieldValue('reason'))
         service.updateApprovedStatus(req).then((res)=>{
             if(res.status){
@@ -58,7 +56,6 @@ export const TrimSwatchDetailView = () => {
 
     
       const TrimRejected =(value)=>{
-        console.log(value,'.......................')
         const req = new TrimSwatchStatus(value,undefined,form.getFieldValue('reason'))
         service.updateRejectedStatus(req).then((res)=>{
             if(res.status){
@@ -74,7 +71,6 @@ export const TrimSwatchDetailView = () => {
       }
 
       const TrimRework =(value)=>{
-        console.log(value,'.......................')
         const req = new TrimSwatchStatus(value,undefined,undefined,form.getFieldValue('reason'))
         service.updateReworkStatus(req).then((res)=>{
             if(res.status){
@@ -137,7 +133,6 @@ export const TrimSwatchDetailView = () => {
           swatchDetails.swatchNo = data[0]?.trim_swatch_number
           // swatchDetails.to = 'kushal.siddegowda@shahi.co.in'
           swatchDetails.to = data[0]?.createdUserMail
-          console.log(data[0]?.createdUserMail, '---------mail')
           swatchDetails.html = `
           <html>
           <head>
@@ -194,7 +189,6 @@ export const TrimSwatchDetailView = () => {
         `
           swatchDetails.subject = "Trim Swatch : " + data[0]?.trim_swatch_number
           const res = await mailService.sendSwatchMail(swatchDetails)
-          console.log(res)
           if (res.status == 201) {
               if (res.data.status) {
                   message.success("Mail sent successfully")

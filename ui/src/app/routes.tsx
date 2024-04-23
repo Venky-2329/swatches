@@ -120,7 +120,11 @@ export const AppRoutes = () => {
           updateDetails={(undefined) => { }}
           />} />
           <Route path="/user-grid" key="user-grid" element={<UserGrid />} />
-          <Route path="/user-form" key="user-form" element={<UserForm />} />
+          <Route path="/user-form" key="user-form" element={<UserForm 
+          userData={undefined} 
+          updateDetails={ () => {undefined} }
+           closeform={() =>  {} } 
+           isUpdate={false} />} />
 
           <Route path='buyer-grid' key='buyer-grid' element={<BuyerGrid />} />
           <Route path='buyer-form' key='buyer-form' element={<BuyerForm buyerData={undefined} isUpdate={false} updateDetails={() => {undefined}}  closeForm={() => {}}/>} />

@@ -3,28 +3,28 @@ import { ApiProperty } from "@nestjs/swagger";
 export class ApprovalUserDto {
     @ApiProperty()
     approvedId: number;
-  
+
     @ApiProperty()
-    userId: string;
-  
+    userId: number;
+
     @ApiProperty()
     emailId: string;
-  
+
     @ApiProperty()
     signImageName: string;
-  
+
     @ApiProperty()
     signPath: string;
-  
+
     @ApiProperty()
     isActive: boolean;
-  
+
     @ApiProperty()
-    createdAt : Date;
-  
+    createdAt: Date;
+
     @ApiProperty()
-    createdUser : string;
-  
+    createdUser: string;
+
     @ApiProperty()
-    versionFlag : number;
+    versionFlag: number;
 }

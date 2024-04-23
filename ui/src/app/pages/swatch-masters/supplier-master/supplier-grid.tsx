@@ -47,7 +47,6 @@ import { supplierDto, supplierReq } from 'libs/shared-models';
   
     const updateSupplier = (supplier: supplierDto) => {
       const authdata = JSON.parse(localStorage.getItem(''));
-      console.log(supplier.updatedUser);
       service.updateSuppliers(supplier).then((res) => {
         if (res.status) {
           message.success('Updated Succesfully');
@@ -75,7 +74,6 @@ import { supplierDto, supplierReq } from 'libs/shared-models';
     // console.log(deletesupplier, '....................');
   
     const openFormWithData = (viewData: supplierDto) => {
-      console.log(viewData);
       setDrawerVisible(true);
       setSelectedSupplier(viewData);
     };

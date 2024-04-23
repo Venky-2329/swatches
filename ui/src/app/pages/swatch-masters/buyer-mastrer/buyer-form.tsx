@@ -32,7 +32,6 @@ export default function BuyerForm(props: BuyerFormProps) {
   }
 
   function onFinish(buyerData: BuyerDto) {
-    console.log(buyerData);
     
     service.createBuyer(buyerData)
       .then((res) => {
@@ -53,7 +52,6 @@ export default function BuyerForm(props: BuyerFormProps) {
   const saveData = (values: BuyerDto) => {
     setDisable(false);
     if (props.isUpdate) {
-      console.log(values,'----------------')
       props.updateDetails(values);
     } else {
       onFinish(values);

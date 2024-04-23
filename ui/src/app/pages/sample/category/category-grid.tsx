@@ -46,7 +46,6 @@ export default function CategoryGrid() {
 
   const updateCategory = (category: categoryDto) => {
     const authdata = JSON.parse(localStorage.getItem(''));
-
     console.log(category.updatedUser);
     updateCategories(category).then((res) => {
       if (res.status) {
@@ -63,7 +62,6 @@ export default function CategoryGrid() {
     val.isActive = val.isActive ? false:true;
     activateOrDeactivate(val).then((res) => {
       if (res.status) {
-        // console.log('okkkkkkkkkkk');
         message.success(res.internalMessage, 2);
         getData();
       } else {
@@ -100,7 +98,6 @@ export default function CategoryGrid() {
       render: (text, rowData) => (
         <span>
           <EditOutlined
-            // className={'editSamplTypeIcon'}
             type="edit"
             onClick={() => {
               if (rowData.isActive) {

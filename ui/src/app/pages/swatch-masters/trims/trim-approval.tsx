@@ -240,7 +240,6 @@ const TrimSwatchApproval = () => {
   `
     swatchDetails.subject = "Trim Swatch : " +  selectedData?.trim_swatch_number
     const res = await mailService.sendSwatchMail(swatchDetails)
-    console.log(res)
     if (res.status == 201) {
         if (res.data.status) {
             message.success("Mail sent successfully")
@@ -343,9 +342,7 @@ function handleReset(clearFilters) {
     if (fileList.length > 0) {
       // console.log(form.getFieldValue('remarks'),'...................')
       const req = new TrimSwatchStatus(selectedData.trim_swatch_id,undefined,undefined,undefined,undefined,form.getFieldValue('remarks'))
-      console.log(req.trimSwatchId , '=========id')
       service.reworkSentForApproval(req).then((res) => {
-        console.log(res.data)
         if (res.status) {
           if (fileList.length > 0) {
             const formData = new FormData();
@@ -354,7 +351,6 @@ function handleReset(clearFilters) {
             // });
             for(const file of fileList){
               formData.append('file', file.originFileObj);
-              console.log(formData)
             }
             formData.append('trimSwatchId', `${res.data.trimSwatchId}`);
             // console.log(res.data.trimSwatchId,'-------id')
@@ -391,7 +387,6 @@ function handleReset(clearFilters) {
   }
 
   const handleDeleteImage = (value)=>{
-    console.log(value.uploadId,'-----------------')
     const req = new TrimSwatchStatus(value.uploadId,undefined)
     service.deleteImage(req).then((res)=>{
       if(res.status){

@@ -58,9 +58,11 @@ export default function SeasonForm(props: SeasonFormProps) {
         title="Season Form"
         extra={
           <span>
+            {props.isUpdate == false && (
             <Button onClick={goToGrid} type="primary">
               View
             </Button>
+            )}
           </span>
         }
       >
@@ -86,6 +88,9 @@ export default function SeasonForm(props: SeasonFormProps) {
                 <Input />
               </Form.Item>
             </Col>
+            <Form.Item hidden name={'seasonId'} >
+              <Input  />
+            </Form.Item>
             <Form.Item hidden name={'createdUser'} initialValue={createUser}>
               <Input defaultValue={createUser} />
             </Form.Item>

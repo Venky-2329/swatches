@@ -33,7 +33,6 @@ export default function FabricSwatch() {
 
     const getAllBuyers = ()=>{
         service.getAllFabricBuyers().then((res)=>{
-            console.log(res)
             if(res.data){
                 setBuyerData(res.data)
             }else{
@@ -41,7 +40,6 @@ export default function FabricSwatch() {
             }
         })
     }
-console.log(buyerData)
     const getAllBrands = ()=>{
         service.getAllBrands().then((res)=>{
             setBrandData(res.data)

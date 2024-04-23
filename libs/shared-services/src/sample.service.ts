@@ -7,7 +7,10 @@ import {
   SampleCardReq,
   SampleDelReq,
   SeasonDto,
+  UserDto,
   categoryDto,
+  seasonReq,
+  userReq,
 } from 'libs/shared-models';
 
 const endPoint = API_URL + '/sample-upload';
@@ -18,7 +21,6 @@ const locationUrl = API_URL + '/location';
 const seasonUrl = API_URL + '/season';
 
 export async function createSample(req: any): Promise<CommonResponseModel> {
-  console.log(req, 'shared serv');
   const response = await axios.post(endPoint + '/create', req);
   return response.data;
 }
@@ -140,5 +142,25 @@ export async function updateSeason(
   createDto: SeasonDto
 ): Promise<CommonResponseModel> {
   const response = await axios.post(seasonUrl + '/updateSeason', createDto);
+  return response.data;
+}
+
+export async function activateOrDeactivateSeason(createDto: seasonReq): Promise<CommonResponseModel> {
+  const response = await axios.post(seasonUrl + '/activateOrDeactivateSeason', createDto);
+  return response.data;
+}
+
+export async function activateOrDeactivateUser(createDto: userReq): Promise<CommonResponseModel> {
+  const response = await axios.post(userUrl + '/activateOrDeactivateUser', createDto);
+  return response.data;
+}
+
+export async function updateUser(createDto: UserDto): Promise<CommonResponseModel> {
+  const response = await axios.post(userUrl + '/updateUser', createDto);
+  return response.data;
+}
+
+export async function getActiveUser(): Promise<CommonResponseModel> {
+  const response = await axios.post(userUrl + '/getActiveUser');
   return response.data;
 }

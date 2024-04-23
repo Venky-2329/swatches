@@ -6,9 +6,14 @@ import {
   Drawer,
   Popconfirm,
   Row,
+  Switch,
   Table,
   message,
 } from 'antd';
+import {
+  RightSquareOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 import {
   activateOrDeactivateBrands,
   getBrandsData,
@@ -61,6 +66,7 @@ export default function BrandsGrid() {
   };
 
   const deleteBrand = (val: any) => {
+    val.isActive = val.isActive ? false:true;
     activateOrDeactivateBrands(val).then((res) => {
       if (res.status) {
         message.success(res.internalMessage);
@@ -116,6 +122,15 @@ export default function BrandsGrid() {
                 : 'Are you sure to Deactivate this Brand ?'
             }
           >
+            <Switch
+              size="default"
+              className={
+                rowData.isActive ? 'toggle-activated' : 'toggle-deactivated'
+              }
+              checkedChildren={<RightSquareOutlined type="check" />}
+              unCheckedChildren={<RightSquareOutlined type="close" />}
+              checked={rowData.isActive}
+            />
 
           </Popconfirm>
         </span>

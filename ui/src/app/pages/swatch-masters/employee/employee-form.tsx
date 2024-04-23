@@ -11,7 +11,7 @@ const { Option } = Select;
 
 export interface EmployeeFormProps {
     employeeData: CreateEmployeeDto;
-    updateDetails: (hrms: CreateEmployeeDto) => void;
+    updateDetails: (employeeData: CreateEmployeeDto) => void;
     isUpdate: boolean;
     closeForm: () => void;
 }
