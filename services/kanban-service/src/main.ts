@@ -24,17 +24,17 @@ async function bootstrap() {
    * Swagger intiantation
    */
   const options = new DocumentBuilder()
-  .setTitle('ProTecketor')
-  .setVersion('0.1')
-  // .setBasePath(`${ptsConfigs.swagger.basePath}`)
-  .addTag('Pro ticketor local')
-  .build();
+    .setTitle('Swatch Card')
+    .setVersion('0.1')
+    // .setBasePath(`${ptsConfigs.swagger.basePath}`)
+    .addTag('Powered by Shahi')
+    .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(`api`, app, document);
 
   app.use(bodyParser.json({ limit: '10mb' }));
   app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
-  app.useLogger(['log','error','debug'])
+  app.useLogger(['log', 'error', 'debug'])
   app.enableCors();
   await app.listen(port);
 
