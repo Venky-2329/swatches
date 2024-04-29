@@ -24,14 +24,14 @@ import { TrimUploadEntity } from '../swatch-masters/trim-swatch/entities/trim-sw
 
 export const typeOrmConfig: DataSourceOptions = {
   type: 'mysql',
-  // host: '172.20.50.169',
-  // username: 'internal_apps',
-  // password: 'Schemax@2023',
-  // database: 'internal_apps',
-  host: 'localhost',
-  username: 'sql_dsw7',
-  password: 'yZW8eEEsDJhCpx7i',
-  database: 'sql_dsw7',
+  host: '172.20.50.169',
+  username: 'internal_apps',
+  password: 'Schemax@2023',
+  database: 'internal_apps',
+  // host: 'localhost',
+  // username: 'sql_dsw7',
+  // password: 'yZW8eEEsDJhCpx7i',
+  // database: 'sql_dsw7',
   entities: [
     BrandsEntity,
     CategoryEntity,
