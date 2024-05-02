@@ -81,7 +81,11 @@ export class FedExService {
       }
       
       async getShippedData():Promise<CommonResponseModel>{
-        const data = await this.dxmRepo.find()
+        const data = await this.dxmRepo.find({
+          order: {
+            createdDate: 'DESC'
+          }
+        })
         if(data.length){
           return new CommonResponseModel(true, 11, 'Data retrived', data);
         } else {
