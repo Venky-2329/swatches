@@ -41,7 +41,7 @@ export class UserService {
   }
 
   async login(dto: any): Promise<CommonResponseModel> {
-    const validateUser = await this.userRepo.findOne({ where: { userName: dto.userName, password: dto.password } })
+    const validateUser = await this.userRepo.findOne({ where: { userName: dto.username, password: dto.password } })
     if (!validateUser) return new CommonResponseModel(false, 1111, 'Please check your credentials')
     const authData = new AuthModel(validateUser.userName, validateUser.userId, validateUser.email, validateUser.role, validateUser.departmentId)
     return new CommonResponseModel(true, 1111, 'Successfully logged in', authData)
