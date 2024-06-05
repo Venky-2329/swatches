@@ -1,6 +1,7 @@
 import { ReworkStatus, StatusEnum } from "libs/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn, OneToMany } from "typeorm";
 import { FabricUploadEntity } from "./fabric-swatch-upload-entity";
+import { FabricItemEntity } from "./fabric-item.entity";
 
 @Entity('fabric_swatch')
 export class FabricSwatchEntity{
@@ -194,5 +195,8 @@ export class FabricSwatchEntity{
 
     @OneToMany(()=>FabricUploadEntity, fabUpload=>fabUpload.fabInfo,{cascade: true})
     uploadInfo: FabricUploadEntity[]
+
+    @OneToMany(()=>FabricItemEntity, fabItem=>fabItem.fabInfo,{cascade: true})
+    itemInfo: FabricItemEntity[]
 
 }

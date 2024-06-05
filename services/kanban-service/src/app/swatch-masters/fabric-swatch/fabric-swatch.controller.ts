@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Post, UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { FabricSwatchService } from "./fabric-swatch.service";
 import { CommonResponseModel, DateReq, SwatchStatus } from "libs/shared-models";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
@@ -209,6 +209,16 @@ export class FabricSwatchController{
           return await this.service.deleteImage(req)
       }catch(err){
           return this.appHandler.returnException(CommonResponseModel,err)
+      }
+  }
+
+  @Post('/reportExcelData')
+  async reportExcelData(): Promise<CommonResponseModel> {
+      try {
+          await this.service.reportExcelData();
+          return new CommonResponseModel(true,1,'Excel Downloaded')
+      } catch (err) {
+          console.log(err)
       }
   }
 

@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { StatusEnum } from "libs/shared-models"
 import { FabricUploadDto } from "./fabric-upload.dto"
+import { FabricItemDto } from "./fabric-item-dto"
 
 export class FabricSwatchDto{
     @ApiProperty()
@@ -55,6 +56,8 @@ export class FabricSwatchDto{
     approverId: number
     @ApiProperty({type:[FabricUploadDto]})
     uploadInfo: FabricUploadDto[]
+    @ApiProperty({type:[FabricItemDto]})
+    itemInfo: FabricItemDto[]
     @ApiProperty()
     remarks: string
 

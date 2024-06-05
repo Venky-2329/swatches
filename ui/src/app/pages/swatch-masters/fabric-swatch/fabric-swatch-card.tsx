@@ -33,22 +33,23 @@ export default function FabricSwatch() {
 
     const getAllBuyers = ()=>{
         service.getAllFabricBuyers().then((res)=>{
-            if(res.data){
-                setBuyerData(res.data)
-            }else{
-                setBuyerData([])
+            if(res.status){
+            setBuyerData(Array.isArray(res.data) ? res.data : []);
             }
         })
     }
+
     const getAllBrands = ()=>{
         service.getAllBrands().then((res)=>{
+            if(res.status){
             setBrandData(res.data)
+            }
         })
     }
 
     const getAllCreatedBy = ()=>{
         service.getAllCreatedBy().then((res)=>{
-            setCreatedByData(res.data)
+            setCreatedByData(Array.isArray(res.data) ? res.data : []);
         })
     }
 
@@ -75,9 +76,6 @@ export default function FabricSwatch() {
         }
         if(form.getFieldValue('approverId') != undefined){
             req.approverId = form.getFieldValue('approverId')
-        }
-        if(form.getFieldValue('status') != undefined){
-            req.status = form.getFieldValue('status')
         }
         
         service.getAllFabricSwatchData(req).then((res)=>{
@@ -158,17 +156,6 @@ export default function FabricSwatch() {
                             })}
                         </Select>
                     </Form.Item>
-                </Col>
-                <Col xs={24} sm={24}md={{span: 6}} lg={{span: 4  }} xl={{span: 4 }}>
-                <Form.Item name="status" label="Status" >
-                <Select allowClear placeholder='Select Status'>
-                {Object.values(StatusDisplayEnum).map((val) => (
-                    <Select.Option key={val.name} value={val.name}>
-                    {val.displayVal}
-                    </Select.Option>
-                ))}
-                    </Select>    
-                </Form.Item>
                 </Col>
                 {/* <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:4}}>
                     <Form.Item label='Style No' name={'styleNo'}>

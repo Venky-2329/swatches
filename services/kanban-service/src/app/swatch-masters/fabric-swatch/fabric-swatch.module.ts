@@ -6,9 +6,11 @@ import { ApplicationExceptionHandler } from "libs/backend-utils";
 import { MailerService } from "./send-mail";
 import { FabricSwatchEntity } from "./entities/fabric-swatch-entity";
 import { FabricUploadEntity } from "./entities/fabric-swatch-upload-entity";
+import { FabricItemEntity } from "./entities/fabric-item.entity";
+import { ItemExcelEntity } from "./entities/item-excel.entity";
 
 @Module({
-    imports:[TypeOrmModule.forFeature([FabricSwatchEntity,FabricUploadEntity])],
+    imports:[TypeOrmModule.forFeature([FabricSwatchEntity,FabricUploadEntity,FabricItemEntity, ItemExcelEntity])],
     providers : [FabricSwatchService,ApplicationExceptionHandler,MailerService],
     controllers :[FabricSwatchController],
 })
