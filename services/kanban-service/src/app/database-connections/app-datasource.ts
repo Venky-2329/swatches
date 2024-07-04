@@ -21,6 +21,8 @@ import { SectionsEntity } from '../swatch-masters/department/entity/section.enti
 import { FabricSwatchEntity } from '../swatch-masters/fabric-swatch/entities/fabric-swatch-entity';
 import { FabricUploadEntity } from '../swatch-masters/fabric-swatch/entities/fabric-swatch-upload-entity';
 import { TrimUploadEntity } from '../swatch-masters/trim-swatch/entities/trim-swatch-upload-entity';
+import { ItemExcelEntity } from '../swatch-masters/excel-bot/entities/item-excel.entity';
+import { POItemExcelEntity } from '../swatch-masters/excel-bot/entities/po-item-excel.entity';
 
 export const typeOrmConfig: DataSourceOptions = {
   type: 'mysql',
@@ -29,9 +31,13 @@ export const typeOrmConfig: DataSourceOptions = {
   // password: 'Schemax@2023',
   // database: 'internal_apps',
   host: 'localhost',
-  username: 'sql_dsw7',
-  password: 'yZW8eEEsDJhCpx7i',
-  database: 'sql_dsw7',
+  username: 'root',
+  password: '',
+  database: 'testing',
+  // host: 'localhost',
+  // username: 'sql_dsw7',
+  // password: 'yZW8eEEsDJhCpx7i',
+  // database: 'sql_dsw7',
   entities: [
     BrandsEntity,
     CategoryEntity,
@@ -45,7 +51,9 @@ export const typeOrmConfig: DataSourceOptions = {
     ApprovalUserEntity,
     SectionsEntity,
     FabricUploadEntity,
-    TrimUploadEntity
+    TrimUploadEntity,
+    ItemExcelEntity,
+    POItemExcelEntity
   ],
 };
 
