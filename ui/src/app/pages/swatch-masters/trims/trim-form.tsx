@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Form,
-  Input,
-  Button,
-  Select,
-  DatePicker,
-  Upload,
-  message,
-  Card,
-  Col,
-  Row,
-  notification,
-  Image,
-  Spin,
-  Segmented,
-} from 'antd';
+import {Form,Input,Button,Select,DatePicker,Upload,message,Card,Col,Row,notification,Image,Spin,Segmented, Divider } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import imageCompression from 'browser-image-compression';
 import { SyncOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { EmailModel } from 'libs/shared-models';
-import { BuyerService, SupplierService, TrimSwatchService, EmailService, ApprovalUserService } from 'libs/shared-services';
-
+import { BuyerReq, EmailModel } from 'libs/shared-models';
+import { BuyerService, SupplierService, TrimSwatchService, EmailService, ApprovalUserService, ExcelBotService } from 'libs/shared-services';
+import '../fabric-swatch/fabric-swatch.css'
+import './trims.css'
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -30,14 +16,10 @@ export function TrimSwatchUpload() {
   const navigate = useNavigate();
   const [fileList, setFileList] = useState<any[]>([]);
   const [buyer, setBuyer] = useState([]);
-  const [category, setCategory] = useState([]);
   const [supplier, setSupplier] = useState([]);
-  const [seasons, setSeasons] = useState([]);
   const users: any = JSON.parse(localStorage.getItem('auth'));
   const createdUser = users.userName;
   const createdUserMail = users.userMail;
-  const [selectedType, setSelectedType] = useState('Garment');
-  const typesWithCommonFields = ['Garment', 'Trim'];
   const service = new BuyerService();
   const service2 = new SupplierService();
   const mainService = new TrimSwatchService();
@@ -46,15 +28,21 @@ export function TrimSwatchUpload() {
   const [employeeData, setEmployeeData] = useState<any[]>([]);
   const [resData, setResData] = useState<any[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [tabName, setTabName] = useState<string | number>('manual');
+  const [buyerData, setBuyerData] = useState<any[]>([])
+  const [buyerCodeData, setBuyerCodeData] = useState<any[]>([])
+  const excelService = new ExcelBotService()
+  const [ itemCodeData, setItemCodeData ] = useState<any[]>([])
+
+  const [ itemDesc, setItemDesc ] = useState([])
 
   useEffect(() => {
     getBuyers();
     getSupplier();
     getEmployeeData();
+    getGrpBuyers()
   }, []);
 
   function getBuyers() {
@@ -64,6 +52,123 @@ export function TrimSwatchUpload() {
       }
     });
   }
+
+  const getGrpBuyers = ()=>{
+    service.getBuyers().then((res)=>{
+      if(res.status){
+        setBuyerData(res.data)
+      }
+    })
+  }
+
+  const getBuyerByName = (value)=>{
+    const req = new BuyerReq(null,null,null,value,null)
+    service.getBuyerCodeByName(req).then((res)=>{
+      if(res.status){
+        setBuyerCodeData(res.data)
+      }
+    })
+  }
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getItemCodesByBuyer = (buyerName, buyerCode) => {
+    setIsLoading(true);
+    setItemCodeData([]);
+    const req = new BuyerReq(undefined, undefined, undefined, buyerName, buyerCode);
+    excelService.getItemCodesByBuyer(req).then((res) => {
+      if (res.status) {
+        setItemCodeData(res.data);
+      }
+      setIsLoading(false);
+    }).catch(() => {
+      setIsLoading(false);
+    });
+  };
+
+  const getItemDesByCode = (value) => {
+    const req = new BuyerReq(undefined, undefined, undefined, undefined, value);
+    excelService.getItemDesByCode(req).then((res) => {
+      if (res.status) {
+        setItemDesc(res.data);
+      }
+    })
+  }
+
+  const [ poData,setPOData ] = useState<any[]>([])
+  const getPODataByItemCode = (value) => {
+    const req = new BuyerReq(undefined, undefined, undefined, undefined, value);
+    excelService.getPODataByItemCode(req).then((res) => {
+      if (res.status) {
+        setPOData(res.data);
+      }
+    })
+  }
+
+  const onBuyerOrCodeChange = (value, type) => {
+    if (tabName !== 'manual') {
+      if (type === 'name') {
+        getBuyerByName(value);
+        form.setFieldsValue({ buyerCode: undefined });
+        form.setFieldsValue({ 
+          buyerCode: undefined,
+          items: form.getFieldValue('items')?.map(item => ({
+            ...item,
+            itemNo: undefined
+          }))
+        });
+        setItemCodeData([]); 
+      }
+      getItemCodesByBuyer(type === 'name' ? value : form.getFieldValue('buyerId'), type === 'code' ? value : undefined);
+    } else {
+      if (type === 'name') {
+        form.setFieldsValue({ buyerName: value });
+      }
+    }
+  };
+
+  const onBuyerChange = (value) => {
+    onBuyerOrCodeChange(value, 'name');
+  };
+
+  const onBuyerCodeChange = (value) => {
+    onBuyerOrCodeChange(value, 'code');
+  };
+
+
+  const handleItemNoChange = (value, name) => {
+    form.setFields([
+      { name: [name, 'itemDescription'], value: undefined },
+      { name: [name, 'poNumber'], value: undefined },
+      { name: [name, 'itemNo'], value: value },
+      { name: [name, 'grnNumber'], value: undefined }
+    ]);
+    
+    setItemDesc([]);
+    setPOData([]);
+    getItemDesByCode(value);
+    getPODataByItemCode(value);
+  };
+
+  const handleItemDescriptionChange = (value, name) => {
+    form.setFieldValue([name, 'itemDescription'], value);
+  };
+  
+  const handlePONumberChange = (value, name) => {
+    form.setFieldValue([name, 'poNumber'], value);
+  };
+  
+  const handleGRNNumberChange = (value, name) => {
+    form.setFieldValue([name, 'grnNumber'], value);
+  };
+  
+  const handleSupplierChange = (value, name) => {
+    form.setFieldValue([name, 'supplier'], value);
+  };
+  
+  const handleInvoiceChange = (value, name) => {
+    form.setFieldValue([name, 'invoiceNo'], value);
+  };
 
   function getSupplier() {
     service2.getAllActiveSuppliers().then((res) => {
@@ -296,12 +401,14 @@ export function TrimSwatchUpload() {
   }
 
 
-  const onBuyerChange = (value, option) => {
-    form.setFieldsValue({ buyerName: option?.name });
-  };
-
   const onSupplierChange = (value, option) => {
     form.setFieldsValue({ supplierName: option?.name });
+  };
+
+  const handleTabChange = (value) => {
+    setTabName(value);
+    form.setFieldsValue({ items: [{}] });
+    form.resetFields( )
   };
 
   return (
@@ -336,7 +443,7 @@ export function TrimSwatchUpload() {
       >
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row> 
-            <Segmented size='large' options={[{ label:'👨🏻‍💻Manual',value: 'manual' },{ label:'🤖Auto', value: 'auto' }]} value={tabName} onChange={setTabName}/>
+            <Segmented size='large' options={[{ label:'👨🏻‍💻Manual',value: 'manual' },{ label:'🤖Auto', value: 'auto' }]} value={tabName} onChange={handleTabChange}/>
           </Row>
           <br />
 
@@ -506,7 +613,7 @@ export function TrimSwatchUpload() {
           ) : (
             <>
               <Row gutter={24}>
-                <Col xs={24} sm={12} md={6} lg={6} xl={4}>
+                <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                   <Form.Item
                     label="Buyer"
                     name={'buyerId'}
@@ -517,9 +624,28 @@ export function TrimSwatchUpload() {
                       optionFilterProp="children"
                       placeholder="Select Buyer"
                       onChange={onBuyerChange}
+                      allowClear
                     >
-                      {buyer.map((item) => (
-                        <Option key={item.buyerId} value={item.buyerId} name={item.buyerName}>{item.buyerName}</Option>
+                      {buyerData.map((item) => (
+                        <Option key={item.buyerName} value={item.buyerName}>{item.buyerName}</Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12} md={8} lg={6} xl={4}>
+                  <Form.Item
+                    label="Buyer Code"
+                    name={'buyerCode'}
+                    rules={[{ required: false, message: 'Buyer Code is required' }]}
+                  >
+                    <Select
+                      showSearch
+                      optionFilterProp="children"
+                      placeholder="Select Buyer"
+                      onChange={onBuyerCodeChange}
+                    >
+                      {buyerCodeData.map((item) => (
+                        <Option key={item.buyerId} value={item.buyerCode}>{item.buyerCode}</Option>
                       ))}
                     </Select>
                   </Form.Item>
@@ -536,7 +662,7 @@ export function TrimSwatchUpload() {
                     <Input defaultValue={createdUserMail} hidden/>
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={12} md={6} lg={6} xl={4}>
+                <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                   <Form.Item
                     label="Transaction No"
                     name={'transactionNo'}
@@ -545,7 +671,7 @@ export function TrimSwatchUpload() {
                     <Input placeholder='Enter Transaction No'/>
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={12} md={6} lg={6} xl={4}>
+                <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                   <Form.Item
                     name={'transactionDate'}
                     label={'Transaction Date'}
@@ -556,37 +682,7 @@ export function TrimSwatchUpload() {
                 </Col>
                 <Form.Item hidden name={'trimSwatchId'}></Form.Item>
                 <Form.Item hidden name={'trimSwatchNumber'}></Form.Item>
-
-                <Col
-                  xs={24} sm={12} md={6} lg={6} xl={4}
-                >
-                  <Form.Item
-                    label="Approver Mail(Marketing)"
-                    name={'approverId'}
-                    rules={[{ required: true, message: 'Approver is required' }]}
-                  >
-                    <Select
-                      allowClear
-                      showSearch
-                      optionFilterProp="children"
-                      placeholder="Select Approver"
-                      onChange={onUserChange}
-                    >
-                      {employeeData.map((item) => (
-                        <Option key={item.approvedId} value={item.approvedId} name={item.approvedUserName} mail={item.emailId}>
-                          {item.emailId}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12} md={6} lg={6} xl={4}>
-                  <Form.Item label="Approver " name={'approverName'}>
-                    <Input disabled />
-                  </Form.Item>
-                </Col>
-                <Form.Item name={'approverMail'} hidden></Form.Item>
-                <Col xs={24} sm={12} md={6} lg={6} xl={4}>
+                <Col xs={24} sm={12} md={8} lg={6} xl={4}>
                   <Form.Item
                     label="Remarks"
                     name={'remarks'}
@@ -595,7 +691,7 @@ export function TrimSwatchUpload() {
                     <TextArea placeholder="Enter Remarks" />
                   </Form.Item>
                 </Col>
-                <Col xs={24} sm={12} md={6} lg={6} xl={15}>
+                <div style={{marginLeft:'14px'}}>
                   <Form.Item label={'Trim Image'} required={true}>
                     <Upload
                       {...uploadFieldProps}
@@ -623,56 +719,119 @@ export function TrimSwatchUpload() {
                       src={previewImage}
                     />
                   </Form.Item>
-                </Col>
+                </div>
               </Row>
-              <Card title={<span style={{textAlign: 'center'}}>Material Details</span>}>
+              <Card title={"Material Details"} style={{overflow:'auto'}}>
                 <Form.List name="items" initialValue={[{}]}>
                   {(fields, { add, remove }) => (
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', marginRight: '20px' }}>
                     <>
-                      {fields.map(({ key, name, fieldKey, ...restField }) => (
-                        <Row key={key} gutter={24} align="middle">
-                          <Col xs={24} sm={12} md={8} lg={6} xl={4}>
-                            <Form.Item
+                      {fields.map(({ key, name, fieldKey, ...restField },index) => (
+                         <React.Fragment key={key}>
+                          {index > 0 && <Divider />}
+                        {/* <Row key={key} gutter={24} align="middle"> */}
+                          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item style={{ marginRight: 16 }}
                               {...restField}
                               label="Item No"
                               name={[name, 'itemNo']}
                               fieldKey={[fieldKey, 'itemNo']}
                               rules={[{ required: true, message: 'Please input Item No' }]}
                             >
-                              <Input placeholder="Enter Item No" />
+                              <Select
+                              allowClear
+                                loading={isLoading}
+                                showSearch
+                                optionFilterProp='children'
+                                placeholder='Select ItemCode'
+                                value={form.getFieldValue([name, 'itemNo'])}
+                                onChange={(value) => handleItemNoChange(value, name)}
+                              >
+                                {itemCodeData?.map((item, index) => (
+                                  <Option key={`${item.itemCode}-${index}`} value={item.itemCode}>
+                                    {item.itemCode}
+                                  </Option>
+                                ))}
+                              </Select>
                             </Form.Item>
                           </Col>
-                          <Col xs={24} sm={12} md={8} lg={6} xl={4}>
-                            <Form.Item
+                          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item style={{ marginRight: 16 }}
                               {...restField}
                               label="Item Description"
                               name={[name, 'itemDescription']}
                               fieldKey={[fieldKey, 'itemDescription']}
                               rules={[{ required: true, message: 'Please input Item Description' }]}
                             >
-                              <Input placeholder="Enter Item Description" />
+                              <Select
+                              allowClear
+                                loading={isLoading}
+                                showSearch
+                                optionFilterProp='children'
+                                placeholder='Select Item Description'
+                                value={form.getFieldValue([name, 'itemDescription'])}
+                                onChange={(value) => handleItemDescriptionChange(value, name)}
+                              >
+                                {itemDesc?.map((item, index) => (
+                                  <Option key={`${item.itemDesc}-${index}`} value={item.itemDesc}>
+                                    {item.itemDesc}
+                                  </Option>
+                                ))}
+                              </Select>
                             </Form.Item>
                           </Col>
-                          <Col xs={24} sm={12} md={8} lg={6} xl={4}>
-                            <Form.Item
+                          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item style={{ marginRight: 16 }}
+                              {...restField}
                               label="PO No"
-                              name={'poNumber'}
+                              name={[name, 'poNumber']}
+                              fieldKey={[fieldKey, 'poNumber']}
                               rules={[{ required: false, message: 'PO is required' }]}
                             >
-                              <Input placeholder="Enter PO No" />
+                              <Select
+                              allowClear
+                                loading={isLoading}
+                                showSearch
+                                optionFilterProp='children'
+                                placeholder='Select PO'
+                                value={form.getFieldValue([name, 'poNumber'])}
+                                onChange={(value) => handlePONumberChange(value, name)}
+                              >
+                                {poData?.map((item, index) => (
+                                  <Option key={`${item.poNo}-${index}`} value={item.poNo}>
+                                    {item.poNo}
+                                  </Option>
+                                ))}
+                              </Select>
                             </Form.Item>
                           </Col>
-                          <Col xs={24} sm={12} md={8} lg={6} xl={4}>
-                            <Form.Item
+                          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item style={{ marginRight: 16 }}
+                              {...restField}
                               label="GRN No"
-                              name={'grnNumber'}
+                              name={[name, 'grnNumber']}
+                              fieldKey={[fieldKey, 'grnNumber']}
                               rules={[{ required: false, message: 'GRN is required' }]}
                             >
-                              <Input placeholder="Enter GRN No" />
+                              <Select
+                              allowClear
+                                loading={isLoading}
+                                showSearch
+                                optionFilterProp='children'
+                                placeholder='Select GRN'
+                                value={form.getFieldValue([name, 'grnNumber'])}
+                                onChange={(value) => handleGRNNumberChange(value, name)}
+                              >
+                                {poData?.map((item, index) => (
+                                  <Option key={`${item.grnNo}-${index}`} value={item.grnNo}>
+                                    {item.grnNo}
+                                  </Option>
+                                ))}
+                              </Select>
                             </Form.Item>
                           </Col>
-                          <Col xs={24} sm={12} md={8} lg={6} xl={4}>
-                            <Form.Item
+                          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item style={{ marginRight: 16 }}
                               name={'grnDate'}
                               label={'GRN Date'}
                               initialValue={dayjs()}
@@ -686,48 +845,116 @@ export function TrimSwatchUpload() {
                               <DatePicker showToday format="YYYY-MM-DD" style={{ width: '100%' }}/>
                             </Form.Item>
                           </Col>
-
-                          <Col xs={24} sm={12} md={6} lg={6} xl={4}>
-                            <Form.Item
+                          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item style={{ marginRight: 16 }}
+                              {...restField}
+                              label="Material No"
+                              name={[name, 'materialNo']}
+                              fieldKey={[fieldKey, 'materialNo']}
+                              rules={[{ required: true, message: 'Please input Material No' }]}
+                            >
+                              <Input placeholder="Enter Material No" />
+                            </Form.Item>
+                          </Col>
+                          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item style={{ marginRight: 16 }}
+                              {...restField}
+                              label="Material Description"
+                              name={[name, 'materialDescription']}
+                              fieldKey={[fieldKey, 'materialDescription']}
+                              rules={[{ required: true, message: 'Please input Material Description' }]}
+                            >
+                              <Input placeholder="Enter Material Description" />
+                            </Form.Item>
+                          </Col>
+                          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item style={{ marginRight: 16 }}
                               label="Supplier"
-                              name={'supplierId'}
+                              name={'supplier'}
                               rules={[{ required: true, message: 'Please input Supplier' }]}
                             >
                               <Select
+                              allowClear
+                                loading={isLoading}
                                 showSearch
-                                optionFilterProp="children"
-                                placeholder="Select Supplier"
-                                onChange={onSupplierChange}
+                                optionFilterProp='children'
+                                placeholder='Select Supplier'
+                                value={form.getFieldValue([name, 'supplier'])}
+                                onChange={(value) => handleSupplierChange(value, name)}
                               >
-                                {supplier.map((item) => (
-                                  <Option key={item.supplierId} value={item.supplierId} name={item.supplierName}>{item.supplierName} - {item.supplierCode}</Option>
+                                {poData?.map((item, index) => (
+                                  <Option key={`${item.supplierName}-${index}`} value={item.supplierName}>
+                                    {item.supplierName}
+                                  </Option>
                                 ))}
                               </Select>
                             </Form.Item>
                           </Col>
-                          <Form.Item hidden name={'supplierName'}></Form.Item>
+                          {/* <Form.Item style={{ marginRight: 16 }} hidden name={'supplierName'}></Form.Item> */}
                           <Col
-                            xs={24} sm={12} md={6} lg={6} xl={4}
+                            xs={24} sm={12} md={8} lg={6} xl={6}
                           >
-                            <Form.Item
+                            <Form.Item style={{ marginRight: 16 }}
                               label="Invoice No"
                               name={'invoiceNo'}
                               rules={[{ required: false, message: 'Please input Invoice No' }]}
                             >
-                              <Input placeholder="Enter Invoice No" />
+                              <Select
+                              allowClear
+                                loading={isLoading}
+                                showSearch
+                                optionFilterProp='children'
+                                placeholder='Select InvoiceNo'
+                                value={form.getFieldValue([name, 'invoiceNo'])}
+                                onChange={(value) => handleInvoiceChange(value, name)}
+                              >
+                                {poData?.map((item, index) => (
+                                  <Option key={`${item.invoiceNo}-${index}`} value={item.invoiceNo}>
+                                    {item.invoiceNo}
+                                  </Option>
+                                ))}
+                              </Select>
                             </Form.Item>
                           </Col>
+                          <Col  xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item style={{ marginRight: 16 }}
+                              label="Approver Mail(Marketing)"
+                              name={'approverId'}
+                              rules={[{ required: true, message: 'Approver is required' }]}
+                            >
+                              <Select
+                                allowClear
+                                showSearch
+                                optionFilterProp="children"
+                                placeholder="Select Approver"
+                                onChange={onUserChange}
+                              >
+                                {employeeData.map((item) => (
+                                  <Option key={item.approvedId} value={item.approvedId} name={item.approvedUserName} mail={item.emailId}>
+                                    {item.emailId}
+                                  </Option>
+                                ))}
+                              </Select>
+                            </Form.Item>
+                          </Col>
+                          <Col  xs={24} sm={12} md={8} lg={6} xl={6}>
+                            <Form.Item style={{ marginRight: 16 }} label="Approver " name={'approverName'}>
+                              <Input disabled />
+                            </Form.Item>
+                          </Col>
+                          <Form.Item style={{ marginRight: 16 }} name={'approverMail'} hidden></Form.Item>
                           {fields.length > 1 ? (
-                            <Col xs={4} sm={4} md={4} lg={4} xl={4}>
+                            <Col xs={4} sm={4} md={4} lg={4} xl={6}>
                               <Button onClick={() => remove(name)} icon={<MinusCircleOutlined />} />
                             </Col>
                           ) : null}
-                        </Row>
+                        {/* </Row> */}
+                        </React.Fragment>
                       ))}
-                      <Col xs={24} sm={6} md={6} lg={5} xl={5}>
+                      {/* <Divider type='horizontal'/> */}
+                      <Col xs={24} style={{ display: 'flex', justifyContent: 'center' }}>
                         <Form.Item>
                           <Button
-                            style={{ width: '70%', justifyContent: 'center' }}
                             type="dashed"
                             onClick={() => add()}
                             disabled={fields.length >= 10}
@@ -738,6 +965,7 @@ export function TrimSwatchUpload() {
                         </Form.Item>
                       </Col>
                     </>
+                    </div>
                   )}
                 </Form.List>
               </Card>

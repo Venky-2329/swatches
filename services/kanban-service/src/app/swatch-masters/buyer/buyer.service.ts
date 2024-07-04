@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BuyerDto } from './dto/buyer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BuyerEntity } from './entities/buyer.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { BuyerReq, CommonResponseModel, ErrorResponse } from 'libs/shared-models';
 
 @Injectable()
@@ -10,7 +10,8 @@ export class BuyerService {
 
   constructor(
     @InjectRepository(BuyerEntity)
-    private readonly repo: Repository<BuyerEntity>
+    private readonly repo: Repository<BuyerEntity>,
+    private readonly datasource: DataSource
   ) { }
 
   async createBuyer(dto: BuyerDto, isUpdate: boolean): Promise<CommonResponseModel> {
@@ -98,6 +99,31 @@ export class BuyerService {
     } catch (error) {
       // return new CommonResponseModel(false , 0 , 'Something Went Wrong');
       console.log(error)
+    }
+  }
+
+  async getBuyerCodeByName(req: BuyerReq):Promise<CommonResponseModel>{
+    try{
+      const data = await this.repo.find({where:{buyerName:req.buyerName}})
+
+      if(data.length >0){
+        return new CommonResponseModel(true,1,'Data retrieved',data)
+      }else{
+        return new CommonResponseModel(false,0,'No data',[])
+      }
+    }catch(err){
+      throw(err)
+    }
+  }
+
+  async getBuyers(): Promise<CommonResponseModel> {
+    let query=`SELECT buyer_name AS buyerName FROM swatch_buyer GROUP BY buyer_name ORDER BY buyer_name`
+    const data = await this.datasource.query(query)
+
+    if(data.length > 0){
+      return new CommonResponseModel(true,1,'Data retrieved',data)
+    }else{
+      return new CommonResponseModel(false,0,'No Data',[])
     }
   }
 

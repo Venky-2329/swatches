@@ -20,9 +20,10 @@ import { DepartmentModule } from './swatch-masters/department/department.module'
 import { TrimSwatchModule } from './swatch-masters/trim-swatch/trim-swatch.module';
 import { ApprovalUsersModule } from './swatch-masters/approval-users/approval-users.module';
 import { FedExModule } from './fed-ex/fed-ex.module';
+import { ExcelBotModule } from './swatch-masters/excel-bot/excel-bot.module';
 
 @Module({
-  imports: [DatabaseModule,RacksModule,CategoryModule,BrandsModule,SeasonModule,SampleUploadModule,LocationModule,UsersModule,FabricSwatchModule ,BuyerModule,SupplierModule,EmployeeModule,DesignationModule,UnitModule,DepartmentModule , TrimSwatchModule , ApprovalUsersModule,FedExModule],
+  imports: [DatabaseModule,RacksModule,CategoryModule,BrandsModule,SeasonModule,SampleUploadModule,LocationModule,UsersModule,FabricSwatchModule ,BuyerModule,SupplierModule,EmployeeModule,DesignationModule,UnitModule,DepartmentModule , TrimSwatchModule , ApprovalUsersModule,FedExModule,ExcelBotModule],
   controllers: [AppController],
   providers: [AppService],
 })

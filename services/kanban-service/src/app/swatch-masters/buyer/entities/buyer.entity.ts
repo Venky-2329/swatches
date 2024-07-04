@@ -9,6 +9,12 @@ export class BuyerEntity {
     @Column('varchar',{name:'buyer_name' , length: 60})
     buyerName : string;
 
+    @Column('varchar',{
+        name:'buyer_code' , 
+        length: 60
+    })
+    buyerCode : string;
+
     @Column("varchar" , {name:'created_user' , length:50,nullable: true })
     createdUser: string;
 

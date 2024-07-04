@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('item-excel')
+@Entity('item_excel')
 export class ItemExcelEntity{
     @PrimaryGeneratedColumn('increment',{
         name:'item_excel_id'
@@ -22,25 +22,53 @@ export class ItemExcelEntity{
     itemDescription: string
 
     @Column('varchar',{
-        name:'approver',
+        name:'sales_person',
         nullable: true,
         length: 100
     })
-    approver: string
+    salesPerson: string
 
     @Column('varchar',{
-        name:'buyer_name',
+        name:'m3_item_responsible',
         nullable: true,
         length: 100
     })
-    buyerName: string
+    m3ItemRes: string
 
     @Column('varchar',{
-        name:'buyer_code',
+        name:'crm_item_responsible',
         nullable: true,
         length: 100
     })
-    buyerCode: string
+    crmItemRes: string
+
+    @Column('varchar',{
+        name:'co_approver',
+        nullable: true,
+        length: 100
+    })
+    coApprover: string
+
+    @Column('varchar',{
+        name:'prod_merchant',
+        nullable: true,
+        length: 100
+    })
+    prodMerchant: string
+
+    @Column('varchar',{
+        name:'pd_merchant',
+        nullable: true,
+        length: 100
+    })
+    pdMerchant: string
+
+    @Column('varchar',{
+        name:'last_modified_by',
+        nullable: true,
+        length: 100
+    })
+    lastModifiedBy: string
 
     @Column('varchar',{
         name:'brand',
@@ -48,6 +76,18 @@ export class ItemExcelEntity{
         length: 100
     })
     brand: string
+
+    @Column('varchar',{
+        name:'buyer_code',
+        nullable: true,
+    })
+    buyerCode: string
+
+    @Column('varchar',{
+        name:'buyer_name',
+        nullable: true,
+    })
+    buyerName: string
 
     @CreateDateColumn({
         name:'created_at',

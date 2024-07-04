@@ -6,10 +6,11 @@ import { TrimSwatchEntity } from './entities/trim-swatch.entity';
 import { ApplicationExceptionHandler } from 'libs/backend-utils';
 import { MailerService } from '../fabric-swatch/send-mail';
 import { TrimUploadEntity } from './entities/trim-swatch-upload-entity';
+import { TrimItemEntity } from './entities/trim-item-entity';
 
 @Module({
   controllers: [TrimSwatchController],
   providers: [TrimSwatchService,ApplicationExceptionHandler,MailerService],
-  imports:[TypeOrmModule.forFeature([TrimSwatchEntity , TrimUploadEntity])]
+  imports:[TypeOrmModule.forFeature([TrimSwatchEntity , TrimUploadEntity,TrimItemEntity])]
 })
 export class TrimSwatchModule {}

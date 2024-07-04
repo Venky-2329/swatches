@@ -2,7 +2,7 @@ import { CommonResponseModel, DateReq, FabricSwatchDto, SwatchStatus } from "lib
 import { CommonAxiosServicePms } from '../common-axios-service-prs';
 
 export class FabricSwatchService extends CommonAxiosServicePms{
-    URL = '/fabric-swatch'
+    URL = '/x'
 
     async createFabricSwatch(req: FabricSwatchDto): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/createFabricSwatch",req)

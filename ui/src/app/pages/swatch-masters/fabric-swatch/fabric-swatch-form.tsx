@@ -668,13 +668,12 @@ export default function FabricSwatchUpload() {
           </Row>
           <br></br>
           <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
+            <Col span={24}>
               <Button type="primary" htmlType="submit">
                 Submit
               </Button>
               <Button
                 htmlType="button"
-                style={{ margin: '0 14px' }}
                 onClick={onReset}
               >
                 Reset

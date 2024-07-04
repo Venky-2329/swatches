@@ -27,4 +27,12 @@ export class BuyerService  extends CommonAxiosServicePms{
     async getAllBuyers():Promise<any>{
         return await this.axiosPostCall(this.BuyerController+'/getAllBuyers')
     }
+
+    async getBuyerCodeByName(req: BuyerReq):Promise<any>{
+        return await this.axiosPostCall(this.BuyerController+'/getBuyerCodeByName',req)
+    }
+
+    async getBuyers():Promise<any>{
+        return await this.axiosPostCall(this.BuyerController+'/getBuyers')
+    }
 }

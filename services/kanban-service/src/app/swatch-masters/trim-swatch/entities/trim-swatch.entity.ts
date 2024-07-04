@@ -1,6 +1,7 @@
 import { ReworkStatus, StatusEnum } from "libs/shared-models";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { TrimUploadEntity } from "./trim-swatch-upload-entity";
+import { TrimItemEntity } from "./trim-item-entity";
 
 @Entity('trim_swatch')
 export class TrimSwatchEntity {
@@ -167,5 +168,8 @@ export class TrimSwatchEntity {
 
     @OneToMany(() => TrimUploadEntity , trimUpload => trimUpload.trimInfo , {cascade: true})
     uploadInfo : TrimUploadEntity[]
+
+    @OneToMany(() => TrimItemEntity , trimItem => trimItem.trimInfo , {cascade: true})
+    trimInfo : TrimUploadEntity[]
 
 }

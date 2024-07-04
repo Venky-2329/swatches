@@ -10,7 +10,7 @@ import axios from "axios";
 import * as XLSX from 'xlsx';
 import { GenericTransactionManager } from "../../database-connections/type0rem-transactions.ts/genertic-transaction";
 import { Cron } from '@nestjs/schedule';
-import { ItemExcelEntity } from "./entities/item-excel.entity";
+import { ItemExcelEntity } from "../excel-bot/entities/item-excel.entity";
 const path = require('path');
 const fs = require('fs');
 @Injectable()
@@ -21,8 +21,6 @@ export class FabricSwatchService{
       private readonly dataSource: DataSource,
       @InjectRepository(FabricUploadEntity)
       private readonly uploadRepo: Repository<FabricUploadEntity>,
-      @InjectRepository(ItemExcelEntity)
-      private readonly iemExcelRepo: Repository<ItemExcelEntity>
     ){}
 
     async getMaxId(): Promise<any> {
@@ -392,92 +390,5 @@ async getDataById(req:SwatchStatus):Promise<CommonResponseModel>{
     }
   }
 
-
-  async reportExcelData(): Promise<void> {
-    const downloadsPath = path.resolve('C:/Users/venka/Downloads');
-  
-    // Step 1: Get all files in the Downloads directory
-    const files = fs.readdirSync(downloadsPath);
-  
-    // Step 2: Filter files that match the "ItemResponsibleReport" pattern
-    const reportFiles = files.filter(file => file.startsWith('ItemResponsibleReport') && file.endsWith('.xls'));
-  
-    if (reportFiles.length === 0) {
-      throw new Error('No ItemResponsibleReport files found in the Downloads directory.');
-    }
-  
-    // Step 3: Sort the files based on the numerical suffix
-    reportFiles.sort((a, b) => {
-      const aMatch = a.match(/ItemResponsibleReport(?: \((\d+)\))?\.xls/);
-      const bMatch = b.match(/ItemResponsibleReport(?: \((\d+)\))?\.xls/);
-  
-      const aNum = aMatch && aMatch[1] ? parseInt(aMatch[1], 10) : 0;
-      const bNum = bMatch && bMatch[1] ? parseInt(bMatch[1], 10) : 0;
-  
-      return bNum - aNum;
-    });
-  
-    // Step 4: Pick the latest file
-    const latestReportFile = reportFiles[0];
-    const filePath = path.join(downloadsPath, latestReportFile);
-    console.log(filePath, '-----------');
-    
-      const workbook = XLSX.readFile(filePath);
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      if (!worksheet) {
-        throw new Error('Worksheet not found in the Excel file.');
-      }
-    
-      const entitiesToSave: ItemExcelEntity[] = [];
-      const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-    
-      // Step 5: Fetch existing invoice numbers from the database
-      const existingInvoices = await this.iemExcelRepo.find({
-        select: ['itemCode'],
-      });
-      const existingInvoicePOCombinations = new Set(existingInvoices.map(inv => `${inv.itemCode}`));
-    
-      rows.forEach((row, rowNumber) => {
-        if (rowNumber > 3) {
-          const cell6 = row[6];
-          const itemCode = cell6 ? cell6.toString(): ''
-          const cell7 = row[7];
-          const itemDesc = cell7 ? cell7.toString(): ''
-
-          const cell11 = row[11];
-          const approver = cell11 ? cell11.toString(): ''
-
-          const cell16 = row[16];
-          const brand = cell16 ? cell16.toString(): ''
-          const cell17 = row[17];
-          const buyerCode = cell17 ? cell17.toString(): ''
-          const cell18 = row[18];
-          const buyerName = cell18 ? cell18.toString(): ''
-    
-          // Step 6: Check if the invoice number and PO number combination already exists
-          // if (!existingInvoicePOCombinations.has(`${invoiceNo}-${poNumber}`)) {
-            if (!existingInvoicePOCombinations.has(itemCode)) {
-            const entity = new ItemExcelEntity();
-            entity.itemCode = itemCode
-            entity.itemDescription = itemDesc
-            entity.buyerName = buyerName
-            entity.buyerCode = buyerCode
-            entity.approver = approver
-            entity.brand = brand
-            entitiesToSave.push(entity);
-    
-            // Add to the set to prevent duplicates within the same file
-            // existingInvoicePOCombinations.add(`${invoiceNo}-${poNumber}`);
-            existingInvoicePOCombinations.add(itemCode);
-          }
-        }
-      });
-    
-      // Step 7: Save only unique invoice numbers
-      if (entitiesToSave.length > 0) {
-        await this.iemExcelRepo.save(entitiesToSave);
-      }
-  }
   
 }

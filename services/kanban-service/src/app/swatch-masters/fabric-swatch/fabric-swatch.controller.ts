@@ -212,14 +212,4 @@ export class FabricSwatchController{
       }
   }
 
-  @Post('/reportExcelData')
-  async reportExcelData(): Promise<CommonResponseModel> {
-      try {
-          await this.service.reportExcelData();
-          return new CommonResponseModel(true,1,'Excel Downloaded')
-      } catch (err) {
-          console.log(err)
-      }
-  }
-
 }

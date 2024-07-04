@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { BuyerService } from './buyer.service';
 import { BuyerDto } from './dto/buyer.dto';
-import { CommonResponseModel } from 'libs/shared-models';
+import { BuyerReq, CommonResponseModel } from 'libs/shared-models';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('buyer')
@@ -53,6 +53,25 @@ export class BuyerController {
   async updateBuyers(@Body() BuyerDto: any, isUpdate: boolean = true): Promise<CommonResponseModel> {
     try {
       return this.buyerService.createBuyer(BuyerDto, isUpdate);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  @Post('/getBuyerCodeByName')
+  @ApiBody({ type: BuyerReq })
+  async getBuyerCodeByName(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return this.buyerService.getBuyerCodeByName(req);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  @Post('/getBuyers')
+  async getBuyers(): Promise<CommonResponseModel> {
+    try {
+      return this.buyerService.getBuyers();
     } catch (err) {
       console.log(err)
     }
